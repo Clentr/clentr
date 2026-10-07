@@ -9,8 +9,10 @@ import type { Screen } from "@/content/projects";
 export function Device({ screen, framed, role, sizes }: { screen: Screen; framed: boolean; role: "main" | "side"; sizes: string }) {
   return (
     <div className={`device device--${role} ${framed ? "" : "device--bare"}`}>
-      <div className="device__screen">
-        <Image src={screen.src} alt={screen.alt} fill sizes={sizes} />
+      <div className="device__bezel">
+        <div className="device__screen">
+          <Image src={screen.src} alt={screen.alt} fill sizes={sizes} />
+        </div>
       </div>
     </div>
   );

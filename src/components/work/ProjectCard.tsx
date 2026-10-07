@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import type { Project } from "@/content/projects";
 import { Reveal } from "../ui/Reveal";
 import { Device } from "./Device";
@@ -29,7 +28,6 @@ function Info({ project, index }: { project: Project; index: number }) {
   return (
     <div className="pinfo">
       <div className="pinfo__meta">
-        <span className="pinfo__swatch" aria-hidden="true" />
         <span className="label">{String(index + 1).padStart(2, "0")}</span>
         <span className="label">{project.category}</span>
         <span className="label">{project.platform}</span>
@@ -59,7 +57,7 @@ function Info({ project, index }: { project: Project; index: number }) {
 export function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <Reveal as="article" className={`project project--${project.layout}`}>
-      <div className="project__inner" style={{ "--c": project.color } as CSSProperties}>
+      <div className="project__inner">
         <Stage project={project} />
         <Info project={project} index={index} />
       </div>

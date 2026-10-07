@@ -10,8 +10,6 @@ export type Project = {
   features: string[];
   /** Technology when known from the codebase; otherwise product highlights. */
   tags: { label: "Built with" | "Highlights"; items: string[] };
-  /** Brand colour of the product — tints its stage. */
-  color: string;
   screens: Screen[];
   /** false when the images already include their own device mockup. */
   framed: boolean;
@@ -35,7 +33,6 @@ export const projects: Project[] = [
       "Choose the kind of episode that fits your day",
     ],
     tags: { label: "Highlights", items: ["AI generation", "Posters", "Seasons", "Subscriptions"] },
-    color: "#e2b86b",
     screens: [
       { src: "/apps/episode-premiere.webp", alt: "Episode series premiere poster" },
       { src: "/apps/episode-home.webp", alt: "Episode home screen with this week's episodes" },
@@ -60,7 +57,6 @@ export const projects: Project[] = [
       "Share a job to the app from anywhere",
     ],
     tags: { label: "Built with", items: ["SwiftUI", "Firebase", "Gemini"] },
-    color: "#5fcfa5",
     screens: [
       { src: "/apps/resumemint-upload.webp", alt: "ResumeMint upload your resume screen" },
       { src: "/apps/resumemint-keywords.webp", alt: "ResumeMint tailoring a resume with ATS keywords" },
@@ -84,7 +80,6 @@ export const projects: Project[] = [
       "A shared history of check-ins",
     ],
     tags: { label: "Highlights", items: ["Couples", "Check-ins", "Insights", "Private"] },
-    color: "#e59a8c",
     screens: [
       { src: "/apps/between-activity.webp", alt: "Between Us today's activity" },
       { src: "/apps/between-home.webp", alt: "Between Us home with today's relationship pulse" },
@@ -109,7 +104,6 @@ export const projects: Project[] = [
       "No account; prompts and recordings aren't stored",
     ],
     tags: { label: "Highlights", items: ["AI generation", "Speech recognition", "Privacy first"] },
-    color: "#5aaee8",
     screens: [
       { src: "/apps/saythis-input.webp", alt: "SayThis describing a situation" },
       { src: "/apps/saythis-lines.webp", alt: "SayThis ready-to-say lines and an exit line" },
@@ -133,7 +127,6 @@ export const projects: Project[] = [
       "Streaks, best days and records — no account needed",
     ],
     tags: { label: "Highlights", items: ["Round timer", "Audio cues", "On-device data"] },
-    color: "#f07a35",
     screens: [
       { src: "/apps/c24-timer.webp", alt: "C24 Cardio work round countdown" },
       { src: "/apps/c24-setup.webp", alt: "C24 Cardio session setup with rounds, duration and rest" },
@@ -158,7 +151,6 @@ export const projects: Project[] = [
       "Business console for offers and performance",
     ],
     tags: { label: "Built with", items: ["Expo", "React Native", "Next.js", "Supabase"] },
-    color: "#c0708e",
     screens: [
       { src: "/work/dealsamor-discover.webp", alt: "DealsAmor discover screen with nearby offers" },
       { src: "/work/dealsamor-wallet.webp", alt: "DealsAmor wallet with active offers" },
@@ -182,7 +174,6 @@ export const projects: Project[] = [
       "Recipe cost and margin analysis",
     ],
     tags: { label: "Built with", items: ["SwiftUI", "Firebase", "Apple Vision", "Speech"] },
-    color: "#c9925a",
     screens: [
       { src: "/work/cafe-dashboard.webp", alt: "CafeManager dashboard" },
       { src: "/work/cafe-assistant.webp", alt: "CafeManager assistant reading a supplier bill" },

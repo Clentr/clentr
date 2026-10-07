@@ -1,6 +1,5 @@
 import { Nav } from "@/components/sections/Nav";
 import { Hero } from "@/components/sections/Hero";
-import { Marquee } from "@/components/sections/Marquee";
 import { Intro } from "@/components/sections/Intro";
 import { Capabilities } from "@/components/sections/Capabilities";
 import { Work } from "@/components/sections/Work";
@@ -18,13 +17,9 @@ export default function Home() {
         Skip to content
       </a>
       <SmoothScroll />
-      <div className="rails" aria-hidden="true">
-        <div className="container" />
-      </div>
       <Nav />
       <main id="main">
         <Hero />
-        <Marquee />
         <Intro />
         <Capabilities />
         <Work />
