@@ -71,6 +71,15 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 2.2, ease }}
         >
+          <defs>
+            <linearGradient id="ring-spectrum" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" style={{ stopColor: "var(--c-ember)" }} />
+              <stop offset="0.3" style={{ stopColor: "var(--c-gold)" }} />
+              <stop offset="0.55" style={{ stopColor: "var(--c-mint)" }} />
+              <stop offset="0.8" style={{ stopColor: "var(--c-sky)" }} />
+              <stop offset="1" style={{ stopColor: "var(--c-rose)" }} />
+            </linearGradient>
+          </defs>
           {RINGS.map((d, i) => (
             <path key={i} d={d} className={i === 6 ? "is-accent" : undefined} />
           ))}
@@ -129,7 +138,7 @@ export function Hero() {
 
           <a href="#work" className="hero__panel glass" aria-label="Browse selected work">
             <div className="hero__panel-row">
-              <span className="label">Recently built</span>
+              <span className="label">Recently shipped</span>
               <span className="label">
                 {String(current + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
               </span>
@@ -143,10 +152,11 @@ export function Hero() {
                   exit={{ opacity: 0, y: -12, filter: "blur(4px)" }}
                   transition={{ duration: 0.6, ease }}
                 >
-                  <p className="hero__panel-name">{p.name}</p>
-                  <p className="hero__panel-meta">
-                    {p.kicker} · {p.platform}
+                  <p className="hero__panel-name">
+                    <span className="hero__panel-swatch" style={{ background: p.color }} aria-hidden="true" />
+                    {p.name}
                   </p>
+                  <p className="hero__panel-meta">{p.tagline}</p>
                 </motion.div>
               </AnimatePresence>
             </div>

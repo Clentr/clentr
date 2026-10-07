@@ -1,182 +1,203 @@
-export type ProjectVisual =
-  | { type: "screens"; images: { src: string; alt: string }[]; ratio: "phone" | "tall" }
-  | { type: "video"; src: string; poster: string; alt: string }
-  | { type: "art"; kind: "atlas" | "siren" | "mask" | "edith" | "voice" };
+export type Screen = { src: string; alt: string };
 
 export type Project = {
   slug: string;
   name: string;
-  kicker: string;
+  tagline: string;
   category: string;
   platform: string;
   summary: string;
   features: string[];
-  stack: string[];
-  visual: ProjectVisual;
-  layout: "feature" | "split" | "split-reverse" | "compact";
+  /** Technology when known from the codebase; otherwise product highlights. */
+  tags: { label: "Built with" | "Highlights"; items: string[] };
+  /** Brand colour of the product — tints its stage. */
+  color: string;
+  screens: Screen[];
+  /** false when the images already include their own device mockup. */
+  framed: boolean;
+  layout: "trio" | "duo" | "duo-reverse";
+  group: "shipped" | "built";
 };
 
 export const projects: Project[] = [
   {
+    slug: "episode",
+    name: "Episode",
+    tagline: "Your life, told one episode at a time.",
+    category: "Lifestyle · AI",
+    platform: "iPhone",
+    summary:
+      "A journal that turns each day into an episode of your life — with a title, summary, cliffhanger and poster. Seven episodes make a season, with a recap at the end of every week.",
+    features: [
+      "Episode title, summary and cliffhanger from each entry",
+      "A poster generated for every episode",
+      "Seven episodes form a season with a weekly recap",
+      "Choose the kind of episode that fits your day",
+    ],
+    tags: { label: "Highlights", items: ["AI generation", "Posters", "Seasons", "Subscriptions"] },
+    color: "#e2b86b",
+    screens: [
+      { src: "/apps/episode-premiere.webp", alt: "Episode series premiere poster" },
+      { src: "/apps/episode-home.webp", alt: "Episode home screen with this week's episodes" },
+      { src: "/apps/episode-season.webp", alt: "Episode season recap with episode posters" },
+    ],
+    framed: true,
+    layout: "trio",
+    group: "shipped",
+  },
+  {
+    slug: "resumemint",
+    name: "ResumeMint",
+    tagline: "Turn any job posting into your next opportunity.",
+    category: "Careers · AI",
+    platform: "iPhone",
+    summary:
+      "Upload a resume once, paste or share a job link, and get a tailored, ATS-ready resume with a match score — ready to download as PDF or DOCX.",
+    features: [
+      "Reads postings from LinkedIn, Indeed, Workday, Greenhouse and Lever",
+      "ATS keyword matching and a match score",
+      "Every change reviewable, section by section",
+      "Share a job to the app from anywhere",
+    ],
+    tags: { label: "Built with", items: ["SwiftUI", "Firebase", "Gemini"] },
+    color: "#5fcfa5",
+    screens: [
+      { src: "/apps/resumemint-upload.webp", alt: "ResumeMint upload your resume screen" },
+      { src: "/apps/resumemint-keywords.webp", alt: "ResumeMint tailoring a resume with ATS keywords" },
+    ],
+    framed: false,
+    layout: "duo",
+    group: "shipped",
+  },
+  {
+    slug: "between-us",
+    name: "Between Us",
+    tagline: "A gentle space for you and your person.",
+    category: "Relationships",
+    platform: "iPhone",
+    summary:
+      "A private relationship companion. Check in with how you feel, write to each other in a shared space, and notice patterns across days, weeks and months.",
+    features: [
+      "Check-ins — hurt, loved, appreciated, need to talk",
+      "Our Space: private messages that don't last forever",
+      "Insights across days, weeks and months",
+      "A shared history of check-ins",
+    ],
+    tags: { label: "Highlights", items: ["Couples", "Check-ins", "Insights", "Private"] },
+    color: "#e59a8c",
+    screens: [
+      { src: "/apps/between-activity.webp", alt: "Between Us today's activity" },
+      { src: "/apps/between-home.webp", alt: "Between Us home with today's relationship pulse" },
+      { src: "/apps/between-insights.webp", alt: "Between Us insights for this week" },
+    ],
+    framed: true,
+    layout: "trio",
+    group: "shipped",
+  },
+  {
+    slug: "saythis",
+    name: "SayThis",
+    tagline: "Find the right words, instantly.",
+    category: "Social · AI",
+    platform: "iPhone",
+    summary:
+      "Describe an awkward or high-pressure moment by typing or speaking, and get calm, ready-to-say lines in seconds — plus a clean way to exit.",
+    features: [
+      "Context-aware lines generated in seconds",
+      "Voice-to-text for in-the-moment use",
+      "Tone presets: pro, minimalist and warm",
+      "No account; prompts and recordings aren't stored",
+    ],
+    tags: { label: "Highlights", items: ["AI generation", "Speech recognition", "Privacy first"] },
+    color: "#5aaee8",
+    screens: [
+      { src: "/apps/saythis-input.webp", alt: "SayThis describing a situation" },
+      { src: "/apps/saythis-lines.webp", alt: "SayThis ready-to-say lines and an exit line" },
+    ],
+    framed: true,
+    layout: "duo-reverse",
+    group: "shipped",
+  },
+  {
+    slug: "c24-cardio",
+    name: "C24 Cardio",
+    tagline: "Train hard. Stay ready.",
+    category: "Fitness",
+    platform: "iPhone",
+    summary:
+      "A combat-conditioning round timer. Set rounds, work and rest, then train to loud audio cues — every session saved on-device with streaks and records.",
+    features: [
+      "Custom rounds, work and rest durations",
+      "Loud audio cues for every transition",
+      "Progress by day, week, month and year",
+      "Streaks, best days and records — no account needed",
+    ],
+    tags: { label: "Highlights", items: ["Round timer", "Audio cues", "On-device data"] },
+    color: "#f07a35",
+    screens: [
+      { src: "/apps/c24-timer.webp", alt: "C24 Cardio work round countdown" },
+      { src: "/apps/c24-setup.webp", alt: "C24 Cardio session setup with rounds, duration and rest" },
+      { src: "/apps/c24-progress.webp", alt: "C24 Cardio training progress" },
+    ],
+    framed: true,
+    layout: "trio",
+    group: "shipped",
+  },
+  {
     slug: "dealsamor",
     name: "DealsAmor",
-    kicker: "Local commerce platform",
-    category: "Commerce",
+    tagline: "Good things, close by.",
+    category: "Local commerce",
     platform: "iOS · Android · Web",
     summary:
-      "Offer discovery, wallet credentials and in-store redemption for local businesses — one product with three surfaces for customers, creators and store staff.",
+      "Offer discovery, wallet credentials and in-store redemption for local businesses — one product with surfaces for customers, creators and store staff.",
     features: [
       "Nearby offers with list and map browsing",
-      "Wallet with rotating redemption codes shown at the register",
+      "Wallet with rotating redemption codes",
       "Creator referrals with tiered rewards",
       "Business console for offers and performance",
     ],
-    stack: ["Expo", "React Native", "Next.js", "Supabase", "TypeScript"],
-    visual: {
-      type: "screens",
-      ratio: "phone",
-      images: [
-        { src: "/work/dealsamor-discover.webp", alt: "DealsAmor discover screen listing nearby offers" },
-        { src: "/work/dealsamor-offer.webp", alt: "DealsAmor offer detail screen" },
-        { src: "/work/dealsamor-wallet.webp", alt: "DealsAmor wallet with active offers" },
-        { src: "/work/dealsamor-register.webp", alt: "DealsAmor redemption code shown at the register" },
-      ],
-    },
-    layout: "feature",
+    tags: { label: "Built with", items: ["Expo", "React Native", "Next.js", "Supabase"] },
+    color: "#c0708e",
+    screens: [
+      { src: "/work/dealsamor-discover.webp", alt: "DealsAmor discover screen with nearby offers" },
+      { src: "/work/dealsamor-wallet.webp", alt: "DealsAmor wallet with active offers" },
+    ],
+    framed: true,
+    layout: "duo",
+    group: "built",
   },
   {
     slug: "cafemanager",
     name: "CafeManager",
-    kicker: "Operations app for cafés",
+    tagline: "Run the café from your pocket.",
     category: "Hospitality",
-    platform: "iOS",
+    platform: "iPhone",
     summary:
-      "Inventory, sales, recipes and suppliers in one iOS app — with an assistant that reads supplier bills from a photo and answers questions by voice.",
+      "Inventory, sales, recipes and suppliers in one app — with an assistant that reads supplier bills from a photo and answers questions by voice.",
     features: [
       "Live revenue, profit and low-stock alerts",
-      "Supplier bills parsed from a photo into inventory",
+      "Supplier bills parsed from a photo",
       "Natural-language assistant with spoken answers",
       "Recipe cost and margin analysis",
     ],
-    stack: ["SwiftUI", "Firebase", "Apple Vision", "Speech"],
-    visual: {
-      type: "screens",
-      ratio: "tall",
-      images: [
-        { src: "/work/cafe-dashboard.webp", alt: "CafeManager dashboard with revenue and stock alerts" },
-        { src: "/work/cafe-assistant.webp", alt: "CafeManager assistant analysing a supplier bill photo" },
-        { src: "/work/cafe-predictions.webp", alt: "CafeManager inventory health predictions" },
-      ],
-    },
-    layout: "split",
-  },
-  {
-    slug: "resume-tailor",
-    name: "Resume Tailor",
-    kicker: "AI career copilot",
-    category: "Careers · AI",
-    platform: "iOS",
-    summary:
-      "Share a job post from LinkedIn, Indeed or Greenhouse; the app extracts the role, tailors your resume to it and tracks the application.",
-    features: [
-      "Job import straight from the iOS share sheet",
-      "In-app sign-in to job boards with WKWebView",
-      "Resume tailoring and ATS match score",
-      "Kanban board for every application",
+    tags: { label: "Built with", items: ["SwiftUI", "Firebase", "Apple Vision", "Speech"] },
+    color: "#c9925a",
+    screens: [
+      { src: "/work/cafe-dashboard.webp", alt: "CafeManager dashboard" },
+      { src: "/work/cafe-assistant.webp", alt: "CafeManager assistant reading a supplier bill" },
     ],
-    stack: ["SwiftUI", "Firebase Functions", "Gemini", "WKWebView"],
-    visual: {
-      type: "video",
-      src: "/work/resume-tailor.mp4",
-      poster: "/work/resume-tailor-poster.jpg",
-      alt: "Screen recording: sharing a job post to Resume Tailor and receiving a tailored resume",
-    },
-    layout: "split-reverse",
+    framed: true,
+    layout: "duo-reverse",
+    group: "built",
   },
-  {
-    slug: "wayfare",
-    name: "Wayfare",
-    kicker: "Structured AI trip planner",
-    category: "Travel · AI",
-    platform: "Web",
-    summary:
-      "Describe a trip in plain words and get a day-by-day itinerary — returned as validated JSON, checked against the real world and plotted on a map and 3D globe.",
-    features: [
-      "Schema-validated model output, repaired when it breaks",
-      "2D map and 3D globe views",
-      "A lab that shows the model failing on purpose",
-    ],
-    stack: ["React", "Three.js", "Zod", "Groq", "Framer Motion"],
-    visual: { type: "art", kind: "atlas" },
-    layout: "compact",
-  },
-  {
-    slug: "siren",
-    name: "Siren",
-    kicker: "Surveillance intelligence",
-    category: "Computer vision",
-    platform: "Web · Server",
-    summary:
-      "Sits above existing cameras and turns continuous video into a searchable record of what happened — classical vision first, learned models only when they earn it.",
-    features: [
-      "Live camera wall over RTSP / ONVIF sources",
-      "Motion and object tracking pipeline",
-      "Event timeline instead of raw footage",
-    ],
-    stack: ["Python", "OpenCV", "FastAPI", "React"],
-    visual: { type: "art", kind: "siren" },
-    layout: "compact",
-  },
-  {
-    slug: "mask",
-    name: "Mask",
-    kicker: "Desktop interface for coding agents",
-    category: "Developer tools",
-    platform: "macOS · Windows · Linux",
-    summary:
-      "A native desktop GUI for Claude Code. The terminal becomes an implementation detail; streaming messages, tool calls, task progress and diffs become the interface.",
-    features: [
-      "Typed event stream from the agent to the UI",
-      "Tool cards, live task progress and file diffs",
-      "Real shell in an embedded PTY terminal",
-    ],
-    stack: ["Tauri", "Rust", "React", "TypeScript"],
-    visual: { type: "art", kind: "mask" },
-    layout: "split",
-  },
-  {
-    slug: "edith",
-    name: "Edith",
-    kicker: "Local-first macOS assistant",
-    category: "Productivity",
-    platform: "macOS",
-    summary:
-      "A menu-bar utility that replaces Activity Monitor, Spotlight and the clipboard — with an on-device agent that can act on the Mac.",
-    features: [
-      "Per-process memory monitor with leak hints",
-      "Typo-tolerant file search on SQLite FTS5",
-      "Private clipboard history",
-      "Local agent that opens, searches and reminds",
-    ],
-    stack: ["Swift 6", "SwiftUI", "AppKit", "SQLite", "Ollama"],
-    visual: { type: "art", kind: "edith" },
-    layout: "compact",
-  },
-  {
-    slug: "voice-orchestrator",
-    name: "Voice Orchestrator",
-    kicker: "Multi-tenant voice AI",
-    category: "Real estate · SaaS",
-    platform: "Web · Cloud",
-    summary:
-      "Agencies upload leads; the system places outbound AI voice calls, evaluates each transcript with an LLM workflow and updates lead status live.",
-    features: [
-      "Outbound calls with end-of-call webhooks",
-      "LangGraph evaluation of every transcript",
-      "Tenant-isolated live dashboard",
-    ],
-    stack: ["FastAPI", "LangGraph", "Vapi", "MongoDB", "Cloud Run"],
-    visual: { type: "art", kind: "voice" },
-    layout: "compact",
-  },
+];
+
+/** Engineering work without public screens, listed compactly. */
+export const moreWork = [
+  { name: "Wayfare", kind: "Structured AI trip planner", stack: "React · Three.js · Zod · Groq" },
+  { name: "Siren", kind: "Surveillance intelligence", stack: "Python · OpenCV · FastAPI" },
+  { name: "Mask", kind: "Desktop GUI for coding agents", stack: "Tauri · Rust · React" },
+  { name: "Edith", kind: "Local-first macOS assistant", stack: "Swift · AppKit · SQLite · Ollama" },
+  { name: "Voice Orchestrator", kind: "Multi-tenant voice AI", stack: "FastAPI · LangGraph · Vapi" },
 ];

@@ -1,27 +1,11 @@
-import { projects, type Project } from "@/content/projects";
+import { moreWork, projects } from "@/content/projects";
 import { ProjectCard } from "../work/ProjectCard";
+import { Reveal } from "../ui/Reveal";
 import { SectionHead } from "../ui/SectionHead";
 
-type Row = { kind: "single"; item: Project; index: number } | { kind: "pair"; items: [Project, Project]; index: number };
-
-// Consecutive compact projects pair up into a staggered two-up row.
-function toRows(list: Project[]): Row[] {
-  const rows: Row[] = [];
-  for (let i = 0; i < list.length; i++) {
-    const p = list[i];
-    const next = list[i + 1];
-    if (p.layout === "compact" && next?.layout === "compact") {
-      rows.push({ kind: "pair", items: [p, next], index: i });
-      i++;
-    } else {
-      rows.push({ kind: "single", item: p, index: i });
-    }
-  }
-  return rows;
-}
-
 export function Work() {
-  const list = projects;
+  const shipped = projects.filter((p) => p.group === "shipped");
+  const built = projects.filter((p) => p.group === "built");
 
   return (
     <section className="section work" id="work" aria-labelledby="work-title">
@@ -30,22 +14,40 @@ export function Work() {
           id="work-title"
           index="03"
           label="Selected work"
-          aside={`${String(list.length).padStart(2, "0")} products`}
-          title={["Things we have", <span key="2"><span className="serif">built</span> and shipped.</span>]}
-          lead="Commerce, operations, careers, travel, vision, developer tools and voice — on phones, desktops, browsers and servers."
+          aside={`${String(shipped.length).padStart(2, "0")} shipped apps`}
+          title={["Products we have", <span key="2"><span className="serif">shipped.</span></span>]}
+          lead="Five apps live on iPhone — journaling, careers, relationships, social confidence and fitness. Each one designed, engineered and released end to end."
         />
         <div className="work__list">
-          {toRows(list).map((row) =>
-            row.kind === "single" ? (
-              <ProjectCard key={row.item.slug} project={row.item} index={row.index} />
-            ) : (
-              <div key={row.items[0].slug} className="work__pair">
-                <ProjectCard project={row.items[0]} index={row.index} />
-                <ProjectCard project={row.items[1]} index={row.index + 1} />
-              </div>
-            ),
-          )}
+          {shipped.map((p, i) => (
+            <ProjectCard key={p.slug} project={p} index={i} />
+          ))}
         </div>
+
+        <div className="work__sub">
+          <div className="section-head__meta">
+            <span className="label">Also engineered</span>
+            <span className="label">Platforms &amp; tools</span>
+          </div>
+        </div>
+        <div className="work__list">
+          {built.map((p, i) => (
+            <ProjectCard key={p.slug} project={p} index={shipped.length + i} />
+          ))}
+        </div>
+
+        <Reveal className="more">
+          <span className="label">More from the workshop</span>
+          <ul className="more__list">
+            {moreWork.map((w) => (
+              <li key={w.name} className="more__row">
+                <span className="more__name">{w.name}</span>
+                <span className="more__kind">{w.kind}</span>
+                <span className="more__stack label">{w.stack}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </section>
   );
