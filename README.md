@@ -17,6 +17,6 @@ npm run lint
 - `src/components/sections/` — page sections (Hero, Work, Process, Contact…)
 - `src/components/work/` — project visuals (device screens, video, illustrations)
 - `src/components/ui/` — shared primitives (Button, Reveal, Magnetic, ThemeToggle)
-- `public/work/` — optimised project screenshots and clips
+- `public/work/` — optimised project screenshots and clips.
 
 The contact form has no backend: it validates input and opens the visitor's email client addressed to the studio. No environment variables are required.
