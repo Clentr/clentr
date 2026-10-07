@@ -18,24 +18,26 @@ export function Work() {
           title={["Products we have", <span key="2"><span className="serif">shipped.</span></span>]}
           lead="Five apps live on iPhone — journaling, careers, relationships, social confidence and fitness. Each one designed, engineered and released end to end."
         />
-        <div className="work__list">
-          {shipped.map((p, i) => (
-            <ProjectCard key={p.slug} project={p} index={i} />
-          ))}
-        </div>
+      </div>
+      <div className="work__list">
+        {shipped.map((p, i) => (
+          <ProjectCard key={p.slug} project={p} index={i} />
+        ))}
+      </div>
 
-        <div className="work__sub">
-          <div className="section-head__meta">
-            <span className="label">Also engineered</span>
-            <span className="label">Platforms &amp; tools</span>
-          </div>
+      <div className="container work__sub">
+        <div className="section-head__meta">
+          <span className="label">Also engineered</span>
+          <span className="label">Platforms &amp; tools</span>
         </div>
-        <div className="work__list">
-          {built.map((p, i) => (
-            <ProjectCard key={p.slug} project={p} index={shipped.length + i} />
-          ))}
-        </div>
+      </div>
+      <div className="work__list">
+        {built.map((p, i) => (
+          <ProjectCard key={p.slug} project={p} index={shipped.length + i} />
+        ))}
+      </div>
 
+      <div className="container">
         <Reveal className="more">
           <span className="label">More from the workshop</span>
           <ul className="more__list">
