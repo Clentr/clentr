@@ -12,8 +12,6 @@ export type Project = {
   tags: { label: "Built with" | "Highlights"; items: string[] };
   /** Screens in the order a user moves through the app. */
   flow: Screen[];
-  /** Indexes into `flow` for the featured composition: [left, centre, right]. */
-  hero: number[];
   group: "shipped" | "built";
 };
 
@@ -45,7 +43,6 @@ export const projects: Project[] = [
       s("/apps/ep-8.webp", "Season recap", "Season recap with every episode poster"),
       s("/apps/ep-9.webp", "All episodes", "List of the season's episodes"),
     ],
-    hero: [1, 6, 7],
     group: "shipped",
   },
   {
@@ -68,7 +65,6 @@ export const projects: Project[] = [
       s("/apps/rm-3.webp", "Read the job", "The job description extracted and analysed"),
       s("/apps/rm-4.webp", "Match keywords", "Tailoring the resume with ATS keywords"),
     ],
-    hero: [0, 2, 3],
     group: "shipped",
   },
   {
@@ -91,7 +87,6 @@ export const projects: Project[] = [
       s("/apps/bu-3.webp", "Insights", "Weekly insights and relationship pattern"),
       s("/apps/bu-4.webp", "Privacy & settings", "About Between Us and relationship settings"),
     ],
-    hero: [1, 0, 2],
     group: "shipped",
   },
   {
@@ -118,7 +113,6 @@ export const projects: Project[] = [
       s("/apps/st-7.webp", "The full answer", "Lines, exit and reasoning together"),
       s("/apps/st-8.webp", "You're ready", "You're ready"),
     ],
-    hero: [1, 2, 6],
     group: "shipped",
   },
   {
@@ -142,7 +136,6 @@ export const projects: Project[] = [
       s("/apps/c24-4.webp", "Pause", "End workout confirmation"),
       s("/apps/c24-5.webp", "Progress", "Training progress and records"),
     ],
-    hero: [0, 2, 4],
     group: "shipped",
   },
   {
@@ -159,7 +152,6 @@ export const projects: Project[] = [
       s("/work/dealsamor-discover.webp", "Discover", "Nearby offers"),
       s("/work/dealsamor-wallet.webp", "Wallet", "Wallet with active offers"),
     ],
-    hero: [0, 1],
     group: "built",
   },
   {
@@ -176,7 +168,6 @@ export const projects: Project[] = [
       s("/work/cafe-dashboard.webp", "Dashboard", "Café dashboard"),
       s("/work/cafe-assistant.webp", "Assistant", "Assistant reading a supplier bill"),
     ],
-    hero: [0, 1],
     group: "built",
   },
 ];

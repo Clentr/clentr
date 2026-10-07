@@ -6,7 +6,17 @@ import { projects } from "@/content/projects";
 import { Button } from "../ui/Button";
 import { ArrowDown } from "../ui/Icons";
 import { ease, LineReveal } from "../ui/Reveal";
-import { Web } from "../ui/Web";
+
+// Concentric, slightly irregular rings — reads as topography / signal, never as a "blob".
+const RINGS = Array.from({ length: 16 }, (_, i) => {
+  const r = 70 + i * 26;
+  const pts = Array.from({ length: 73 }, (_, k) => {
+    const a = (k / 72) * Math.PI * 2;
+    const w = Math.sin(a * 3 + i * 0.35) * (4 + i * 0.9) + Math.sin(a * 5 - i * 0.2) * (2 + i * 0.4);
+    return `${(500 + Math.cos(a) * (r + w)).toFixed(1)},${(500 + Math.sin(a) * (r + w) * 0.86).toFixed(1)}`;
+  });
+  return `M${pts.join("L")}Z`;
+});
 
 const CYCLE_MS = 3600;
 
@@ -17,7 +27,8 @@ export function Hero() {
   const [current, setCurrent] = useState(0);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const webY = useTransform(scrollYProgress, [0, 1], ["0%", "16%"]);
+  const ringsY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
+  const ringsRotate = useTransform(scrollYProgress, [0, 1], [0, 12]);
   const titleY = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
 
   // The light follows the pointer lazily; written straight to CSS variables to avoid re-renders.
@@ -52,16 +63,18 @@ export function Hero() {
     <section ref={ref} className="hero" id="top" aria-labelledby="hero-title">
       <div className="hero__bg">
         <div ref={lightRef} className="hero__light" />
-        <div className="hero__halftone" />
-        <motion.div
-          className="hero__web"
-          style={reduce ? undefined : { y: webY }}
-          initial={reduce ? false : { opacity: 0, scale: 1.04 }}
+        <motion.svg
+          className="hero__contours"
+          viewBox="0 0 1000 1000"
+          style={reduce ? undefined : { y: ringsY, rotate: ringsRotate }}
+          initial={reduce ? false : { opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 2, ease }}
+          transition={{ duration: 2.2, ease }}
         >
-          <Web />
-        </motion.div>
+          {RINGS.map((d, i) => (
+            <path key={i} d={d} className={i === 6 ? "is-accent" : undefined} />
+          ))}
+        </motion.svg>
       </div>
 
       <div className="container">
