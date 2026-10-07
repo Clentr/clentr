@@ -19,9 +19,9 @@ export function Work() {
           lead="Five apps live on iPhone — journaling, careers, relationships, social confidence and fitness. Each one designed, engineered and released end to end."
         />
       </div>
-      <div className="work__list">
+      <div className="container work__list">
         {shipped.map((p, i) => (
-          <ProjectCard key={p.slug} project={p} index={i} />
+          <ProjectCard key={p.slug} project={p} index={i} flip={i % 2 === 1} />
         ))}
       </div>
 
@@ -31,9 +31,9 @@ export function Work() {
           <span className="label">Platforms &amp; tools</span>
         </div>
       </div>
-      <div className="work__list">
+      <div className="container work__list work__list--pair">
         {built.map((p, i) => (
-          <ProjectCard key={p.slug} project={p} index={shipped.length + i} />
+          <ProjectCard key={p.slug} project={p} index={shipped.length + i} flip={false} />
         ))}
       </div>
 
