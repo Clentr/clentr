@@ -932,6 +932,9 @@ main {
 
 /* ---------- Work ---------- */
 
+.work {
+  overflow-x: clip;
+}
 .work__list {
   display: grid;
   gap: clamp(96px, 12vw, 184px);
