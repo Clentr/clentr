@@ -52,6 +52,12 @@
   --grain-opacity: 0.05;
   --stage: radial-gradient(60% 70% at 50% 45%, #1d1d20 0%, #121214 45%, rgba(10, 10, 11, 0) 80%);
   --device-shadow: 0 50px 100px -40px rgba(0, 0, 0, 0.9), 0 24px 48px -28px rgba(0, 0, 0, 0.7);
+  /* Colour: one warm site accent, plus each product's own colour (--c). */
+  --brand: #f2a65a;
+  --brand-2: #e8875f;
+  --brand-soft: rgba(242, 166, 90, 0.14);
+  --on-brand: #1a1108;
+  --glow-mix: 40%;
 }
 
 [data-theme="light"] {
@@ -78,6 +84,11 @@
   --grain-opacity: 0.025;
   --stage: radial-gradient(60% 70% at 50% 45%, #ffffff 0%, #fafafb 45%, rgba(245, 245, 247, 0) 80%);
   --device-shadow: 0 50px 90px -40px rgba(0, 0, 0, 0.35), 0 20px 40px -26px rgba(0, 0, 0, 0.25);
+  --brand: #c4621c;
+  --brand-2: #b4503a;
+  --brand-soft: rgba(196, 98, 28, 0.1);
+  --on-brand: #ffffff;
+  --glow-mix: 30%;
 }
 
 /* ---------- Base ---------- */
@@ -243,7 +254,7 @@ main {
   font-weight: 400;
   letter-spacing: -0.02em;
   padding-right: 0.06em;
-  color: var(--text-2);
+  color: var(--brand);
 }
 
 .lead {
@@ -279,8 +290,8 @@ main {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--text);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  background: var(--brand);
+  box-shadow: 0 0 0 4px var(--brand-soft);
 }
 
 /* Section header: label row + headline, used across sections. */
@@ -383,13 +394,13 @@ main {
   transform: translateX(3px);
 }
 .btn--primary {
-  --btn-bg: var(--accent);
-  color: var(--on-accent);
+  --btn-bg: var(--brand);
+  color: var(--on-brand);
   border-color: transparent;
 }
 .btn--primary .btn__icon {
   background: rgba(0, 0, 0, 0.14);
-  color: var(--on-accent);
+  color: var(--on-brand);
 }
 [data-theme="light"] .btn--primary .btn__icon {
   background: rgba(255, 255, 255, 0.18);
@@ -398,12 +409,12 @@ main {
   background: var(--btn-hover);
 }
 .btn--primary:hover {
-  color: var(--on-accent);
+  color: var(--bg);
   border-color: transparent;
 }
 .btn--primary:hover .btn__icon {
-  background: rgba(127, 127, 127, 0.18);
-  color: var(--on-accent);
+  background: var(--brand);
+  color: var(--on-brand);
 }
 .btn--sm {
   height: 42px;
@@ -509,7 +520,7 @@ main {
   height: 4px;
   margin-left: -2px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--brand);
 }
 .nav__actions {
   display: flex;
@@ -598,7 +609,9 @@ main {
 .hero__light {
   position: absolute;
   inset: -20%;
-  background: radial-gradient(38% 38% at var(--lx, 72%) var(--ly, 32%), var(--accent-soft), transparent 70%);
+  background:
+    radial-gradient(34% 34% at var(--lx, 72%) var(--ly, 32%), var(--brand-soft), transparent 70%),
+    radial-gradient(40% 46% at 86% 18%, color-mix(in oklab, var(--brand-2) 16%, transparent), transparent 70%);
 }
 .hero__contours {
   position: absolute;
@@ -617,8 +630,8 @@ main {
   vector-effect: non-scaling-stroke;
 }
 .hero__contours path.is-accent {
-  stroke: var(--text-2);
-  stroke-opacity: 0.6;
+  stroke: var(--brand);
+  stroke-opacity: 0.75;
 }
 .hero__top {
   display: flex;
@@ -718,7 +731,7 @@ main {
 .hero__panel-bar span i {
   display: block;
   height: 100%;
-  background: var(--text);
+  background: var(--brand);
   transform-origin: left;
 }
 .hero__scroll {
@@ -842,7 +855,7 @@ main {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--accent-soft), transparent 60%);
+  background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 0%), var(--brand-soft), transparent 60%);
   opacity: 0;
   transition: opacity var(--dur) var(--ease-out);
 }
@@ -872,11 +885,9 @@ main {
 .cap__glyph {
   width: 44px;
   height: 44px;
-  color: var(--accent-2);
+  color: var(--brand);
 }
-[data-theme="light"] .cap__glyph {
-  color: var(--accent);
-}
+
 .cap__glyph * {
   fill: none;
   stroke: currentColor;
@@ -973,13 +984,23 @@ main {
   line-height: 0.92;
   margin: 22px 0 12px;
 }
+.pinfo__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--c) 22%, transparent);
+}
+[data-theme="light"] .project {
+  --c-text: color-mix(in oklab, var(--c) 62%, #000);
+}
 .pinfo__tagline {
   margin: 0;
   font-family: var(--font-serif), Georgia, serif;
   font-style: italic;
   font-size: clamp(1.3rem, 2vw, 1.7rem);
   line-height: 1.25;
-  color: var(--text-2);
+  color: var(--c-text, var(--c));
   max-width: 22ch;
 }
 .pinfo__detail {
@@ -1007,9 +1028,10 @@ main {
   content: "";
   flex: none;
   width: 14px;
-  height: 1px;
-  margin-top: 0.8em;
-  background: var(--muted);
+  height: 2px;
+  border-radius: 2px;
+  margin-top: 0.75em;
+  background: var(--c);
 }
 .pinfo__tags {
   display: flex;
@@ -1021,6 +1043,20 @@ main {
 /* Flow strip — runs edge to edge, screens glide or swipe. */
 .flow {
   position: relative;
+  isolation: isolate;
+}
+.flow::before {
+  /* The product's own colour, as soft light behind its screens. */
+  content: "";
+  position: absolute;
+  inset: -18% 0 -10%;
+  z-index: -1;
+  background:
+    radial-gradient(55% 70% at 50% 52%, color-mix(in oklab, var(--c) var(--glow-mix), transparent), transparent 72%),
+    radial-gradient(90% 40% at 50% 100%, color-mix(in oklab, var(--c) calc(var(--glow-mix) * 0.6), transparent), transparent 70%);
+  pointer-events: none;
+}
+.flow {
   padding-inline: max(var(--gutter), calc((100vw - var(--container)) / 2));
   outline: none;
 }
@@ -1097,6 +1133,9 @@ main {
 }
 .shot:hover .shot__screen {
   transform: translateY(-8px);
+}
+.shot__caption .label {
+  color: var(--c-text, var(--c));
 }
 .shot__caption {
   display: flex;
@@ -1251,7 +1290,7 @@ main {
   top: -1px;
   height: 1px;
   width: 100%;
-  background: var(--text);
+  background: var(--brand);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.8s var(--ease-out);
@@ -1327,7 +1366,7 @@ main {
 .process__progress i {
   display: block;
   height: 100%;
-  background: var(--text);
+  background: var(--brand);
   transform-origin: left;
 }
 .process__steps {
@@ -1387,7 +1426,7 @@ main {
   width: 120%;
   height: 80%;
   transform: translateX(-50%);
-  background: radial-gradient(45% 50% at 50% 50%, var(--accent-soft), transparent 70%);
+  background: radial-gradient(45% 50% at 50% 50%, var(--brand-soft), transparent 70%);
   pointer-events: none;
   z-index: -1;
 }

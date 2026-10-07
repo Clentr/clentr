@@ -144,6 +144,7 @@ export function Hero() {
                   transition={{ duration: 0.6, ease }}
                 >
                   <p className="hero__panel-name">
+                    <span className="hero__panel-swatch" style={{ background: p.color }} aria-hidden="true" />
                     {p.name}
                   </p>
                   <p className="hero__panel-meta">{p.tagline}</p>

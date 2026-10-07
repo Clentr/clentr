@@ -1,13 +1,15 @@
+import type { CSSProperties } from "react";
 import type { Project } from "@/content/projects";
 import { Reveal } from "../ui/Reveal";
 import { Flow } from "./Flow";
 
 export function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
-    <article className="project">
+    <article className="project" style={{ "--c": project.color } as CSSProperties}>
       <Reveal className="container pinfo">
         <div className="pinfo__lead">
           <div className="pinfo__meta">
+            <span className="pinfo__swatch" aria-hidden="true" />
             <span className="label">{String(index + 1).padStart(2, "0")}</span>
             <span className="label">{project.category}</span>
             <span className="label">{project.platform}</span>

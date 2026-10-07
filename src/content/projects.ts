@@ -10,6 +10,8 @@ export type Project = {
   features: string[];
   /** Technology when known from the codebase; otherwise product highlights. */
   tags: { label: "Built with" | "Highlights"; items: string[] };
+  /** The product's own brand colour, used for its glow and accents. */
+  color: string;
   /** Screens in the order a user moves through the app. */
   flow: Screen[];
   group: "shipped" | "built";
@@ -32,6 +34,7 @@ export const projects: Project[] = [
       "Seven episodes form a season with a weekly recap",
     ],
     tags: { label: "Highlights", items: ["AI generation", "Posters", "Seasons", "Subscriptions"] },
+    color: "#e2b86b",
     flow: [
       s("/apps/ep-1.webp", "Launch", "Episode launch screen"),
       s("/apps/ep-2.webp", "Series premiere", "Series premiere poster"),
@@ -59,6 +62,7 @@ export const projects: Project[] = [
       "Every change reviewable, section by section",
     ],
     tags: { label: "Built with", items: ["SwiftUI", "Firebase", "Gemini"] },
+    color: "#5fcfa5",
     flow: [
       s("/apps/rm-1.webp", "Upload once", "Adding a resume"),
       s("/apps/rm-2.webp", "Paste a job link", "Pasting a job link from LinkedIn"),
@@ -81,6 +85,7 @@ export const projects: Project[] = [
       "Insights across days, weeks and months",
     ],
     tags: { label: "Highlights", items: ["Couples", "Check-ins", "Insights", "Private"] },
+    color: "#e59a8c",
     flow: [
       s("/apps/bu-1.webp", "Check in", "Home with today's relationship pulse"),
       s("/apps/bu-2.webp", "Today together", "Today's activity and reflections"),
@@ -103,6 +108,7 @@ export const projects: Project[] = [
       "No account; prompts and recordings aren't stored",
     ],
     tags: { label: "Highlights", items: ["AI generation", "Speech recognition", "Privacy first"] },
+    color: "#6cb4e4",
     flow: [
       s("/apps/st-1.webp", "Launch", "SayThis launch screen"),
       s("/apps/st-2.webp", "Set your tone", "Choosing a tone: pro, minimalist or warm"),
@@ -129,6 +135,7 @@ export const projects: Project[] = [
       "Streaks, records and history — no account needed",
     ],
     tags: { label: "Highlights", items: ["Round timer", "Audio cues", "On-device data"] },
+    color: "#f07a35",
     flow: [
       s("/apps/c24-1.webp", "Set the session", "Choosing rounds, duration and rest"),
       s("/apps/c24-2.webp", "Go", "Round start countdown"),
@@ -148,6 +155,7 @@ export const projects: Project[] = [
       "Offer discovery, wallet credentials and in-store redemption for local businesses — one product with surfaces for customers, creators and store staff.",
     features: ["Nearby offers with list and map browsing", "Wallet with rotating redemption codes", "Business console for offers"],
     tags: { label: "Built with", items: ["Expo", "React Native", "Next.js", "Supabase"] },
+    color: "#c0708e",
     flow: [
       s("/work/dealsamor-discover.webp", "Discover", "Nearby offers"),
       s("/work/dealsamor-wallet.webp", "Wallet", "Wallet with active offers"),
@@ -164,6 +172,7 @@ export const projects: Project[] = [
       "Inventory, sales, recipes and suppliers in one app — with an assistant that reads supplier bills from a photo and answers questions by voice.",
     features: ["Live revenue, profit and stock alerts", "Supplier bills parsed from a photo", "Voice assistant"],
     tags: { label: "Built with", items: ["SwiftUI", "Firebase", "Apple Vision", "Speech"] },
+    color: "#c9925a",
     flow: [
       s("/work/cafe-dashboard.webp", "Dashboard", "Café dashboard"),
       s("/work/cafe-assistant.webp", "Assistant", "Assistant reading a supplier bill"),
