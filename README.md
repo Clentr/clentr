@@ -19,4 +19,4 @@ npm run lint
 - `src/components/ui/` — shared primitives (Button, Reveal, Magnetic, ThemeToggle)
 - `public/work/` — optimised project screenshots and clips.
 
-The contact form has no backend: it validates input and opens the visitor's email client addressed to the studio. No environment variables are required.
+The contact form validates input and posts it to FormSubmit, which emails it to the studio inbox (`site.email`). The first submission triggers a one-time activation email to that inbox. No environment variables are required.
