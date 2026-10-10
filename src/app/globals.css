@@ -2725,6 +2725,14 @@ fieldset.field {
   width: 12px;
   height: 12px;
 }
+.form__fail {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: #e5484d;
+}
+.form__fail:empty {
+  display: none;
+}
 .sent {
   display: flex;
   flex-direction: column;

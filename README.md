@@ -13,10 +13,11 @@ npm run lint
 
 ## Structure
 
-- `src/content/` — all copy: site info, services, process, stack, projects
-- `src/components/sections/` — page sections (Hero, Work, Process, Contact…)
-- `src/components/work/` — project visuals (device screens, video, illustrations)
-- `src/components/ui/` — shared primitives (Button, Reveal, Magnetic, ThemeToggle)
-- `public/work/` — optimised project screenshots and clips.
+- `src/content/` — copy and data: `site.ts` (services, AI, process, FAQs), `projects.ts` (12 case studies), `figma-sizes.json`
+- `src/components/home/` — home sections (Hero, Finder, Services, AI showcase, Trust, Process, FAQ…)
+- `src/components/work/` — work cards, contact form, share control
+- `src/components/ui/` — nav, footer, logo, icons, themed artwork, reveal
+- `src/app/work/[slug]` — case-study pages; `src/app/contact` — contact page
+- `public/f/` — artwork exported from the Figma file (Clentr v5) via the REST API, light and dark
 
 The contact form validates input and posts it to FormSubmit, which emails it to the studio inbox (`site.email`). The first submission triggers a one-time activation email to that inbox. No environment variables are required.
