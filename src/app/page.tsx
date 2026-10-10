@@ -1,34 +1,34 @@
-import { Nav } from "@/components/sections/Nav";
-import { Hero } from "@/components/sections/Hero";
-import { Intro } from "@/components/sections/Intro";
-import { Capabilities } from "@/components/sections/Capabilities";
-import { Work } from "@/components/sections/Work";
-import { Stack } from "@/components/sections/Stack";
-import { Principles } from "@/components/sections/Principles";
-import { Process } from "@/components/sections/Process";
-import { Contact } from "@/components/sections/Contact";
-import { Footer } from "@/components/sections/Footer";
-import { SmoothScroll } from "@/components/ui/SmoothScroll";
+import { Nav } from "@/components/ui/Nav";
+import { Footer } from "@/components/ui/Footer";
+import { ContactCta } from "@/components/ui/ContactCta";
+import { Hero } from "@/components/home/Hero";
+import { Finder } from "@/components/home/Finder";
+import { Statement } from "@/components/home/Statement";
+import { Services } from "@/components/home/Services";
+import { AiShowcase } from "@/components/home/AiShowcase";
+import { Trust } from "@/components/home/Trust";
+import { Principles } from "@/components/home/Principles";
+import { Process } from "@/components/home/Process";
+import { Faq } from "@/components/home/Faq";
 
 export default function Home() {
   return (
-    <>
-      <a href="#main" className="skip-link">
-        Skip to content
-      </a>
-      <SmoothScroll />
+    <div className="page">
+      <div className="guides" aria-hidden="true" />
       <Nav />
-      <main id="main">
+      <main>
         <Hero />
-        <Intro />
-        <Capabilities />
-        <Work />
-        <Stack />
+        <Finder />
+        <Statement />
+        <Services />
+        <AiShowcase />
+        <Trust />
         <Principles />
         <Process />
-        <Contact />
+        <Faq />
+        <ContactCta />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

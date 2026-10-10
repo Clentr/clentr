@@ -1,56 +1,33 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, type ReactNode, type ElementType } from "react";
 
-export const ease = [0.22, 1, 0.36, 1] as const;
-
-/** Fades and lifts its content into place the first time it enters the viewport. */
-export function Reveal({
-  children,
-  delay = 0,
-  y = 28,
-  className,
-  as = "div",
-}: {
+/** Fades content up the first time it scrolls into view. */
+export function Reveal({ children, as: Tag = "div", className = "", delay = 0, ...rest }: {
   children: ReactNode;
-  delay?: number;
-  y?: number;
+  as?: ElementType;
   className?: string;
-  as?: "div" | "li" | "article" | "header";
-}) {
-  const reduce = useReducedMotion();
-  const Comp = motion[as];
+  delay?: number;
+} & Record<string, unknown>) {
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          el.classList.add("is-in");
+          io.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
-    <Comp
-      className={className}
-      initial={reduce ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "0px 0px -12% 0px" }}
-      transition={{ duration: 0.9, ease, delay }}
-    >
+    <Tag ref={ref} className={`reveal ${className}`} style={delay ? { transitionDelay: `${delay}ms` } : undefined} {...rest}>
       {children}
-    </Comp>
-  );
-}
-
-/** Masked line-by-line reveal for headlines. */
-export function LineReveal({ lines, className, delay = 0 }: { lines: ReactNode[]; className?: string; delay?: number }) {
-  const reduce = useReducedMotion();
-  return (
-    <span className={className}>
-      {lines.map((line, i) => (
-        <span key={i} className="hero__line">
-          <motion.span
-            initial={reduce ? false : { y: "105%" }}
-            whileInView={{ y: "0%" }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, ease, delay: delay + i * 0.09 }}
-          >
-            {line}
-          </motion.span>
-        </span>
-      ))}
-    </span>
+    </Tag>
   );
 }

@@ -1,40 +1,26 @@
 import type { ReactNode } from "react";
-import { LineReveal, Reveal } from "./Reveal";
+import { Icon } from "./Icon";
+import { Reveal } from "./Reveal";
 
-/** Label row with index, then a large headline and optional supporting copy. */
-export function SectionHead({
-  index,
-  label,
-  aside,
-  title,
-  lead,
-  id,
-}: {
-  index: string;
-  label: string;
-  aside?: ReactNode;
-  title: ReactNode[];
+/** Chip → two-tone heading → supporting line, centred. */
+export function SectionHead({ chip, icon, title, dim, lead, id }: {
+  chip: string;
+  icon: string;
+  title: string;
+  dim: string;
   lead?: ReactNode;
   id?: string;
 }) {
   return (
-    <header className="section-head">
-      <div className="section-head__meta">
-        <span className="label label--accent">
-          {index} — {label}
-        </span>
-        {aside && <span className="label">{aside}</span>}
-      </div>
-      <div className="section-head__row">
-        <h2 className="h2" id={id}>
-          <LineReveal lines={title} />
-        </h2>
-        {lead && (
-          <Reveal delay={0.15}>
-            <p className="lead">{lead}</p>
-          </Reveal>
-        )}
-      </div>
-    </header>
+    <Reveal className="head">
+      <span className="chip">
+        <Icon name={icon} />
+        {chip}
+      </span>
+      <h2 className="h2" id={id}>
+        {title} <span className="dim">{dim}</span>
+      </h2>
+      {lead && <p className="lead">{lead}</p>}
+    </Reveal>
   );
 }
