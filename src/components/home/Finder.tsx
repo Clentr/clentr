@@ -1,21 +1,29 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
-import { mobileApps, webDesktop, type Project } from "@/content/projects";
+import type { SiteContent } from "@/content/cms";
+import type { Project } from "@/content/projects";
+import { getWork } from "@/lib/projects";
 import { Art } from "../ui/Art";
 import { Icon } from "../ui/Icon";
+import { FolderArt, PopArt, ProjectIcon } from "../work/ProjectArt";
 import { SectionHead } from "../ui/SectionHead";
 
 function FolderItem({ p }: { p: Project }) {
   const tag = p.status === "shipped" ? "var(--green)" : "var(--accent)";
   return (
-    <Link href={`/work/${p.slug}`} className="folder" aria-label={`Open ${p.name} — ${p.kind}`}>
+    <Link
+      href={`/work/${p.slug}`}
+      className="folder"
+      aria-label={`Open ${p.name} — ${p.kind}`}
+      style={{ "--p": p.color } as CSSProperties}
+    >
+      <span className="folder__glow" aria-hidden="true" />
       <span className="folder__pop" aria-hidden="true">
-        <Art name={`pop-${p.slug}-l`} alt="" className="pop-l" sizes="70px" />
-        <Art name={`pop-${p.slug}-r`} alt="" className="pop-r" sizes="70px" />
-        <Art name={`icon-${p.slug}`} themed alt="" className="pop-icon" sizes="44px" />
+        <PopArt p={p} />
       </span>
-      <Art name={`folder-${p.slug}`} themed alt="" className="folder__art" sizes="96px" />
+      <FolderArt p={p} />
       <span className="folder__label">
-        {p.name}
+        <span>{p.name}</span>
         <i style={{ background: tag }} />
       </span>
       <span className="folder__kind">{p.kind}</span>
@@ -27,6 +35,9 @@ function FolderItem({ p }: { p: Project }) {
   );
 }
 
+/** Projects whose Figma icon is only a letter — shown as a tinted tile on the phone screen. */
+const LETTER_ICONS = new Set(["wayfare", "siren", "edith", "voice-orchestrator", "cafemanager"]);
+
 const SIDEBAR = [
   { h: "Favourites", items: [["AirDrop", "audio-lines"], ["Recents", "clock"], ["Applications", "app-window"], ["Desktop", "monitor"], ["Documents", "file-text"], ["Downloads", "arrow-right"]] },
   { h: "Clentr", items: [["Work", "folder-open"], ["Case studies", "book-open"], ["Brand kit", "sparkles"]] },
@@ -34,20 +45,14 @@ const SIDEBAR = [
 ];
 
 /** The work, organised like the Mac it was built on. */
-export function Finder() {
+export async function Finder({ c }: { c: SiteContent["work"] }) {
+  const { mobileApps, webDesktop } = await getWork();
   return (
     <section className="section" id="work" aria-labelledby="work-title">
       <div className="container">
-        <SectionHead
-          id="work-title"
-          chip="Our work"
-          icon="folder"
-          title="Every project, one"
-          dim="folder away."
-          lead="Mobile apps, websites and desktop tools — organised like the Mac we build them on. Hover a folder to peek inside, click to open the project."
-        />
+        <SectionHead id="work-title" {...c} />
       </div>
-      <div className="desktop">
+      <div className="desktop" id="work-folders">
         <span className="desktop__wave desktop__wave--1" aria-hidden="true" />
         <span className="desktop__wave desktop__wave--2" aria-hidden="true" />
         <div className="menubar" aria-hidden="true">
@@ -99,6 +104,11 @@ export function Finder() {
           </aside>
           <div className="finder__main">
             <div className="toolbar">
+              <div className="lights lights--bar" aria-hidden="true">
+                <i />
+                <i />
+                <i />
+              </div>
               <Icon name="arrow-left" />
               <Icon name="arrow-right" />
               <b>Work</b>
@@ -129,11 +139,52 @@ export function Finder() {
             <div className="finder__path" aria-hidden="true">
               <Icon name="hard-drive" />
               <span>Macintosh HD › Users › clentr › Work</span>
-              <span>12 items, 418 GB available</span>
+              <span>{mobileApps.length + webDesktop.length} items, 418 GB available</span>
             </div>
           </div>
         </div>
         <Art name="dock" themed alt="" className="dock" sizes="800px" />
+      </div>
+
+      {/* Phones: the same work as an iPhone home screen — tap an app to open its case study. */}
+      <div className="phonehome" aria-label="All projects">
+        <div className="phonehome__status" aria-hidden="true">
+          <b>9:41</b>
+          <span>
+            <i />
+            <i />
+            <i />
+          </span>
+        </div>
+        {[
+          ["Shipped", mobileApps],
+          ["Web, desktop & R&D", webDesktop],
+        ].map(([title, list]) => (
+          <div key={title as string} className="phonehome__group">
+            <span className="phonehome__label">{title as string}</span>
+            <ul className="phonehome__grid">
+              {(list as Project[]).map((p) => (
+                <li key={p.slug}>
+                  <Link href={`/work/${p.slug}`} className="phonehome__app" aria-label={`Open ${p.name} — ${p.kind}`}>
+                    {LETTER_ICONS.has(p.slug) ? (
+                      <span className="phonehome__icon phonehome__letter" style={{ "--p": p.color } as CSSProperties}>
+                        {p.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                      </span>
+                    ) : (
+                      <ProjectIcon p={p} size={60} className="phonehome__icon" />
+                    )}
+                    <span>{p.name}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+        <div className="phonehome__dock" aria-hidden="true">
+          {mobileApps.slice(0, 4).map((p) => (
+            <ProjectIcon key={p.slug} p={p} size={52} className="phonehome__icon" />
+          ))}
+        </div>
       </div>
     </section>
   );

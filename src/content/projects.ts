@@ -23,6 +23,40 @@ export type Project = {
   screens: string[];
   captions: string[];
   galleryCaptions: string[];
+  /** Set for projects added from the admin panel: uploaded art instead of Figma exports. */
+  media?: ProjectMedia;
+  /** Public link to the live product (App Store, website…). Shown as an "Open live" button. */
+  liveUrl?: string;
+  /** Button text for the live link, e.g. "Open on the App Store". */
+  liveLabel?: string;
+  /** Under NDA: no public link — the page invites people to request a walkthrough instead. */
+  nda?: boolean;
+};
+
+export type Device = "phone" | "desktop";
+
+/** An uploaded screenshot: its pixel size picks how it is framed. */
+/** Crop inside the frame: focus point in % (0–100) and zoom (1 = fit). */
+export type Crop = { x: number; y: number; z: number };
+export type Shot = { url: string; w: number; h: number; device: Device; crop?: Crop };
+
+export type ProjectMedia = {
+  icon: string | null;
+  /** Screenshot URLs, in flow order. */
+  screens: string[];
+  /** Main device of the project (used when `shots` is missing). */
+  device: Device;
+  /** Per-screenshot size and frame; newer entries always have it. */
+  shots?: Shot[];
+};
+
+/** Screenshots with their frames, for old and new entries alike. */
+export const shotsOf = (m: ProjectMedia): Shot[] => m.shots ?? m.screens.map((url) => ({ url, w: 0, h: 0, device: m.device }));
+
+/** Phone if it has a phone's proportions (about 9:19.5), otherwise a desktop or web screenshot. */
+export const guessDevice = (w: number, h: number): Device => {
+  const r = h / w;
+  return r >= 1.6 && r <= 2.4 && w <= 1700 ? "phone" : "desktop";
 };
 
 export const projects: Project[] = [
@@ -765,6 +799,104 @@ export const projects: Project[] = [
     "screens": [],
     "galleryCaptions": [],
     "captions": []
+  },
+  {
+    "slug": "inventory-erp",
+    "name": "Inventory ERP Assistant",
+    "color": "#2d46ff",
+    "kind": "AI ERP analytics",
+    "platform": "Web",
+    "status": "rnd",
+    "eyebrow": "Case study · Supply chain · AI",
+    "tagline": "Ask your ERP anything, in plain English.",
+    "servicesLine": "Web platform · Applied AI · Backend & cloud",
+    "cta": "Open live site",
+    "quote": "Ask your ERP anything, in plain English",
+    "short": "An AI assistant that answers stock, sales and supplier questions with live SQL, tables and charts.",
+    "about": [
+      [
+        "Category",
+        "Supply chain · AI"
+      ],
+      [
+        "Platform",
+        "Web"
+      ],
+      [
+        "Status",
+        "Live demo"
+      ],
+      [
+        "Highlights",
+        "Natural-language SQL, live charts, CSV export"
+      ]
+    ],
+    "services": [
+      "Web platform",
+      "Applied AI",
+      "Backend & cloud",
+      "Product design"
+    ],
+    "product": "Operations teams ask questions like “Which products are below their reorder level?” and get an answer in seconds — written up in plain English, backed by a chart or table, and exportable as CSV. Live KPIs for stock value, revenue, backorders and open POs sit across the top.",
+    "challenge": "ERP data is rich but locked behind reports only analysts can build. The assistant had to turn everyday questions into correct SQL on live data, explain the result clearly, and stay honest about what it can and can’t verify.",
+    "built": [
+      "Plain-English questions turned into SQL on the live ERP database",
+      "Answers with summaries, charts and tables — line or bar, CSV export",
+      "Suggested questions across stock, reorder, purchasing, sales and fulfilment"
+    ],
+    "proves": [
+      "A useful AI system on real business data, not a demo chatbot.",
+      "Every answer shows its numbers, so people can check before acting.",
+      "Fast to adopt: no reports to build, just ask."
+    ],
+    "gallery": [],
+    "galleryWide": null,
+    "screens": [],
+    "galleryCaptions": [
+      "Ask anything — live KPIs and suggested questions",
+      "Monthly sales trend, answered with a chart",
+      "Stock value by warehouse",
+      "Products below their reorder level"
+    ],
+    "captions": [],
+    "media": {
+      "icon": "/screens/erp-icon.png",
+      "screens": [
+        "/screens/erp-home.webp",
+        "/screens/erp-trend.webp",
+        "/screens/erp-warehouse.webp",
+        "/screens/erp-reorder.webp"
+      ],
+      "device": "desktop",
+      "shots": [
+        {
+          "url": "/screens/erp-home.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/erp-trend.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/erp-warehouse.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/erp-reorder.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        }
+      ]
+    },
+    "liveUrl": "https://inventory-erp-assistant.vercel.app/",
+    "liveLabel": "Open the live demo"
   }
 ];
 
@@ -775,10 +907,4 @@ export const mobileApps = projects.filter((p) => p.status === "shipped");
 export const webDesktop = projects.filter((p) => p.status === "rnd");
 
 /** Carousel order, as laid out in the design. */
-export const carouselOrder = ["episode", "resumemint", "wayfare", "saythis", "dealsamor", "mask", "between-us", "c24-cardio", "edith", "cafemanager"];
-
-/** The three projects that follow `slug`, wrapping around — for "More work". */
-export function moreWork(slug: string) {
-  const i = projects.findIndex((p) => p.slug === slug);
-  return [1, 2, 3].map((k) => projects[(i + k) % projects.length]);
-}
+export const carouselOrder = ["episode", "inventory-erp", "resumemint", "wayfare", "saythis", "dealsamor", "mask", "between-us", "c24-cardio", "edith", "cafemanager"];

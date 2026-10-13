@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { bookCallHref, site } from "@/content/site";
+import { getSite } from "@/lib/content";
 import { Footer } from "@/components/ui/Footer";
 import { Icon } from "@/components/ui/Icon";
 import { Nav } from "@/components/ui/Nav";
 import { ContactForm } from "@/components/work/ContactForm";
+import { BookCall } from "@/components/ui/BookCall";
 
 export const metadata: Metadata = {
   title: "Contact",
   description: "Tell us what you’re making. A real person replies within one working day.",
 };
 
-export default function Contact() {
+export default async function Contact() {
+  const { content } = await getSite();
+  const email = content.contact.email;
   return (
     <div className="page">
       <div className="guides" aria-hidden="true" />
@@ -41,19 +44,19 @@ export default function Contact() {
                 <b>Book a 30-min call</b>
                 <span>Tell us a time that suits you and we’ll confirm by email.</span>
                 <br />
-                <a href={bookCallHref} className="btn btn--ink btn--xs">
+                <BookCall where="contact" className="btn btn--ink btn--xs">
                   Book a call
                   <Icon name="arrow-up-right" className="arrow" />
-                </a>
+                </BookCall>
               </div>
             </div>
-            <a href={`mailto:${site.email}`} className="info card">
+            <a href={`mailto:${email}`} className="info card">
               <span className="icon-tile">
                 <Icon name="mail" />
               </span>
               <div>
                 <b>Email us</b>
-                <span>{site.email}</span>
+                <span>{email}</span>
               </div>
             </a>
             <div className="info card">
@@ -77,7 +80,7 @@ export default function Contact() {
               </ol>
             </div>
           </div>
-          <ContactForm />
+          <ContactForm email={email} />
         </div>
       </main>
       <Footer />

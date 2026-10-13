@@ -1,10 +1,13 @@
 import Link from "next/link";
-import { bookCallHref, nav, services, site } from "@/content/site";
+import { nav } from "@/content/site";
+import { getSite } from "@/lib/content";
 import { Icon } from "./Icon";
 import { Lockup } from "./Logo";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { BookCall } from "./BookCall";
 
-export function Footer() {
+export async function Footer() {
+  const { content } = await getSite();
   return (
     <footer className="footer">
       <div className="container">
@@ -30,8 +33,8 @@ export function Footer() {
           <div>
             <h2>Capabilities</h2>
             <ul>
-              {services.map((s) => (
-                <li key={s.key}>
+              {content.services.items.map((s) => (
+                <li key={s.title}>
                   <Link href="/#services">{s.title}</Link>
                 </li>
               ))}
@@ -41,16 +44,16 @@ export function Footer() {
             <h2>Get in touch</h2>
             <ul>
               <li>
-                <a href={`mailto:${site.email}`}>
+                <a href={`mailto:${content.contact.email}`}>
                   <Icon name="mail" />
-                  {site.email}
+                  {content.contact.email}
                 </a>
               </li>
               <li>
-                <a href={bookCallHref}>
+                <BookCall where="footer">
                   <Icon name="calendar" />
                   Book a call
-                </a>
+                </BookCall>
               </li>
               <li>
                 <Link href="/contact">

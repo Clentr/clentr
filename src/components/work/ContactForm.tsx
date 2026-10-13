@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { bookCallHref, site } from "@/content/site";
 import { Icon } from "../ui/Icon";
+import { BookCall } from "../ui/BookCall";
 
 const KINDS: [string, string][] = [
   ["Mobile app", "smartphone"],
@@ -16,10 +16,10 @@ const BUDGETS = ["< $10k", "$10–25k", "$25–50k", "$50k+", "Not sure"];
 type Errors = Partial<Record<"name" | "email" | "details", string>>;
 
 /**
- * Submissions are relayed to the studio inbox by FormSubmit (formsubmit.co);
- * there is no backend of our own.
+ * Submissions go to /api/lead, which stores them for the admin panel and emails the
+ * studio inbox via FormSubmit.
  */
-export function ContactForm() {
+export function ContactForm({ email }: { email: string }) {
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
@@ -44,23 +44,21 @@ export function ContactForm() {
     setSending(true);
     setFailed(false);
     try {
-      const res = await fetch(`https://formsubmit.co/ajax/${site.email}`, {
+      const res = await fetch("/api/lead", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          _subject: `New project enquiry — ${building}`,
-          _replyto: get("email"),
-          _template: "table",
-          _honey: get("_honey"),
           name: get("name"),
           email: get("email"),
           building,
           budget: get("budget") || "Not specified",
           details: get("details"),
+          path: location.pathname,
+          _honey: get("_honey"),
         }),
       });
-      const json = (await res.json().catch(() => ({}))) as { success?: string | boolean };
-      if (!res.ok || String(json.success) === "false") throw new Error("send failed");
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
+      if (!json.ok) throw new Error("send failed");
       setSent(true);
     } catch {
       setFailed(true);
@@ -76,11 +74,11 @@ export function ContactForm() {
           <Icon name="check" />
         </span>
         <h2>Message sent</h2>
-        <p>Thanks — a real person will reply from {site.email} within one working day.</p>
-        <a href={bookCallHref} className="btn btn--ink btn--sm">
+        <p>Thanks — a real person will reply from {email} within one working day.</p>
+        <BookCall where="form_sent" className="btn btn--ink btn--sm">
           <Icon name="calendar" />
           Or book a call now
-        </a>
+        </BookCall>
       </div>
     );
   }
@@ -145,7 +143,7 @@ export function ContactForm() {
         </small>
       </div>
       <p role="status" className="form__fail">
-        {failed ? `Something went wrong sending your message. Please write to ${site.email} directly.` : ""}
+        {failed ? `Something went wrong sending your message. Please write to ${email} directly.` : ""}
       </p>
     </form>
   );

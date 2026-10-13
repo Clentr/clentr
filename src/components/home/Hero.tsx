@@ -1,43 +1,40 @@
 import Link from "next/link";
-import { bookCallHref } from "@/content/site";
-import { carouselOrder, getProject, mobileApps, webDesktop, type Project } from "@/content/projects";
-import { Art } from "../ui/Art";
+import type { SiteContent } from "@/content/cms";
+import { getWork } from "@/lib/projects";
+import { ProjectIcon } from "../work/ProjectArt";
 import { Icon } from "../ui/Icon";
 import { WorkCard } from "../work/WorkCard";
+import { BookCall } from "../ui/BookCall";
 
-export function Hero() {
-  const cards = carouselOrder.map((s) => getProject(s)).filter(Boolean) as Project[];
+export async function Hero({ c }: { c: SiteContent["hero"] }) {
+  const { mobileApps, webDesktop, carousel: cards } = await getWork();
   return (
     <section aria-labelledby="hero-title">
       <div className="container hero">
         <Link href="/contact" className="pill-link">
           <span className="dot-live" />
-          Taking on new projects this quarter
+          {c.pill}
           <Icon name="arrow-right" />
         </Link>
         <h1 className="h1" id="hero-title">
-          We design and engineer
-          <br /> software people <span className="dim">actually use.</span>
+          {c.title} <span className="dim">{c.dim}</span>
         </h1>
-        <p className="lead">
-          Clentr takes ideas from first sketch to shipped software across mobile apps, web platforms, desktop tools and AI
-          systems.
-        </p>
+        <p className="lead">{c.lead}</p>
         <div className="hero__ctas">
-          <a href={bookCallHref} className="btn btn--ink">
+          <BookCall where="hero" className="btn btn--ink">
             <Icon name="calendar" />
-            Book a 30-min call
+            {c.primary}
             <Icon name="arrow-up-right" className="arrow" />
-          </a>
+          </BookCall>
           <Link href="/#work" className="btn btn--ghost">
             <Icon name="folder" />
-            Explore our work
+            {c.secondary}
           </Link>
         </div>
         <div className="proof">
           <span className="proof__apps" aria-hidden="true">
             {mobileApps.slice(0, 5).map((p) => (
-              <Art key={p.slug} name={`icon-${p.slug}`} themed alt="" sizes="30px" />
+              <ProjectIcon key={p.slug} p={p} size={30} />
             ))}
           </span>
           <span className="proof__item">

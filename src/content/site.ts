@@ -24,8 +24,8 @@ export const services = [
   { key: "computer-vision", title: "Computer vision", icon: "scan-eye", body: "Image and video pipelines — classical CV first, learned models where they help." },
   { key: "desktop-native", title: "Desktop & native", icon: "monitor", body: "Menu-bar utilities and desktop apps with Tauri, Rust, Swift and AppKit." },
   { key: "backend-cloud", title: "Backend & cloud", icon: "cloud", body: "APIs, webhooks, edge functions and containers that recover cleanly." },
-  { key: "product-design", title: "Product design", icon: "pen-tool", body: "Flows, interfaces and design systems — every state, not just the happy path." },
-  { key: "launch-growth", title: "Launch & growth", icon: "trending-up", body: "Releases, analytics and iteration — we stay close once real users arrive." },
+  { key: "mvp-prototypes", title: "MVPs & prototypes", icon: "rocket", body: "A clickable prototype in days, a testable MVP in weeks — validated before you scale." },
+  { key: "integrations", title: "Integrations & payments", icon: "workflow", body: "Stripe, CRMs, WhatsApp, maps and third-party APIs — wired in and kept reliable." },
 ] as const;
 
 export const tools = [
@@ -50,14 +50,14 @@ export const principles = [
 ] as const;
 
 export const comparison = {
-  columns: ["Clentr", "In-house hire", "Typical agency"],
+  columns: ["Clentr", "Hiring in-house", "A typical agency"],
   rows: [
-    ["Design + engineering", "Same team, same hands", "Two or more hires", "Handed between teams"],
-    ["Time to first build", "Weeks", "Months of hiring first", "Varies by queue"],
-    ["Every state designed", "Empty, offline and error too", "Depends on the person", "Usually the happy path"],
-    ["Code and decisions", "Yours, typed, documented", "Yours", "Often hard to take over"],
-    ["After launch", "Measure, refine, stay close", "Internal capacity", "Ends at delivery"],
-    ["Range", "Mobile, web, AI, desktop", "One specialism", "Mostly web"],
+    ["Who designs and who builds", "One team, start to finish", "You hire both — then manage both", "Designers hand off to developers"],
+    ["Your first working build", "Week two, then every week", "After a 2–3 month search", "When the queue reaches you"],
+    ["When things go wrong", "Error, empty and offline states designed in", "Depends on who you hired", "Fixed after launch, if at all"],
+    ["Who owns the code", "You, from the first commit", "You", "Often tied to their stack"],
+    ["After launch", "We stay — analytics, fixes, next release", "Whoever is still around", "The contract ends at handover"],
+    ["Shipped a product of their own?", "Yes — 7 apps live", "Rarely", "Rarely"],
   ],
 };
 
@@ -69,10 +69,11 @@ export const process = [
 ] as const;
 
 export const faqs = [
-  { q: "What does Clentr build?", a: "Mobile apps, web platforms, applied AI, computer vision, desktop and native tools — and the backend and cloud that runs them." },
-  { q: "How much does a project cost?", a: "It depends on scope. Most projects start with a fixed-price two-week sprint, so you see working software before committing to more." },
-  { q: "How fast can we start?", a: "Usually within a week of our first call. You get a short written plan with scope, stages and what you will see first." },
-  { q: "Do you work on existing products?", a: "Yes. We start with a review of the code and the product, then improve it in small, safe increments." },
-  { q: "Who owns the code?", a: "You do — code, designs and IP from day one. NDA on request." },
-  { q: "What happens after launch?", a: "We measure, refine and stay close to real users. Support continues for as long as you need it." },
+  { q: "What does a project cost?", a: "Every project is scoped to what you actually need. After a 30-minute call you get a written estimate with a timeline and a cost range — no surprises later." },
+  { q: "How long until we launch?", a: "About 8 weeks for a typical MVP: discovery in week one, design in weeks one to three, build in weeks three to eight. You see working software every week." },
+  { q: "Can you take over an existing or half-built app?", a: "Yes. We start with a short code and product review, tell you honestly what to keep, then improve it in small, safe releases." },
+  { q: "Who owns the code and designs?", a: "You do, from the first commit. Repositories, design files and app-store accounts are set up in your name." },
+  { q: "How do time zones and communication work?", a: "We overlap with US, UK and EU working hours, reply within a day, and send a written update and a working build every week." },
+  { q: "Will you sign an NDA?", a: "Yes — we’re happy to sign yours, or send ours, before you share anything sensitive." },
+  { q: "What do you build?", a: "Mobile apps, web platforms, AI systems, desktop tools — and the backend and cloud that runs them." },
 ] as const;

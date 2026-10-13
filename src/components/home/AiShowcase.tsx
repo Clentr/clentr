@@ -1,15 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { aiCapabilities } from "@/content/site";
-import { Art } from "../ui/Art";
+import type { SiteContent } from "@/content/cms";
+import { AI_SCENES } from "./AiScenes";
+import { GenericScene } from "./GenericScene";
 import { Icon } from "../ui/Icon";
 import { SectionHead } from "../ui/SectionHead";
 
-const CYCLE_MS = 7000;
+const CYCLE_MS = 5500;
 
 /** Six AI capabilities. Auto-advances while visible; pick one to stop. */
-export function AiShowcase() {
+export function AiShowcase({ c }: { c: SiteContent["ai"] }) {
+  const aiCapabilities = c.items;
   const [i, setI] = useState(0);
   const [auto, setAuto] = useState(true);
   const [visible, setVisible] = useState(false);
@@ -23,37 +25,43 @@ export function AiShowcase() {
     return () => io.disconnect();
   }, []);
 
+  // Keep the active chip in view on phones as it auto-advances.
+  useEffect(() => {
+    const tab = document.getElementById(`ai-tab-${i}`);
+    const row = tab?.parentElement;
+    if (tab && row && row.scrollWidth > row.clientWidth) row.scrollTo({ left: tab.offsetLeft - 12, behavior: "smooth" });
+  }, [i]);
+
   useEffect(() => {
     if (!auto || !visible || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const t = setTimeout(() => setI((v) => (v + 1) % aiCapabilities.length), CYCLE_MS);
     return () => clearTimeout(t);
-  }, [i, auto, visible]);
+  }, [i, auto, visible, aiCapabilities.length]);
 
   return (
     <section className="section" id="ai" aria-labelledby="ai-title">
       <div className="container">
-        <SectionHead
-          id="ai-title"
-          chip="Applied AI"
-          icon="sparkles"
-          title="AI that does"
-          dim="real work."
-          lead="Six things we build for teams right now. Pick one — or let it play."
-        />
+        <SectionHead id="ai-title" chip={c.chip} icon={c.icon} title={c.title} dim={c.dim} lead={c.lead} />
         <div ref={ref} className={`ai card ${auto && visible ? "" : "ai--paused"}`}>
           <div className="ai__tabs" role="tablist" aria-label="AI capabilities">
             {aiCapabilities.map((c, k) => (
               <button
-                key={c.key}
+                key={`${c.key}-${k}`}
                 type="button"
                 role="tab"
-                id={`ai-tab-${c.key}`}
+                id={`ai-tab-${k}`}
                 aria-selected={k === i}
                 aria-controls="ai-stage"
                 className="ai__tab"
-                onClick={() => {
+                onMouseEnter={() => {
+                  if (!window.matchMedia("(hover: hover)").matches) return;
                   setI(k);
                   setAuto(false);
+                }}
+                onClick={() => {
+                  setI(k);
+                  // On phones a tap jumps to that system and the showcase keeps playing.
+                  if (window.matchMedia("(hover: hover)").matches) setAuto(false);
                 }}
               >
                 <span className="ai__tab-row">
@@ -85,16 +93,25 @@ export function AiShowcase() {
               </button>
             ))}
           </div>
-          <div className="ai__stage invert-dark" id="ai-stage" role="tabpanel" aria-labelledby={`ai-tab-${aiCapabilities[i].key}`}>
-            {aiCapabilities.map((c, k) => (
-              <Art
-                key={c.key}
-                name={`ai-${c.key}`}
-                alt={k === i ? `${c.title}: ${c.head}` : ""}
-                className={k === i ? "is-on" : undefined}
-                sizes="(max-width: 1024px) 90vw, 640px"
-              />
-            ))}
+          <div className="ai__stage" id="ai-stage" role="tabpanel" aria-labelledby={`ai-tab-${i}`}>
+            {aiCapabilities.map((c, k) => {
+              const Scene = AI_SCENES[c.key as keyof typeof AI_SCENES];
+              return (
+                <div
+                  key={`${c.key}-${k}`}
+                  className={`ai__scene ${k === i ? "is-on" : ""}`}
+                  role="img"
+                  aria-label={`${c.title}: ${c.head}`}
+                  aria-hidden={k !== i}
+                >
+                  {c.image ? <GenericScene image={c.image} icon={c.icon} sizes="640px" /> : Scene ? <Scene /> : <GenericScene icon={c.icon} />}
+                </div>
+              );
+            })}
+          </div>
+          <div className="ai__mcopy" aria-hidden="true">
+            <b>{aiCapabilities[i]?.head}</b>
+            <p>{aiCapabilities[i]?.body}</p>
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import {
   Folder, FolderOpen, GitBranch, GitPullRequest, HardDrive, Heart, Laptop, Layers, Lock, Mail, Menu, MessageCircle,
   MessagesSquare, Mic, Minus, Monitor, MonitorSmartphone, Moon, Paperclip, PenTool, PhoneCall, Plane, Rocket,
   ScanEye, ScanText, Search, Send, Share2, ShieldCheck, Smartphone, Sparkles, SquareTerminal, Star, Sun, Ticket,
-  Timer, TrendingUp, UserRound, Users, Workflow, X, type LucideIcon,
+  Timer, TrendingUp, UserRound, Users, Workflow, X, TriangleAlert, Package, Quote, BadgeCheck, Zap, CalendarCheck, Hourglass, Puzzle, Repeat, Store, Infinity as InfinityIcon, type LucideIcon,
 } from "lucide-react";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -20,7 +20,12 @@ const ICONS: Record<string, LucideIcon> = {
   "scan-text": ScanText, search: Search, send: Send, share: Share2, "shield-check": ShieldCheck,
   smartphone: Smartphone, sparkles: Sparkles, "square-terminal": SquareTerminal, star: Star, sun: Sun,
   ticket: Ticket, timer: Timer, "trending-up": TrendingUp, user: UserRound, users: Users, workflow: Workflow, x: X,
+  "triangle-alert": TriangleAlert, package: Package, quote: Quote, "badge-check": BadgeCheck, zap: Zap,
+  "calendar-check": CalendarCheck, hourglass: Hourglass, puzzle: Puzzle, repeat: Repeat, store: Store, infinity: InfinityIcon,
 };
+
+/** Names an admin can choose from. */
+export const ICON_NAMES = Object.keys(ICONS);
 
 export function Icon({ name, className, strokeWidth = 1.75 }: { name: string; className?: string; strokeWidth?: number }) {
   const C = ICONS[name] ?? Sparkles;

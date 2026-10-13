@@ -1,37 +1,35 @@
 import Link from "next/link";
-import { bookCallHref } from "@/content/site";
+import type { SiteContent } from "@/content/cms";
 import { Icon } from "./Icon";
 import { Reveal } from "./Reveal";
+import { BookCall } from "./BookCall";
+import { Mark } from "./Logo";
 
 /** Dark closing band with the oversized mark. */
-export function ContactCta() {
+export function ContactCta({ c }: { c: SiteContent["cta"] }) {
   return (
     <Reveal className="container">
       <section className="cta" aria-labelledby="cta-title">
         <div>
           <h2 className="h2" id="cta-title">
-            You&apos;ve seen the work.
+            {c.title}
             <br />
-            Let&apos;s build yours.
+            {c.title2}
           </h2>
-          <p>Tell us what you&apos;re making. We&apos;ll reply with how we&apos;d approach it — or book a call and talk it through.</p>
+          <p>{c.text}</p>
           <div className="cta__ctas">
-            <a href={bookCallHref} className="btn btn--accent">
+            <BookCall where="cta" className="btn btn--accent">
               <Icon name="calendar" />
               Book a 30-min call
               <Icon name="arrow-up-right" className="arrow" />
-            </a>
+            </BookCall>
             <Link href="/contact" className="btn btn--light">
               <Icon name="send" />
-              Contact us
+              Send us your idea
             </Link>
           </div>
         </div>
-        <div className="big-mark" aria-hidden="true">
-          {["", "", "", "", "c", "gap", "", "", ""].map((k, i) => (
-            <i key={i} className={k} />
-          ))}
-        </div>
+        <Mark className="big-mark big-mark--stroke" ink="currentColor" width={5.5} />
       </section>
     </Reveal>
   );

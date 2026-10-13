@@ -1,33 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import { bookCallHref, faqs, site } from "@/content/site";
+import { useEffect, useRef, useState } from "react";
+import type { SiteContent } from "@/content/cms";
 import { Icon } from "../ui/Icon";
 import { Mark } from "../ui/Logo";
 import { SectionHead } from "../ui/SectionHead";
+import { BookCall } from "../ui/BookCall";
 
 type Msg = { from: "bot" | "me"; text: string };
 
-const GREETING: Msg = {
-  from: "bot",
-  text: "Hi! I can answer anything about working with Clentr. Pick a question below or type your own.",
-};
-
-const KEYWORDS: [RegExp, number][] = [
-  [/build|make|do you|service|offer/i, 0],
-  [/cost|price|budget|how much|rate/i, 1],
-  [/start|soon|fast|when|timeline/i, 2],
-  [/existing|legacy|take over|half|already/i, 3],
-  [/own|code|ip|nda/i, 4],
-  [/after|launch|support|maintain/i, 5],
-];
-
 /** Answers the common questions instantly; anything else goes to a person. */
-export function Faq() {
+export function Faq({ c }: { c: SiteContent["faq"]; email?: string }) {
+  const faqs = c.items;
+  const GREETING: Msg = { from: "bot", text: c.greeting };
   const [log, setLog] = useState<Msg[]>([GREETING]);
   const [asked, setAsked] = useState<number[]>([]);
   const [typing, setTyping] = useState(false);
-  const [draft, setDraft] = useState("");
   const logRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,31 +38,12 @@ export function Faq() {
     reply(faqs[i].q, faqs[i].a, i);
   }
 
-  function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    const q = draft.trim();
-    if (!q || typing) return;
-    setDraft("");
-    const hit = KEYWORDS.find(([re]) => re.test(q));
-    reply(
-      q,
-      hit
-        ? faqs[hit[1]].a
-        : `Good question — a real person should answer that one. Email ${site.email} and we'll reply within one working day.`,
-    );
-  }
+
 
   return (
     <section className="section" id="faqs" aria-labelledby="faqs-title">
       <div className="container">
-        <SectionHead
-          id="faqs-title"
-          chip="FAQs"
-          icon="message-circle"
-          title="Questions,"
-          dim="answered."
-          lead="Tap a question — our assistant answers instantly, and a real person follows up within a day."
-        />
+        <SectionHead id="faqs-title" chip={c.chip} icon={c.icon} title={c.title} dim={c.dim} lead={c.lead} />
         <div className="bot card">
           <div className="bot__bar">
             <span className="bot__avatar">
@@ -87,10 +56,10 @@ export function Faq() {
                 Online · answers instantly, humans reply within a day
               </span>
             </span>
-            <a href={bookCallHref}>
+            <BookCall where="faq">
               <Icon name="calendar" />
               Book a call
-            </a>
+            </BookCall>
           </div>
           <div className="bot__log" ref={logRef} aria-live="polite">
             {log.map((m, i) => (
@@ -108,21 +77,12 @@ export function Faq() {
           </div>
           <div className="bot__qs">
             {faqs.map((f, i) => (
-              <button key={f.q} type="button" onClick={() => ask(i)} disabled={typing || asked.includes(i)}>
+              <button key={`${f.q}-${i}`} type="button" onClick={() => ask(i)} disabled={typing || asked.includes(i)}>
                 <Icon name="message-circle" />
                 {f.q}
               </button>
             ))}
           </div>
-          <form className="bot__input" onSubmit={onSubmit}>
-            <label htmlFor="bot-q" className="sr-only">
-              Ask us anything
-            </label>
-            <input id="bot-q" value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Ask us anything…" autoComplete="off" />
-            <button type="submit" aria-label="Send" disabled={!draft.trim() || typing}>
-              <Icon name="send" />
-            </button>
-          </form>
         </div>
       </div>
     </section>

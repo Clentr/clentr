@@ -1,63 +1,72 @@
-import { mobileApps, webDesktop } from "@/content/projects";
-import { Art } from "../ui/Art";
+import type { CSSProperties } from "react";
+import type { SiteContent } from "@/content/cms";
+import { getWork } from "@/lib/projects";
+import { Icon } from "../ui/Icon";
 import { Mark } from "../ui/Logo";
 import { Reveal } from "../ui/Reveal";
 import { SectionHead } from "../ui/SectionHead";
+import { ProjectIcon } from "../work/ProjectArt";
 
-/**
- * Proof points. Only real figures: the design's placeholder stats
- * (founder count, years, avatars) are left out until real numbers exist.
- */
-export function Trust() {
+/** Proof points in one compact band: four tiles, each with a small live detail. Real figures only. */
+export async function Trust({ c }: { c: SiteContent["trust"] }) {
+  const { mobileApps, webDesktop } = await getWork();
+  const bars = [18, 26, 32, 40, 52, 66, 84, 100];
   return (
     <section className="section" aria-labelledby="trust-title">
       <div className="container">
         <SectionHead
           id="trust-title"
-          chip="Why founders trust us"
-          icon="shield-check"
-          title="Trusted by founders"
-          dim="who ship."
-          lead={`${mobileApps.length} products shipped and ${webDesktop.length} more in R&D — designed and engineered by the same team.`}
+          chip={c.chip}
+          icon={c.icon}
+          title={c.title}
+          dim={c.dim}
+          lead={c.lead.replaceAll("{shipped}", String(mobileApps.length)).replaceAll("{rnd}", String(webDesktop.length))}
         />
-        <div className="trust">
-          <Reveal className="card stat stat--split">
-            <div>
-              <span className="stat__num">{mobileApps.length}</span>
-              <span className="stat__label">products shipped</span>
-              <p className="stat__text">
-                Journaling, careers, relationships, social, fitness, local commerce and hospitality — live with real
-                users.
-              </p>
-            </div>
-            <Art name="trust-products" themed alt="App icons of shipped products" className="stat__art" sizes="200px" />
-          </Reveal>
-          <Reveal className="card stat" delay={80}>
-            <span className="stat__num">4</span>
-            <span className="stat__label">platforms, one team</span>
-            <Art name="trust-platforms" themed alt="iPhone, Android, web and macOS" className="stat__art" sizes="200px" />
-          </Reveal>
-        </div>
-        <div className="trust__row2 trust__row2--two">
-          <Reveal className="card stat">
-            <h3 className="stat__title">Built to scale</h3>
-            <p className="stat__text" style={{ color: "var(--ink-2)", marginTop: 10 }}>
-              From MVP to v1 to scale — on the same codebase.
-            </p>
-            <Art name="trust-growth" themed alt="" className="stat__art" sizes="340px" />
-          </Reveal>
-          <Reveal className="card stat" delay={80}>
-            <span className="stat__num">&lt; 1 day</span>
-            <span className="stat__label">to a real reply</span>
-            <div className="chat" aria-hidden="true">
-              <span className="bubble bubble--me">Can you take over our half-built app?</span>
-              <span className="bubble-row">
+        <Reveal className="trust7">
+          <div className="trust7__tile">
+            <span className="trust7__num">{mobileApps.length}</span>
+            <span className="trust7__label">{c.shippedLabel}</span>
+            <span className="trust7__fan" aria-hidden="true">
+              {mobileApps.slice(0, 6).map((p, i) => (
+                <span key={p.slug} style={{ "--i": i } as CSSProperties}>
+                  <ProjectIcon p={p} size={40} />
+                </span>
+              ))}
+            </span>
+          </div>
+          <div className="trust7__tile">
+            <span className="trust7__num">{c.platforms}</span>
+            <span className="trust7__label">{c.platformsLabel}</span>
+            <span className="trust7__chips" aria-hidden="true">
+              {[["smartphone", "iOS"], ["smartphone", "Android"], ["globe", "Web"], ["monitor", "macOS"]].map(([ic, t], i) => (
+                <span key={t} style={{ "--i": i } as CSSProperties}>
+                  <Icon name={ic} />
+                  {t}
+                </span>
+              ))}
+            </span>
+          </div>
+          <div className="trust7__tile">
+            <span className="trust7__num trust7__num--sm">{c.scaleTitle}</span>
+            <span className="trust7__label">{c.scaleText}</span>
+            <span className="trust7__bars" aria-hidden="true">
+              {bars.map((h, i) => (
+                <i key={i} style={{ "--h": `${h}%`, "--i": i } as CSSProperties} />
+              ))}
+            </span>
+          </div>
+          <div className="trust7__tile">
+            <span className="trust7__num">{c.replyNum}</span>
+            <span className="trust7__label">{c.replyLabel}</span>
+            <span className="trust7__chat" aria-hidden="true">
+              <span className="trust7__q">{c.replyQ}</span>
+              <span className="trust7__a">
                 <Mark />
-                <span className="bubble bubble--them">Yes — send the repo. We&apos;ll review it this week.</span>
+                {c.replyA}
               </span>
-            </div>
-          </Reveal>
-        </div>
+            </span>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

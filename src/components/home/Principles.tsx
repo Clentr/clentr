@@ -1,18 +1,18 @@
-import { comparison, principles } from "@/content/site";
+import type { SiteContent } from "@/content/cms";
 import { Icon } from "../ui/Icon";
 import { Mark } from "../ui/Logo";
 import { Reveal } from "../ui/Reveal";
 import { SectionHead } from "../ui/SectionHead";
 
-export function Principles() {
-  const [, hire, agency] = comparison.columns;
+export function Principles({ c }: { c: SiteContent["principles"] }) {
+  const [hire = "", agency = ""] = c.compareColumns;
   return (
     <section className="section" aria-labelledby="principles-title">
       <div className="container">
-        <SectionHead id="principles-title" chip="How we work" icon="star" title="Principles we" dim="build by." />
+        <SectionHead id="principles-title" chip={c.chip} icon={c.icon} title={c.title} dim={c.dim} lead={c.lead} />
         <div className="principles">
-          {principles.map((p, i) => (
-            <Reveal as="article" key={p.title} className="principle card" delay={i * 60}>
+          {c.items.map((p, i) => (
+            <Reveal as="article" key={`${p.title}-${i}`} className="principle card" delay={i * 60}>
               <span className="icon-tile">
                 <Icon name={p.icon} />
               </span>
@@ -23,7 +23,7 @@ export function Principles() {
         </div>
 
         <h2 className="h2 compare-title">
-          Why teams pick a studio <span className="dim">over a hire.</span>
+          {c.compareTitle} <span className="dim">{c.compareDim}</span>
         </h2>
         <Reveal className="compare card">
           <table>
@@ -52,22 +52,22 @@ export function Principles() {
               </tr>
             </thead>
             <tbody>
-              {comparison.rows.map(([label, us, h, a]) => (
-                <tr key={label}>
+              {c.compareRows.map(([label, us, h, a], r) => (
+                <tr key={`${label}-${r}`}>
                   <th scope="row">{label}</th>
-                  <td className="us">
+                  <td className="us" data-label="clentr">
                     <span>
                       <Icon name="circle-check" />
                       {us}
                     </span>
                   </td>
-                  <td className="other">
+                  <td className="other" data-label={hire}>
                     <span>
                       <Icon name="minus" />
                       {h}
                     </span>
                   </td>
-                  <td className="other">
+                  <td className="other" data-label={agency}>
                     <span>
                       <Icon name="x" />
                       {a}

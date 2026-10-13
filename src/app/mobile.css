@@ -1,0 +1,769 @@
+/* ==========================================================================
+   Phones (≤ 700px). Desktop is untouched: every rule here is either hidden on
+   desktop or lives inside the media query below.
+   ========================================================================== */
+
+/* Phone-only pieces stay hidden on larger screens. */
+.phonehome,
+.ai__mcopy,
+.mcta {
+  display: none;
+}
+.rail--steps button {
+  all: unset;
+  position: relative;
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ink) 14%, transparent);
+  overflow: hidden;
+  cursor: pointer;
+}
+.rail--steps button i {
+  position: absolute;
+  inset: 0;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+.rail--steps button.is-done i {
+  transform: none;
+}
+.rail--steps.is-live button.is-on i {
+  animation: rail-fill var(--ms) linear forwards;
+}
+.rail--steps button em {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  /* ---------- Rhythm: less air between sections ---------- */
+  .section {
+    padding-block: 52px;
+  }
+  .head {
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+  .h2 {
+    font-size: 2rem;
+  }
+  .head .lead,
+  .lead {
+    font-size: 15.5px;
+  }
+
+  /* ---------- Swipeable rows (services, offers, principles) ---------- */
+  .services,
+  .principles {
+    display: flex;
+    gap: 12px;
+    max-width: none;
+    margin-inline: calc(-1 * var(--gutter));
+    padding: 6px var(--gutter) 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .services::-webkit-scrollbar,
+  .principles::-webkit-scrollbar {
+    display: none;
+  }
+  .services > *,
+  .principles > * {
+    flex: 0 0 84%;
+    scroll-snap-align: start;
+    opacity: 1;
+    transform: none;
+  }
+  .services > *,
+  .principles > * {
+    flex-basis: 78%;
+  }
+  .offer6__vis {
+    height: 120px;
+  }
+  .offer6__line {
+    min-height: 0;
+  }
+  .offers6__stack {
+    margin-top: 18px;
+    font-size: 13.5px;
+    text-align: center;
+  }
+  .offers6__stack li {
+    width: 38px;
+    height: 38px;
+  }
+
+  /* ---------- The problem: compact rows ---------- */
+  .problem7 .h2 {
+    font-size: 2.15rem;
+  }
+  .problem7__list {
+    gap: 10px;
+  }
+  .problem7__row {
+    gap: 10px;
+    padding: 18px;
+    border-radius: 22px;
+  }
+  .problem7__n,
+  .problem7__arrow {
+    display: none;
+  }
+  .problem7__issue h3 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+  .problem7__issue p {
+    font-size: 14px;
+  }
+  .problem7__fix {
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: 15px;
+  }
+  .problem7__tick {
+    width: 22px;
+    height: 22px;
+  }
+  .problem7__answer {
+    gap: 14px;
+    padding: 20px;
+  }
+  .problem7__answer p {
+    flex-basis: 100%;
+    font-size: 1.3rem;
+  }
+  .problem7__answer .btn {
+    width: 100%;
+  }
+  .problem7__mark {
+    display: none;
+  }
+
+  /* ---------- We ship our own ---------- */
+  .own7__title {
+    font-size: 2.6rem;
+  }
+  .own7__body {
+    margin-top: 24px;
+    font-size: 1.1rem;
+  }
+  .own7__apps {
+    gap: 14px 12px;
+    margin-top: 32px;
+  }
+  .own7__icon {
+    width: 54px;
+    height: 54px;
+  }
+
+  /* ---------- Work: the Mac becomes an iPhone home screen ---------- */
+  #work .desktop {
+    display: none;
+  }
+  .phonehome {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    max-width: 380px;
+    padding: 14px 18px 18px;
+    border-radius: 44px;
+    border: 8px solid #141416;
+    background:
+      radial-gradient(120% 80% at 10% 0%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 60%),
+      radial-gradient(90% 70% at 100% 100%, color-mix(in srgb, #3fa2ff 40%, transparent), transparent 60%),
+      linear-gradient(170deg, #1b1f3b, #0d0f1d);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset, var(--shadow-lg);
+    color: #fff;
+  }
+  .phonehome__status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 10px 16px;
+    font-size: 13px;
+  }
+  .phonehome__status span {
+    display: flex;
+    gap: 3px;
+  }
+  .phonehome__status i {
+    width: 4px;
+    height: 10px;
+    border-radius: 2px;
+    background: #fff;
+  }
+  .phonehome__status i:nth-child(1) {
+    height: 6px;
+  }
+  .phonehome__status i:nth-child(2) {
+    height: 8px;
+  }
+  .phonehome__group + .phonehome__group {
+    margin-top: 18px;
+  }
+  .phonehome__label {
+    display: block;
+    margin: 0 4px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+  }
+  .phonehome__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .phonehome__app {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    min-height: 44px;
+    text-align: center;
+  }
+  .phonehome__app span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+  }
+  .phonehome__icon,
+  .phonehome .picon {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 23%;
+    box-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s var(--ease);
+  }
+  .phonehome__app:active .phonehome__icon {
+    transform: scale(0.92);
+  }
+  .phonehome__dock {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 22px;
+    padding: 12px 10px;
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.14);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+  }
+  .phonehome__dock .phonehome__icon,
+  .phonehome__dock .picon {
+    width: 52px !important;
+    height: 52px !important;
+  }
+
+  /* ---------- Applied AI: chips, then the live demo, then the copy ---------- */
+  .ai {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 12px;
+  }
+  .ai__stage {
+    order: 0;
+    border-radius: 18px;
+  }
+  .ai__tabs {
+    order: 1;
+    display: flex;
+    gap: 8px;
+    margin-inline: -12px;
+    padding: 0 12px 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .ai__tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .ai__tab {
+    flex: none;
+    padding: 0;
+    border-radius: 999px;
+  }
+  .ai__tab-row {
+    gap: 8px;
+    padding: 6px 14px 6px 6px;
+  }
+  .ai__tab .icon-tile {
+    width: 30px;
+    height: 30px;
+  }
+  .ai__tab-title {
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+  .ai__tab-n,
+  .ai__body {
+    display: none !important;
+  }
+  .ai__mcopy {
+    order: 2;
+    display: block;
+    padding: 2px 6px 6px;
+  }
+  .ai__mcopy b {
+    display: block;
+    font-family: var(--font-head);
+    font-size: 19px;
+    letter-spacing: -0.02em;
+  }
+  .ai__mcopy p {
+    margin: 6px 0 0;
+    font-size: 14.5px;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  /* ---------- Process: one stage at a time, tap the tabs ---------- */
+  .rail--steps {
+    height: auto;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .rail--steps button {
+    height: auto;
+    padding: 10px 0 12px;
+    background: none;
+    text-align: center;
+  }
+  .rail--steps button i {
+    top: auto;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .rail--steps button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    border-radius: 2px;
+    background: color-mix(in srgb, var(--ink) 14%, transparent);
+    z-index: -1;
+  }
+  .rail--steps button em {
+    display: block;
+    font-style: normal;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .rail--steps button.is-on em {
+    color: var(--ink);
+  }
+  .process .stage:not([aria-expanded="true"]) {
+    display: none;
+  }
+  .process .stage[aria-expanded="true"] {
+    min-height: 0;
+  }
+
+  /* ---------- Trust: 2 × 2 ---------- */
+  .trust7 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .trust7__tile {
+    min-height: 0 !important;
+    padding: 18px 16px;
+    border-left: 1px solid var(--line) !important;
+    border-top: 0 !important;
+  }
+  .trust7__tile:nth-child(odd) {
+    border-left: 0 !important;
+  }
+  .trust7__tile:nth-child(n + 3) {
+    border-top: 1px solid var(--line) !important;
+  }
+  .trust7__num {
+    font-size: 2.1rem;
+  }
+  .trust7__num--sm {
+    font-size: 1.25rem;
+  }
+  .trust7__label {
+    font-size: 13px;
+  }
+  .trust7__chat,
+  .trust7__chips span:nth-child(n + 3) {
+    display: none;
+  }
+  .trust7__bars {
+    height: 44px;
+  }
+
+  /* ---------- FAQ ---------- */
+  .bot__log {
+    padding: 16px;
+  }
+  .bot__qs {
+    padding-inline: 16px;
+  }
+  .bot__qs button {
+    min-height: 40px;
+    font-size: 13.5px;
+  }
+
+  /* ---------- Readability: nothing under 12px, comfy tap targets ---------- */
+  .stage__when,
+  .service__row span,
+  .work-card__kind,
+  .chip {
+    font-size: 12px;
+  }
+  .btn--xs {
+    min-height: 40px;
+  }
+
+  /* ---------- Sticky "Book a call" bar ---------- */
+  .mcta {
+    position: fixed !important;
+    left: 12px;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 10px 10px 18px;
+    border-radius: 22px;
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    border: 1px solid var(--line);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(140%);
+    transition: transform 0.4s var(--ease);
+  }
+  .mcta.is-on {
+    transform: none;
+  }
+  .mcta b {
+    display: block;
+    font-size: 14px;
+  }
+  .mcta small {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  /* Leave room so the bar never covers the footer's last line. */
+  .page {
+    padding-bottom: 72px;
+  }
+}
+
+@media (max-width: 700px) {
+  .ai .ai__tabs {
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+    grid-template-columns: none;
+    overflow-x: auto;
+  }
+  .ai .ai__tab {
+    width: auto;
+    min-width: max-content;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .ai .ai__tab[aria-selected="true"] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  /* Offer titles get their own line; the timeline sits under them. */
+  .offer6__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  /* FAQ header: name on top, status underneath, button stays compact. */
+  .bot__bar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .bot__status {
+    font-size: 12px;
+  }
+  .bot__bar > a {
+    margin-left: auto;
+  }
+}
+
+/* ---------- Round 2 phone fixes ---------- */
+@media (max-width: 700px) {
+  /* Offers: whole cards, stacked, nothing cut off. */
+  .offers6__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+  }
+  .offer6 {
+    padding: 10px 10px 18px;
+  }
+  .offer6__vis {
+    height: 96px;
+    margin-bottom: 14px;
+  }
+  .offer6__points {
+    gap: 6px;
+    padding-top: 12px;
+    margin-bottom: 16px;
+  }
+  .offer6__points li {
+    font-size: 13.5px;
+  }
+  .offer6__best {
+    margin: 12px 14px;
+  }
+
+  /* FAQ: a compact header row and left-aligned questions. */
+  .bot__bar {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+  .bot__avatar {
+    width: 34px;
+    height: 34px;
+  }
+  .bot__name {
+    font-size: 14.5px;
+  }
+  .bot__status {
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+  .bot__bar > a {
+    flex: none;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .bot__bar > a svg {
+    width: 17px;
+    height: 17px;
+  }
+  .bot__qs {
+    display: grid;
+    gap: 8px;
+  }
+  .bot__qs button {
+    justify-content: flex-start;
+    width: 100%;
+    text-align: left;
+    border-radius: 14px;
+    padding: 11px 14px;
+  }
+  .msg {
+    max-width: 88%;
+    font-size: 14px;
+  }
+
+  /* Process: compact card — title, a framed visual of fixed height, then outputs. */
+  .process .stage[aria-expanded="true"] {
+    padding: 16px;
+  }
+  .stage__info {
+    gap: 4px 12px;
+  }
+  .stage__body {
+    font-size: 14px !important;
+    margin-top: 8px;
+  }
+  .stage__outputs {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin-top: 10px;
+  }
+  .stage__outputs li {
+    font-size: 13px;
+  }
+  .process .stage__visual {
+    height: 300px !important;
+    min-height: 0 !important;
+    margin-top: 14px;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  /* "We're product makers.": no full-width underline on narrow screens. */
+  .own7__l2 > span::after {
+    display: none;
+  }
+
+  /* Phone home screen: smaller, cleaner iPhone. */
+  .phonehome {
+    max-width: 300px;
+    padding: 12px 14px 14px;
+    border-width: 7px;
+    border-radius: 40px;
+    background:
+      radial-gradient(90% 60% at 20% 10%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 65%),
+      radial-gradient(80% 60% at 90% 95%, color-mix(in srgb, #3fa2ff 45%, transparent), transparent 60%),
+      #0b0d1a;
+  }
+  .phonehome::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 9px;
+    width: 84px;
+    height: 22px;
+    translate: -50% 0;
+    border-radius: 99px;
+    background: #000;
+  }
+  .phonehome__status {
+    padding: 0 8px 12px;
+    font-size: 12px;
+  }
+  .phonehome__grid {
+    gap: 12px 6px;
+  }
+  .phonehome__icon,
+  .phonehome .picon {
+    width: 50px !important;
+    height: 50px !important;
+  }
+  .phonehome__app span {
+    font-size: 10.5px;
+  }
+  .phonehome__label {
+    font-size: 10.5px;
+    margin-bottom: 8px;
+  }
+  .phonehome__letter {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(150deg, color-mix(in srgb, var(--p) 70%, #fff), var(--p));
+    color: #fff;
+    font-family: var(--font-head);
+    font-size: 19px;
+    font-weight: 700;
+  }
+  .phonehome__dock {
+    margin-top: 16px;
+    padding: 9px 8px;
+    border-radius: 24px;
+  }
+  .phonehome__dock .phonehome__icon,
+  .phonehome__dock .picon {
+    width: 44px !important;
+    height: 44px !important;
+  }
+}
+
+/* ---------- Round 3 phone fixes ---------- */
+@media (max-width: 700px) {
+  /* Smooth scrolling: heavy background blurs are the main cause of lag on phones — keep them light. */
+  .nav__bar,
+  .btn--ghost,
+  .pill-link,
+  .chip,
+  .round-btn,
+  .bot__qs button,
+  .nav__links,
+  .mcta {
+    -webkit-backdrop-filter: blur(10px) !important;
+    backdrop-filter: blur(10px) !important;
+  }
+  .chip,
+  .btn--ghost,
+  .bot__qs button {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+  }
+  /* Off-screen sections skip layout and painting until they're near. */
+  main > section:not(:first-child) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 900px;
+  }
+  /* Only the active AI scene exists on screen, so switching is instant. */
+  .ai__scene:not(.is-on) {
+    display: none;
+  }
+  .ai__scene.is-on {
+    animation: m-fade 0.35s ease both;
+    transition: none;
+  }
+  .process .stage[aria-expanded="true"] {
+    animation: m-fade 0.35s ease both;
+  }
+  .stage,
+  .stage * {
+    transition-duration: 0s !important;
+  }
+  @keyframes m-fade {
+    from { opacity: 0; transform: translateY(6px); }
+  }
+
+  /* Offers: the release strip and its label no longer overlap. */
+  .offer6__vis {
+    height: 132px;
+  }
+  .ovis--partner {
+    align-items: start;
+    padding-top: 14px;
+    padding-bottom: 34px;
+  }
+  .ovis__loop {
+    bottom: 10px;
+  }
+}
+
+/* Comparison on phones: the same table as desktop, swiped sideways (nothing pinned, so nothing overlaps). */
+@media (max-width: 700px) {
+  .compare {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .compare::-webkit-scrollbar {
+    display: none;
+  }
+  .compare table {
+    min-width: 660px;
+  }
+  .compare th,
+  .compare td {
+    font-size: 13.5px;
+  }
+  .compare-title {
+    font-size: 1.9rem;
+  }
+  .compare::after {
+    content: "Swipe to compare →";
+    position: sticky;
+    left: 0;
+    display: block;
+    padding: 0 0 12px 16px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+}
