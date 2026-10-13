@@ -3,7 +3,8 @@ export const config = {
   supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
   supabaseAnonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "",
   /** e.g. "clentr/30min" — the part after cal.com/ */
-  calLink: (process.env.NEXT_PUBLIC_CAL_LINK ?? "").replace(/^https?:\/\/(app\.)?cal\.com\//, "").replace(/^\/+|\/+$/g, ""),
+  // Falls back to the studio's public booking page, so "Book a call" never drops to email.
+  calLink: (process.env.NEXT_PUBLIC_CAL_LINK || "dinesh-kotipalli-opwmsq/30min").replace(/^https?:\/\/(app\.)?cal\.com\//, "").replace(/^\/+|\/+$/g, ""),
 };
 
 export const hasSupabase = Boolean(config.supabaseUrl && config.supabaseAnonKey);

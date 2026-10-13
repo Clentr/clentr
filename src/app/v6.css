@@ -1861,3 +1861,28 @@
   font-size: 0.68em;
   color: rgba(255, 255, 255, 0.65);
 }
+
+/* Intro logo: drawn at full size (crisp), centred, sized to the screen. */
+.intro__logo {
+  inset: 0;
+  margin: auto;
+  width: max-content;
+  height: max-content;
+  translate: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.36em;
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: clamp(44px, 12vw, 92px);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--ink);
+  transform: none;
+  will-change: auto;
+}
+.intro__logo svg {
+  width: 1.04em;
+  height: 1.04em;
+  flex: none;
+}
