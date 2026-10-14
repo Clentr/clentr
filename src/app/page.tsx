@@ -18,6 +18,7 @@ import { getWork } from "@/lib/projects";
 import { Problem } from "@/components/v6/Problem";
 import { OwnProducts } from "@/components/v6/OwnProducts";
 import { Offers } from "@/components/v6/Offers";
+import { ResourceHandoff } from "@/components/resources/ResourceHandoff";
 
 /** The home page, in the order and with the sections chosen in the admin panel. */
 export default async function Home() {
@@ -29,7 +30,7 @@ export default async function Home() {
     problem: () => <Problem c={c.problem} />,
     own: () => <OwnProducts c={c.own} apps={ownApps} />,
     offers: () => <Offers c={c.offers} />,
-    work: () => <Finder c={c.work} />,
+    work: () => <Finder c={c.work} email={c.contact.email} />,
     statement: () => <Statement c={c.statement} />,
     services: () => <Services c={c.services} />,
     ai: () => <AiShowcase c={c.ai} />,
@@ -57,6 +58,7 @@ export default async function Home() {
       </main>
       <Footer />
       <MobileCta />
+      <ResourceHandoff />
     </div>
   );
 }

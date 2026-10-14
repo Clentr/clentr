@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarCheck, ExternalLink, FolderKanban, Inbox, LayoutDashboard, LayoutTemplate, Settings } from "lucide-react";
+import { CalendarCheck, ExternalLink, FolderKanban, Inbox, LayoutDashboard, LayoutTemplate, Library, Settings } from "lucide-react";
 
 const GROUPS = [
   { h: "Overview", items: [{ href: "/admin", label: "Dashboard", icon: LayoutDashboard }] },
@@ -18,6 +18,7 @@ const GROUPS = [
     items: [
       { href: "/admin/content", label: "Home page", icon: LayoutTemplate },
       { href: "/admin/projects", label: "Projects", icon: FolderKanban },
+      { href: "/admin/resources", label: "Resources", icon: Library },
     ],
   },
   { h: "Studio", items: [{ href: "/admin/settings", label: "Settings", icon: Settings }] },

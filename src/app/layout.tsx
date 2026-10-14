@@ -7,6 +7,7 @@ import { site } from "@/content/site";
 import "./globals.css";
 import "./v6.css";
 import "./mobile.css";
+import "./resources.css";
 
 const geist = Geist({ variable: "--font-geist", subsets: ["latin"], display: "swap" });
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });

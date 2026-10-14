@@ -28,6 +28,9 @@ export async function Footer() {
                   <Link href={n.href}>{n.label}</Link>
                 </li>
               ))}
+              <li>
+                <Link href="/resources">Free resources</Link>
+              </li>
             </ul>
           </nav>
           <div>

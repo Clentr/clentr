@@ -1,0 +1,545 @@
+/* ---------- Free resource library (/resources) ---------- */
+.lib {
+  padding-bottom: clamp(64px, 9vw, 120px);
+}
+.lib__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  max-width: 860px;
+  margin: clamp(36px, 6vw, 72px) auto clamp(40px, 6vw, 64px);
+  text-align: center;
+}
+.lib__head .h1 {
+  font-size: clamp(2.4rem, 5.6vw, 4.25rem);
+  text-wrap: balance;
+}
+.lib__head .lead {
+  max-width: 600px;
+}
+.lib__promise {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  color: var(--ink-2);
+}
+.lib__promise li {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.lib__promise svg {
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
+}
+
+/* Filter bar */
+.lib__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.lib__cats {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.lib__cats::-webkit-scrollbar {
+  display: none;
+}
+.lib__cats button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.lib__cats button:hover {
+  color: var(--ink);
+}
+.lib__cats button[aria-selected="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+.lib__cats em {
+  font-style: normal;
+  font-size: 11.5px;
+  opacity: 0.6;
+}
+.lib__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(280px, 100%);
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  transition: border-color 0.2s;
+}
+.lib__search:focus-within {
+  border-color: var(--accent);
+}
+.lib__search svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+.lib__search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.lib__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.lib__none,
+.lib__empty {
+  margin: 40px 0;
+  text-align: center;
+  color: var(--ink-2);
+}
+.lib__none button {
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+.lib__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 56px 24px;
+}
+.lib__empty b {
+  font-size: 18px;
+  color: var(--ink);
+}
+.lib__empty p {
+  margin: 0;
+}
+
+/* Closing note */
+.lib__after {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: clamp(48px, 7vw, 80px);
+  padding: 28px 32px;
+}
+.lib__after b {
+  font-size: 18px;
+}
+.lib__after p {
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  font-size: 14.5px;
+  max-width: 520px;
+}
+.lib__after-ctas {
+  display: flex;
+  gap: 10px;
+  flex: none;
+}
+
+/* ---------- Resource card ---------- */
+.rc {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 8px;
+  border-radius: 24px;
+  transition: border-color 0.25s, transform 0.35s var(--ease);
+}
+.rc:hover {
+  border-color: color-mix(in srgb, var(--ink) 18%, var(--line));
+}
+.rc__cover {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 17px;
+  background: var(--surface-3);
+}
+.rc__cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease);
+}
+.rc:hover .rc__cover img {
+  transform: scale(1.03);
+}
+
+/* Paper sheets standing in for a cover */
+.rc__paper {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--ink) 9%, transparent) 1px, transparent 0) 0 0 / 14px 14px,
+    var(--surface-3);
+}
+.rc__sheet {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 46%;
+  aspect-ratio: 1 / 1.25;
+  margin-top: 22%;
+  padding: 14px 14px 0;
+  border: 1px solid var(--line);
+  border-radius: 6px 6px 0 0;
+  border-bottom: 0;
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(10, 10, 11, 0.06), 0 12px 28px -14px rgba(10, 10, 11, 0.28);
+  transition: transform 0.45s var(--ease);
+}
+.rc__sheet--back {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  margin: 0;
+  translate: -38% 0;
+  rotate: 6deg;
+  opacity: 0.7;
+}
+.rc:hover .rc__sheet:not(.rc__sheet--back) {
+  transform: translateY(-8px);
+}
+.rc:hover .rc__sheet--back {
+  transform: translateY(-3px) rotate(3deg);
+}
+.rc__sheet-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.rc__sheet-kind svg {
+  width: 11px;
+  height: 11px;
+}
+.rc__sheet b {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 12.5px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.rc__sheet i {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--surface-3);
+}
+.rc__sheet i.is-short {
+  width: 60%;
+}
+
+.rc__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 12px 12px;
+}
+.rc__kind {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.rc__kind svg {
+  width: 14px;
+  height: 14px;
+  color: var(--accent);
+}
+.rc__kind em {
+  margin-left: auto;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ink-2);
+}
+.rc h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+.rc__body > p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.rc__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+.rc__foot small {
+  font-size: 12px;
+  color: var(--muted);
+}
+.rc__get {
+  flex: none;
+}
+.rc__down {
+  rotate: 90deg;
+  transition: transform 0.25s var(--ease);
+}
+.rc__get:hover .rc__down {
+  transform: translateX(2px);
+}
+
+/* The featured resource: cover beside the text */
+.rc--big {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.rc--big .rc__cover {
+  aspect-ratio: auto;
+  min-height: 300px;
+}
+.rc--big .rc__sheet {
+  width: 34%;
+  margin-top: 14%;
+}
+.rc--big .rc__body {
+  justify-content: center;
+  gap: 12px;
+  padding: 28px 28px 24px;
+}
+.rc--big h3 {
+  font-size: clamp(24px, 2.6vw, 32px);
+  letter-spacing: -0.025em;
+}
+.rc--big .rc__body > p {
+  font-size: 15.5px;
+  -webkit-line-clamp: 5;
+}
+.rc--big .rc__foot {
+  margin-top: 8px;
+}
+.rc--big .rc__kind::before {
+  content: "Featured";
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ---------- Home → library hand-off (Instagram visitors) ---------- */
+.handoff,
+.page > .handoff {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: min(520px, calc(100vw - 32px));
+  padding: 12px 12px 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  translate: -50% 0;
+  animation: handoff-in 0.55s var(--ease) both;
+}
+.handoff.is-leaving {
+  animation: handoff-out 0.3s var(--ease) both;
+}
+@keyframes handoff-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+}
+@keyframes handoff-out {
+  to { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+.handoff__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.handoff__icon svg {
+  width: 20px;
+  height: 20px;
+}
+.handoff__text {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.handoff__text b {
+  font-size: 14.5px;
+}
+.handoff__text small {
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+.handoff__bar {
+  height: 3px;
+  margin-top: 7px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--surface-3);
+}
+.handoff__bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: 0 50%;
+  animation: handoff-bar linear both;
+}
+@keyframes handoff-bar {
+  from { transform: scaleX(0); }
+}
+.handoff__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  flex: none;
+}
+.handoff__stay {
+  height: 26px;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.handoff__stay:hover {
+  color: var(--ink);
+}
+/* The home page fades out as the library opens. */
+html.is-handoff main {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.3s ease, transform 0.3s var(--ease);
+}
+
+@media (max-width: 960px) {
+  .lib__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rc--big {
+    grid-template-columns: 1fr;
+  }
+  .rc--big .rc__cover {
+    min-height: 0;
+    aspect-ratio: 16 / 10;
+  }
+}
+@media (max-width: 700px) {
+  .lib__bar {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .lib__search {
+    width: 100%;
+  }
+  .lib__cats {
+    border-radius: 999px;
+  }
+  .lib__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .rc--big .rc__body {
+    padding: 18px 12px 12px;
+  }
+  .lib__after {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px;
+  }
+  .lib__promise {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .handoff,
+  .handoff.is-leaving {
+    animation: none;
+  }
+  .rc__sheet,
+  .rc__cover img {
+    transition: none;
+  }
+}

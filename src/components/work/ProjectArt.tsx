@@ -2,6 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { shotsOf, type Crop, type Device as DeviceKind, type Project, type Shot } from "@/content/projects";
 import { Art } from "../ui/Art";
+import { PhoneRow, ScreenTour } from "./ScreenTour";
 
 /*
  * Project artwork. Built-in projects use their Figma exports; projects added from the admin
@@ -125,33 +126,55 @@ export function HeroArt({ p }: { p: Project }) {
 }
 
 /** Every screenshot, each in its own frame, for the case-study gallery. */
+/** Up to this many screens are laid out in full; more become a tour (web) or a swipe row (phone). */
+const STACK_DESKTOP = 2;
+const ROW_PHONES = 4;
+
 export function GalleryArt({ p }: { p: Project }) {
   if (!p.media) return null;
   const shots = shotsOf(p.media);
   const phones = shots.filter((x) => x.device === "phone");
   const desks = shots.filter((x) => x.device === "desktop");
   const caption = (s: Shot) => p.galleryCaptions[shots.indexOf(s)];
+  const phone = (s: Shot, i: number) => (
+    <figure key={s.url}>
+      <Device src={s.url} device="phone" w={s.w} h={s.h} crop={s.crop} alt={`${p.name} screen ${i + 1}`} sizes="160px" />
+      {caption(s) && <figcaption>{caption(s)}</figcaption>}
+    </figure>
+  );
   return (
     <>
-      {desks.length > 0 && (
-        <div className="mgal mgal--desktop">
-          {desks.map((s, i) => (
-            <figure key={s.url}>
-              <Device src={s.url} device="desktop" w={s.w} h={s.h} crop={s.crop} alt={`${p.name} screen ${i + 1}`} sizes="(max-width: 900px) 92vw, 620px" />
-              {caption(s) && <figcaption>{caption(s)}</figcaption>}
-            </figure>
+      {desks.length > STACK_DESKTOP ? (
+        <ScreenTour
+          name={p.name}
+          captions={desks.map(caption)}
+          slides={desks.map((s, i) => (
+            <Device key={s.url} src={s.url} device="desktop" w={s.w} h={s.h} crop={s.crop} alt={caption(s) ?? `${p.name} screen ${i + 1}`} sizes="(max-width: 900px) 92vw, 640px" />
           ))}
-        </div>
+          thumbs={desks.map((s) => (
+            <Image key={s.url} src={s.url} alt="" fill sizes="150px" />
+          ))}
+        />
+      ) : (
+        desks.length > 0 && (
+          <div className="mgal mgal--desktop">
+            {desks.map((s, i) => (
+              <figure key={s.url}>
+                <Device src={s.url} device="desktop" w={s.w} h={s.h} crop={s.crop} alt={`${p.name} screen ${i + 1}`} sizes="(max-width: 900px) 92vw, 620px" />
+                {caption(s) && <figcaption>{caption(s)}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        )
       )}
-      {phones.length > 0 && (
-        <div className="mgal mgal--phone" style={{ "--n": Math.min(phones.length, 4) } as CSSProperties}>
-          {phones.map((s, i) => (
-            <figure key={s.url}>
-              <Device src={s.url} device="phone" w={s.w} h={s.h} crop={s.crop} alt={`${p.name} screen ${i + 1}`} sizes="160px" />
-              {caption(s) && <figcaption>{caption(s)}</figcaption>}
-            </figure>
-          ))}
-        </div>
+      {phones.length > ROW_PHONES ? (
+        <PhoneRow name={p.name}>{phones.map(phone)}</PhoneRow>
+      ) : (
+        phones.length > 0 && (
+          <div className="mgal mgal--phone" style={{ "--n": phones.length } as CSSProperties}>
+            {phones.map(phone)}
+          </div>
+        )
       )}
     </>
   );

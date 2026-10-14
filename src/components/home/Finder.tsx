@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 import Link from "next/link";
 import type { SiteContent } from "@/content/cms";
 import type { Project } from "@/content/projects";
@@ -7,6 +7,9 @@ import { Art } from "../ui/Art";
 import { Icon } from "../ui/Icon";
 import { FolderArt, PopArt, ProjectIcon } from "../work/ProjectArt";
 import { SectionHead } from "../ui/SectionHead";
+import { BookCall } from "../ui/BookCall";
+import { Mark } from "../ui/Logo";
+import { PhonePager } from "./PhonePager";
 
 function FolderItem({ p }: { p: Project }) {
   const tag = p.status === "shipped" ? "var(--green)" : "var(--accent)";
@@ -38,6 +41,34 @@ function FolderItem({ p }: { p: Project }) {
 /** Projects whose Figma icon is only a letter — shown as a tinted tile on the phone screen. */
 const LETTER_ICONS = new Set(["wayfare", "siren", "edith", "voice-orchestrator", "cafemanager"]);
 
+/** Slots per home-screen page: 4 columns × 6 rows. The widget and each group title take a row. */
+const PER_PAGE = 24;
+type PhonePage = { widget: boolean; groups: { title: string; apps: Project[] }[] };
+
+/** Lays the projects out like an iPhone: fixed-size pages, filled in order. Empty groups are skipped. */
+function phonePages(shipped: Project[], rnd: Project[]): PhonePage[] {
+  const pages: PhonePage[] = [{ widget: true, groups: [] }];
+  let room = PER_PAGE - 4; // the widget takes one row
+  for (const [title, list] of [["Shipped", shipped], ["Web, desktop & R&D", rnd]] as const) {
+    let first = true;
+    for (let i = 0; i < list.length; ) {
+      // A group title needs a row of its own; start a new page if there's no room for it plus one row.
+      if (room < (first ? 8 : 4)) {
+        pages.push({ widget: false, groups: [] });
+        room = PER_PAGE;
+      }
+      if (first) room -= 4;
+      const take = list.slice(i, i + room);
+      const rows = Math.ceil(take.length / 4) * 4;
+      pages[pages.length - 1].groups.push({ title: first ? title : "", apps: take });
+      room -= rows;
+      i += take.length;
+      first = false;
+    }
+  }
+  return pages.filter((p) => p.widget || p.groups.length);
+}
+
 const SIDEBAR = [
   { h: "Favourites", items: [["AirDrop", "audio-lines"], ["Recents", "clock"], ["Applications", "app-window"], ["Desktop", "monitor"], ["Documents", "file-text"], ["Downloads", "arrow-right"]] },
   { h: "Clentr", items: [["Work", "folder-open"], ["Case studies", "book-open"], ["Brand kit", "sparkles"]] },
@@ -45,7 +76,7 @@ const SIDEBAR = [
 ];
 
 /** The work, organised like the Mac it was built on. */
-export async function Finder({ c }: { c: SiteContent["work"] }) {
+export async function Finder({ c, email }: { c: SiteContent["work"]; email: string }) {
   const { mobileApps, webDesktop } = await getWork();
   return (
     <section className="section" id="work" aria-labelledby="work-title">
@@ -146,7 +177,8 @@ export async function Finder({ c }: { c: SiteContent["work"] }) {
         <Art name="dock" themed alt="" className="dock" sizes="800px" />
       </div>
 
-      {/* Phones: the same work as an iPhone home screen — tap an app to open its case study. */}
+      {/* Phones: the same work as an iPhone home screen — tap an app to open its case study.
+          The phone keeps real iPhone proportions; more projects add home-screen pages, never height. */}
       <div className="phonehome" aria-label="All projects">
         <div className="phonehome__status" aria-hidden="true">
           <b>9:41</b>
@@ -156,34 +188,61 @@ export async function Finder({ c }: { c: SiteContent["work"] }) {
             <i />
           </span>
         </div>
-        {[
-          ["Shipped", mobileApps],
-          ["Web, desktop & R&D", webDesktop],
-        ].map(([title, list]) => (
-          <div key={title as string} className="phonehome__group">
-            <span className="phonehome__label">{title as string}</span>
-            <ul className="phonehome__grid">
-              {(list as Project[]).map((p) => (
-                <li key={p.slug}>
-                  <Link href={`/work/${p.slug}`} className="phonehome__app" aria-label={`Open ${p.name} — ${p.kind}`}>
-                    {LETTER_ICONS.has(p.slug) ? (
-                      <span className="phonehome__icon phonehome__letter" style={{ "--p": p.color } as CSSProperties}>
-                        {p.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                      </span>
-                    ) : (
-                      <ProjectIcon p={p} size={60} className="phonehome__icon" />
-                    )}
-                    <span>{p.name}</span>
-                  </Link>
-                </li>
+        <PhonePager
+          pages={phonePages(mobileApps, webDesktop).map((pg, n) => (
+            <Fragment key={n}>
+              {pg.widget && (
+                <div className="phonehome__widget">
+                  <Mark className="phonehome__mark" />
+                  <span>
+                    <b>{mobileApps.length} shipped</b>
+                    {webDesktop.length > 0 && <small>{webDesktop.length} in R&amp;D · web &amp; desktop</small>}
+                    <small>Tap an app to open its story</small>
+                  </span>
+                </div>
+              )}
+              {pg.groups.map((g) => (
+                <div key={g.title} className="phonehome__group">
+                  {g.title && <span className="phonehome__label">{g.title}</span>}
+                  <ul className="phonehome__grid">
+                    {g.apps.map((p) => (
+                      <li key={p.slug}>
+                        <Link href={`/work/${p.slug}`} className="phonehome__app" aria-label={`Open ${p.name} — ${p.kind}`}>
+                          {LETTER_ICONS.has(p.slug) ? (
+                            <span className="phonehome__icon phonehome__letter" style={{ "--p": p.color } as CSSProperties}>
+                              {p.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+                            </span>
+                          ) : (
+                            <ProjectIcon p={p} size={60} className="phonehome__icon" />
+                          )}
+                          <span>{p.name}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               ))}
-            </ul>
-          </div>
-        ))}
-        <div className="phonehome__dock" aria-hidden="true">
-          {mobileApps.slice(0, 4).map((p) => (
-            <ProjectIcon key={p.slug} p={p} size={52} className="phonehome__icon" />
+            </Fragment>
           ))}
+        />
+        <div className="phonehome__dock">
+          <BookCall where="phone_dock" className="phonehome__dockapp">
+            <span className="phonehome__tile phonehome__tile--cal" aria-hidden="true">
+              <small>BOOK</small>
+              <b>30</b>
+            </span>
+            <span className="sr-only">Book a call</span>
+          </BookCall>
+          <a href={`mailto:${email}`} className="phonehome__dockapp" aria-label="Email us">
+            <span className="phonehome__tile phonehome__tile--mail" aria-hidden="true">
+              <Icon name="mail" />
+            </span>
+          </a>
+          <Link href="/contact" className="phonehome__dockapp" aria-label="Start a project">
+            <span className="phonehome__tile phonehome__tile--msg" aria-hidden="true">
+              <Icon name="message-circle" />
+            </span>
+          </Link>
         </div>
       </div>
     </section>

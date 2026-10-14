@@ -767,3 +767,135 @@
     color: var(--muted);
   }
 }
+
+/* ---------- Phone home screen: fixed iPhone shape, swipeable pages ---------- */
+@media (max-width: 700px) {
+  .phonehome {
+    display: flex;
+    flex-direction: column;
+    width: min(300px, 100%);
+    max-width: none;
+    aspect-ratio: 9 / 19.5;
+    overflow: hidden;
+    padding: 12px 0 12px;
+  }
+  .phonehome__status {
+    flex: none;
+    padding: 0 22px 10px;
+  }
+  .phonehome__pages {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .phonehome__pages::-webkit-scrollbar {
+    display: none;
+  }
+  .phonehome__page {
+    flex: 0 0 100%;
+    padding: 4px 14px 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+  .phonehome__group + .phonehome__group {
+    margin-top: 14px;
+  }
+  .phonehome__widget {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 2px 2px 16px;
+    padding: 14px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .phonehome__mark {
+    width: 40px;
+    height: 40px;
+    flex: none;
+    padding: 8px;
+    border-radius: 12px;
+    background: #fff;
+  }
+  .phonehome__widget span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .phonehome__widget b {
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .phonehome__widget small {
+    font-size: 10.5px;
+    color: rgba(255, 255, 255, 0.65);
+  }
+  .phonehome__dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    flex: none;
+    padding: 8px 0 10px;
+  }
+  .phonehome__dots button {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.35);
+    transition: background-color 0.2s;
+  }
+  .phonehome__dots button[aria-selected="true"] {
+    background: #fff;
+  }
+  .phonehome__dock {
+    flex: none;
+    justify-content: space-evenly;
+    margin: 0 10px;
+  }
+  .phonehome__dockapp {
+    display: block;
+  }
+  .phonehome__tile {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 23%;
+    color: #fff;
+  }
+  .phonehome__tile svg {
+    width: 24px;
+    height: 24px;
+  }
+  .phonehome__tile--cal {
+    align-content: center;
+    gap: 0;
+    background: #fff;
+    color: #0a0a0b;
+    line-height: 1;
+  }
+  .phonehome__tile--cal small {
+    font-size: 7.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #ff3b30;
+  }
+  .phonehome__tile--cal b {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  .phonehome__tile--mail {
+    background: #1f8fff;
+  }
+  .phonehome__tile--msg {
+    background: #34c759;
+  }
+}
