@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { ExternalLink, Eye, EyeOff, Library, Pencil, Star, Trash2 } from "lucide-react";
-import { KINDS, type Resource } from "@/content/resources";
+import { KINDS, resourcePath, type Resource } from "@/content/resources";
 import { Icon } from "@/components/ui/Icon";
 import { Empty } from "../../_ui/kit";
 import { deleteResource, setResourcePublished } from "../../resource-actions";
@@ -75,7 +75,7 @@ export function ResourceList({ items: initial }: { items: Resource[] }) {
                 )}
               </b>
               <small>
-                {(KINDS[r.kind] ?? KINDS.other).label} · {r.category} · {r.file ? r.fileName || "File" : "Link"}
+                {(KINDS[r.kind] ?? KINDS.other).label} · {r.category} · {resourcePath(r)}
               </small>
             </span>
             <span className="rl__tools">
@@ -83,7 +83,7 @@ export function ResourceList({ items: initial }: { items: Resource[] }) {
                 {r.published ? <Eye /> : <EyeOff />}
                 {r.published ? "Live" : "Hidden"}
               </button>
-              <a className="ad-iconbtn ad-iconbtn--sm" href={r.file ?? r.link} target="_blank" rel="noopener" aria-label="Open file" title="Open file">
+              <a className="ad-iconbtn ad-iconbtn--sm" href={resourcePath(r)} target="_blank" rel="noopener" aria-label="Open its page" title="Open its page">
                 <ExternalLink />
               </a>
               <button type="button" className="ad-iconbtn ad-iconbtn--sm ad-iconbtn--danger" onClick={() => remove(r)} aria-label="Delete" title="Delete">

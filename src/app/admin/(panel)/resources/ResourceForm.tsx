@@ -4,7 +4,7 @@ import { createBrowserClient } from "@supabase/ssr";
 import { Check, FileUp, ImagePlus, Link2, Loader, X } from "lucide-react";
 import { useActionState, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { formatSize, KINDS, type Resource, type ResourceKind } from "@/content/resources";
+import { formatSize, KINDS, slugify, type Resource, type ResourceKind } from "@/content/resources";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { config } from "@/lib/config";
 import { prepareResourceUpload, saveResource } from "../../resource-actions";
@@ -34,6 +34,8 @@ function Section({ title, sub, children }: { title: string; sub?: string; childr
 export function ResourceForm({ id, resource, categories, sort }: { id: string; resource?: Resource; categories: string[]; sort: number }) {
   const [state, action, saving] = useActionState(saveResource, undefined);
   const [title, setTitle] = useState(resource?.title ?? "");
+  const [slug, setSlug] = useState(resource?.slug ?? "");
+  const [slugTouched, setSlugTouched] = useState(Boolean(resource?.slug));
   const [description, setDescription] = useState(resource?.description ?? "");
   const [category, setCategory] = useState(resource?.category ?? "");
   const [kind, setKind] = useState<ResourceKind>(resource?.kind ?? "guide");
@@ -58,7 +60,11 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
       if (what === "cover") setCover(url);
       else {
         setFile({ url, name: f.name, size: f.size });
-        if (!title) setTitle(f.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " "));
+        if (!title) {
+          const t = f.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ");
+          setTitle(t);
+          if (!slugTouched) setSlug(slugify(t));
+        }
         if (/\.pdf$/i.test(f.name) && kind === "other") setKind("pdf");
       }
     } catch (e) {
@@ -72,6 +78,7 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
 
   const preview: Resource = {
     id,
+    slug: slug || undefined,
     title: title || "Resource title",
     description: description || "A short line on what this is and who it helps.",
     category: category || "Category",
@@ -96,7 +103,33 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
         <Section title="What it is">
           <label className="pf-field">
             <span>Title</span>
-            <input name="title" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="The App Launch Checklist" />
+            <input
+              name="title"
+              required
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (!slugTouched) setSlug(slugify(e.target.value));
+              }}
+              placeholder="The App Launch Checklist"
+            />
+          </label>
+          <label className="pf-field">
+            <span>
+              Page address <em>The link you share — keep it short</em>
+            </span>
+            <span className="pf-prefix">
+              <em>clentr.com/resources/</em>
+              <input
+                name="slug"
+                value={slug}
+                onChange={(e) => {
+                  setSlugTouched(true);
+                  setSlug(slugify(e.target.value));
+                }}
+                placeholder="app-launch-checklist"
+              />
+            </span>
           </label>
           <label className="pf-field">
             <span>

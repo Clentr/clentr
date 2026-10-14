@@ -23,3 +23,9 @@ export async function getLibrary(): Promise<Library> {
   const lib = await readLibrary();
   return { ...lib, items: lib.items.filter((r) => r.published) };
 }
+
+/** One published resource by its page address (or, for older entries, its id). */
+export async function getResource(slug: string) {
+  const { items } = await getLibrary();
+  return items.find((r) => r.slug === slug) ?? items.find((r) => r.id === slug);
+}

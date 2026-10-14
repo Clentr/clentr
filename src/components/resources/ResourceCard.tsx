@@ -1,4 +1,5 @@
-import { fileType, formatSize, KINDS, type Resource } from "@/content/resources";
+import Link from "next/link";
+import { fileType, formatSize, KINDS, resourcePath, viewOf, type Resource } from "@/content/resources";
 import { Icon } from "../ui/Icon";
 
 /** The paper-sheet cover used when a resource has no cover image. */
@@ -22,30 +23,24 @@ function PaperCover({ r }: { r: Resource }) {
   );
 }
 
-/** One resource in the library: cover, what it is, and a download (or open) button. */
+const VERB: Record<string, string> = { pdf: "Read", office: "Open", text: "Open", image: "View", video: "Watch", audio: "Listen", embed: "Open", link: "Open", file: "Get it" };
+
+/** One resource in the library: the whole card opens its page, where it reads right on the site. */
 export function ResourceCard({ r, big = false }: { r: Resource; big?: boolean }) {
   const k = KINDS[r.kind] ?? KINDS.other;
-  // Supabase serves "?download=" with a Content-Disposition header, so files save instead of opening.
-  const href = r.file ? `${r.file}?download=${encodeURIComponent(r.fileName ?? "")}` : (r.link ?? "#");
-  const isFile = Boolean(r.file);
-  const meta = [r.detail, isFile ? [fileType(r.fileName), formatSize(r.size)].filter(Boolean).join(" · ") : "Opens in a new tab"].filter(Boolean);
+  const view = viewOf(r);
+  const meta = [r.detail, r.file ? [fileType(r.fileName), formatSize(r.size)].filter(Boolean).join(" · ") : view.kind === "embed" || view.kind === "link" ? view.host : ""].filter(Boolean);
   return (
     <article className={`rc card${big ? " rc--big" : ""}`}>
-      <a
-        className="rc__cover"
-        href={href}
-        {...(isFile ? {} : { target: "_blank", rel: "noopener" })}
-        tabIndex={-1}
-        aria-hidden="true"
-        data-track={`resource:${r.title}`}
-      >
+      <Link href={resourcePath(r)} className="rc__hit" aria-label={`${VERB[view.kind]} ${r.title}`} data-track={`resource:${r.title}`} />
+      <span className="rc__cover" aria-hidden="true">
         {r.cover ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={r.cover} alt="" loading="lazy" />
         ) : (
           <PaperCover r={r} />
         )}
-      </a>
+      </span>
       <div className="rc__body">
         <span className="rc__kind">
           <Icon name={k.icon} />
@@ -56,15 +51,10 @@ export function ResourceCard({ r, big = false }: { r: Resource; big?: boolean })
         {r.description && <p>{r.description}</p>}
         <div className="rc__foot">
           <small>{meta.join(" · ")}</small>
-          <a
-            className="btn btn--ink btn--xs rc__get"
-            href={href}
-            {...(isFile ? {} : { target: "_blank", rel: "noopener" })}
-                data-track={`resource:${r.title}`}
-          >
-            {isFile ? "Download" : "Open"}
-            <Icon name={isFile ? "arrow-right" : "arrow-up-right"} className={isFile ? "rc__down" : "arrow"} />
-          </a>
+          <span className="btn btn--ink btn--xs rc__get" aria-hidden="true">
+            {VERB[view.kind]}
+            <Icon name="arrow-right" className="arrow" />
+          </span>
         </div>
       </div>
     </article>

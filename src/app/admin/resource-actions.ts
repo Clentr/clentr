@@ -2,7 +2,7 @@
 
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
-import { KINDS, type Library, type Resource, type ResourceKind } from "@/content/resources";
+import { KINDS, slugify, type Library, type Resource, type ResourceKind } from "@/content/resources";
 import { LIBRARY_KEY, readLibrary } from "@/lib/resources";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { serviceClient } from "@/lib/supabase/service";
@@ -73,8 +73,14 @@ export async function saveResource(_: FormState, form: FormData): Promise<FormSt
 
   const lib = await readLibrary();
   const before = lib.items.find((r) => r.id === id);
+  // A unique page address; it stays put when the title changes, unless edited.
+  const base = slugify(text(form, "slug") || before?.slug || title) || id;
+  const taken = new Set(lib.items.filter((r) => r.id !== id).flatMap((r) => [r.slug, r.id]));
+  let slug = base;
+  for (let n = 2; taken.has(slug); n++) slug = `${base}-${n}`;
   const item: Resource = {
     id,
+    slug,
     title: title.slice(0, 120),
     description: text(form, "description").slice(0, 400),
     category: category.slice(0, 40),

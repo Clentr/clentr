@@ -4,7 +4,7 @@ import {
   Folder, FolderOpen, GitBranch, GitPullRequest, HardDrive, Heart, Laptop, Layers, Lock, Mail, Menu, MessageCircle,
   MessagesSquare, Mic, Minus, Monitor, MonitorSmartphone, Moon, Paperclip, PenTool, PhoneCall, Plane, Rocket,
   ScanEye, ScanText, Search, Send, Share2, ShieldCheck, Smartphone, Sparkles, SquareTerminal, Star, Sun, Ticket,
-  Timer, TrendingUp, UserRound, Users, Workflow, X, TriangleAlert, Package, Quote, BadgeCheck, Zap, CalendarCheck, Hourglass, Puzzle, Repeat, Store, Infinity as InfinityIcon, type LucideIcon,
+  Timer, TrendingUp, UserRound, Users, Workflow, X, TriangleAlert, Package, Quote, BadgeCheck, Zap, CalendarCheck, Hourglass, Puzzle, Repeat, Store, Infinity as InfinityIcon, Plus, Download, Maximize2, Minimize2, Link2, ExternalLink, type LucideIcon,
 } from "lucide-react";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -22,6 +22,7 @@ const ICONS: Record<string, LucideIcon> = {
   ticket: Ticket, timer: Timer, "trending-up": TrendingUp, user: UserRound, users: Users, workflow: Workflow, x: X,
   "triangle-alert": TriangleAlert, package: Package, quote: Quote, "badge-check": BadgeCheck, zap: Zap,
   "calendar-check": CalendarCheck, hourglass: Hourglass, puzzle: Puzzle, repeat: Repeat, store: Store, infinity: InfinityIcon,
+  plus: Plus, download: Download, maximize: Maximize2, minimize: Minimize2, link: Link2, "external-link": ExternalLink,
 };
 
 /** Names an admin can choose from. */
