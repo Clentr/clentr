@@ -1,6 +1,6 @@
 export const site = {
   name: "Clentr",
-  url: "https://clentr.vercel.app",
+  url: "https://www.clentr.com",
   email: "shaikazad@clentr.com",
   description:
     "Clentr takes ideas from first sketch to shipped software across mobile apps, web platforms, desktop tools and AI systems.",

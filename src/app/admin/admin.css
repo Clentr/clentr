@@ -3402,3 +3402,123 @@
   width: 18px;
   height: 18px;
 }
+.rf-source--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.rf-file {
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+.rf-file__hint {
+  flex: 1 1 260px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.rf-file__btns {
+  display: flex;
+  gap: 8px;
+}
+/* Markdown editor */
+.mde {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+}
+.mde__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-3);
+}
+.mde__tabs {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--surface);
+}
+.mde__tabs button {
+  height: 28px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.mde__tabs button[aria-selected="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+.mde__tools {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+.mde__tools button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+.mde__tools button:hover {
+  background: var(--surface);
+  color: var(--ink);
+}
+.mde__tools svg {
+  width: 16px;
+  height: 16px;
+}
+.mde__import {
+  margin-left: auto;
+}
+.mde__area {
+  display: block;
+  width: 100%;
+  min-height: 460px;
+  padding: 18px 20px;
+  border: 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+}
+.mde__preview {
+  max-height: 640px;
+  min-height: 460px;
+  overflow: auto;
+  padding: 24px 28px;
+}
+.mde__preview .art__prose {
+  font-size: 16px;
+}
+.mde__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+.mde__foot code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-3);
+  font-size: 11px;
+}

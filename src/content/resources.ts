@@ -22,7 +22,9 @@ export type Resource = {
   description: string;
   category: string;
   kind: ResourceKind;
-  /** Uploaded file in the "resources" bucket… */
+  /** The article itself, in Markdown — shown as a blog post with a PDF download. */
+  body?: string;
+  /** …and/or an uploaded file in the "resources" bucket… */
   file?: string;
   fileName?: string;
   size?: number;
@@ -68,6 +70,7 @@ export const resourcePath = (r: Pick<Resource, "id" | "slug">) => `/resources/${
 
 /** How a resource is shown on its page. */
 export type View =
+  | { kind: "article" }
   | { kind: "pdf"; src: string }
   | { kind: "office"; src: string }
   | { kind: "image"; src: string }
@@ -100,6 +103,7 @@ function embedFor(url: URL): string | null {
 }
 
 export function viewOf(r: Resource): View {
+  if (r.body?.trim()) return { kind: "article" };
   if (r.file) {
     const e = ext(r.fileName) || ext(r.file);
     if (e === "pdf") return { kind: "pdf", src: r.file };

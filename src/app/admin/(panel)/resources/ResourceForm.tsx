@@ -1,13 +1,14 @@
 "use client";
 
 import { createBrowserClient } from "@supabase/ssr";
-import { Check, FileUp, ImagePlus, Link2, Loader, X } from "lucide-react";
+import { Check, FileUp, ImagePlus, Link2, Loader, PenLine, X } from "lucide-react";
 import { useActionState, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { formatSize, KINDS, slugify, type Resource, type ResourceKind } from "@/content/resources";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { config } from "@/lib/config";
 import { prepareResourceUpload, saveResource } from "../../resource-actions";
+import { MarkdownEditor } from "./MarkdownEditor";
 
 async function upload(id: string, what: "file" | "cover", f: File) {
   const s = await prepareResourceUpload(id, what, f.name, f.type, f.size);
@@ -40,7 +41,10 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
   const [category, setCategory] = useState(resource?.category ?? "");
   const [kind, setKind] = useState<ResourceKind>(resource?.kind ?? "guide");
   const [detail, setDetail] = useState(resource?.detail ?? "");
-  const [source, setSource] = useState<"file" | "link">(resource?.link && !resource.file ? "link" : "file");
+  const [source, setSource] = useState<"article" | "file" | "link">(
+    !resource || resource.body ? "article" : resource.link && !resource.file ? "link" : "file",
+  );
+  const [body, setBody] = useState(resource?.body ?? "");
   const [file, setFile] = useState(resource?.file ? { url: resource.file, name: resource.fileName ?? "", size: resource.size ?? 0 } : null);
   const [link, setLink] = useState(resource?.link ?? "");
   const [cover, setCover] = useState(resource?.cover ?? "");
@@ -84,7 +88,8 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
     category: category || "Category",
     kind,
     detail,
-    ...(source === "file" && file ? { file: file.url, fileName: file.name, size: file.size } : {}),
+    ...(source === "article" && body.trim() ? { body } : {}),
+    ...(source !== "link" && file ? { file: file.url, fileName: file.name, size: file.size } : {}),
     ...(source === "link" && link ? { link } : {}),
     ...(cover ? { cover } : {}),
     published: true,
@@ -95,7 +100,8 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
   return (
     <form action={action} className="pf">
       <input type="hidden" name="id" value={id} />
-      <input type="hidden" name="file" value={source === "file" ? (file?.url ?? "") : ""} />
+      <input type="hidden" name="file" value={source !== "link" ? (file?.url ?? "") : ""} />
+      <input type="hidden" name="body" value={source === "article" ? body : ""} />
       <input type="hidden" name="fileName" value={file?.name ?? ""} />
       <input type="hidden" name="size" value={file?.size ?? 0} />
       <input type="hidden" name="cover" value={cover} />
@@ -166,21 +172,32 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
           </div>
         </Section>
 
-        <Section title="The resource" sub="Upload the file (PDF, Word, Excel, PowerPoint, ZIP, images — up to 50 MB), or paste a link to Notion, Google Drive, Figma or similar.">
-          <div className="pf-choice rf-source" role="radiogroup">
-            {(["file", "link"] as const).map((v) => (
+        <Section
+          title="The resource"
+          sub={
+            source === "article"
+              ? "Write it like a blog post — it reads beautifully on the site and visitors can save it as a PDF. Paste or import a Markdown (.md / README) file."
+              : source === "file"
+                ? "PDF, Word, Excel, PowerPoint, images, video — up to 50 MB. It opens right on the site."
+                : "A Notion, Google Drive, Figma, YouTube or Loom link — embedded on the page where possible."
+          }
+        >
+          <div className="pf-choice rf-source rf-source--3" role="radiogroup">
+            {(["article", "file", "link"] as const).map((v) => (
               <label key={v} className={source === v ? "is-on" : ""}>
                 <input type="radio" checked={source === v} onChange={() => setSource(v)} />
-                {v === "file" ? <FileUp /> : <Link2 />}
+                {v === "article" ? <PenLine /> : v === "file" ? <FileUp /> : <Link2 />}
                 <span>
-                  <b>{v === "file" ? "Upload a file" : "Paste a link"}</b>
-                  <small>{v === "file" ? "Visitors download it" : "Opens in a new tab"}</small>
+                  <b>{v === "article" ? "Write an article" : v === "file" ? "Upload a file" : "Paste a link"}</b>
+                  <small>{v === "article" ? "Blog post + PDF" : v === "file" ? "Opens on the site" : "Embedded or linked"}</small>
                 </span>
               </label>
             ))}
           </div>
-          {source === "file" ? (
+          {source === "article" && <MarkdownEditor value={body} onChange={setBody} />}
+          {source !== "link" ? (
             <div className="rf-file">
+              {source === "article" && !file && <span className="rf-file__hint">Optional: attach your own PDF version — the “Download PDF” button then gives this file.</span>}
               {file ? (
                 <>
                   <span className="rf-file__name">
@@ -188,11 +205,24 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
                     <b>{file.name || "Uploaded file"}</b>
                     <small>{formatSize(file.size)}</small>
                   </span>
-                  <button type="button" className="ad-btn ad-btn--sm" onClick={() => fileInput.current?.click()} disabled={busy === "file"}>
-                    {busy === "file" ? <Loader className="ad-spin" /> : <FileUp />}
-                    Replace
-                  </button>
+                  <span className="rf-file__btns">
+                    {source === "article" && (
+                      <button type="button" className="ad-btn ad-btn--sm" onClick={() => setFile(null)}>
+                        <X />
+                        Remove
+                      </button>
+                    )}
+                    <button type="button" className="ad-btn ad-btn--sm" onClick={() => fileInput.current?.click()} disabled={busy === "file"}>
+                      {busy === "file" ? <Loader className="ad-spin" /> : <FileUp />}
+                      Replace
+                    </button>
+                  </span>
                 </>
+              ) : source === "article" ? (
+                <button type="button" className="ad-btn ad-btn--sm" onClick={() => fileInput.current?.click()} disabled={busy === "file"}>
+                  {busy === "file" ? <Loader className="ad-spin" /> : <FileUp />}
+                  {busy === "file" ? "Uploading…" : "Attach PDF"}
+                </button>
               ) : (
                 <button type="button" className="rf-drop" onClick={() => fileInput.current?.click()} disabled={busy === "file"}>
                   {busy === "file" ? <Loader className="ad-spin" /> : <FileUp />}
@@ -200,7 +230,7 @@ export function ResourceForm({ id, resource, categories, sort }: { id: string; r
                   <small>Up to 50 MB</small>
                 </button>
               )}
-              <input ref={fileInput} type="file" hidden onChange={(e) => onPick("file", e.target.files)} />
+              <input ref={fileInput} type="file" hidden accept={source === "article" ? "application/pdf" : undefined} onChange={(e) => onPick("file", e.target.files)} />
             </div>
           ) : (
             <label className="pf-field">

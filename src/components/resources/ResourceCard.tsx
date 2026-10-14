@@ -23,13 +23,13 @@ function PaperCover({ r }: { r: Resource }) {
   );
 }
 
-const VERB: Record<string, string> = { pdf: "Read", office: "Open", text: "Open", image: "View", video: "Watch", audio: "Listen", embed: "Open", link: "Open", file: "Get it" };
+const VERB: Record<string, string> = { article: "Read", pdf: "Read", office: "Open", text: "Open", image: "View", video: "Watch", audio: "Listen", embed: "Open", link: "Open", file: "Get it" };
 
 /** One resource in the library: the whole card opens its page, where it reads right on the site. */
 export function ResourceCard({ r, big = false }: { r: Resource; big?: boolean }) {
   const k = KINDS[r.kind] ?? KINDS.other;
   const view = viewOf(r);
-  const meta = [r.detail, r.file ? [fileType(r.fileName), formatSize(r.size)].filter(Boolean).join(" · ") : view.kind === "embed" || view.kind === "link" ? view.host : ""].filter(Boolean);
+  const meta = [r.detail, r.file ? [fileType(r.fileName), formatSize(r.size)].filter(Boolean).join(" · ") : view.kind === "embed" || view.kind === "link" ? view.host : view.kind === "article" ? "Article" : ""].filter(Boolean);
   return (
     <article className={`rc card${big ? " rc--big" : ""}`}>
       <Link href={resourcePath(r)} className="rc__hit" aria-label={`${VERB[view.kind]} ${r.title}`} data-track={`resource:${r.title}`} />

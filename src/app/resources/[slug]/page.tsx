@@ -9,6 +9,9 @@ import { Icon } from "@/components/ui/Icon";
 import { Nav } from "@/components/ui/Nav";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { ResourceViewer, ShareResource } from "@/components/resources/ResourceViewer";
+import { ArticleProgress, ArticleToc, PdfButton } from "@/components/resources/ArticleBits";
+import { Lockup, Mark } from "@/components/ui/Logo";
+import { renderArticle } from "@/lib/markdown";
 
 // Known resources are prerendered; ones added later render on first visit.
 export const instant = false;
@@ -44,6 +47,136 @@ export default async function ResourcePage({ params }: PageProps<"/resources/[sl
     r.file && ["File", [fileType(r.fileName), formatSize(r.size)].filter(Boolean).join(" · ")],
     view.kind === "embed" || view.kind === "link" ? ["Hosted on", view.host] : null,
   ].filter(Boolean) as [string, string][];
+
+  const pdfFile = r.file && /\.pdf$/i.test(r.fileName ?? "") ? dl : undefined;
+  const after = (
+    <>
+      <section className="lib__after card">
+        <div>
+          <b>Found this useful?</b>
+          <p>It’s how we work on every product we build. If you’d like us to build yours, let’s talk — 30 minutes, no pitch deck needed.</p>
+        </div>
+        <div className="lib__after-ctas">
+          <Link href="/#work" className="btn btn--ghost btn--sm">
+            See our work
+          </Link>
+          <BookCall where={`resource:${r.slug || r.id}`} className="btn btn--ink btn--sm">
+            Book a call
+            <Icon name="arrow-up-right" className="arrow" />
+          </BookCall>
+        </div>
+      </section>
+      {more.length > 0 && (
+        <section className="rp__more">
+          <div className="rp__more-head">
+            <h2>More free resources</h2>
+            <Link href="/resources" className="rp__all">
+              See the library
+              <Icon name="arrow-right" />
+            </Link>
+          </div>
+          <div className="lib__grid">
+            {more.map((m) => (
+              <ResourceCard key={m.id} r={m} />
+            ))}
+          </div>
+        </section>
+      )}
+    </>
+  );
+
+  if (view.kind === "article") {
+    const a = renderArticle(r.body ?? "");
+    const date = r.updatedAt ? new Date(r.updatedAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }) : "";
+    const url = `clentr.com/resources/${r.slug || r.id}`;
+    return (
+      <div className="page">
+        <div className="guides" aria-hidden="true" />
+        <Nav />
+        <ArticleProgress storageKey={`clentr-checks:${r.id}`} />
+        <main className={`container art ${a.toc.length >= 2 ? "art--toc" : ""}`}>
+          {/* Only in the PDF / print version */}
+          <div className="art__print-head" aria-hidden="true">
+            <Lockup />
+            <span>{url}</span>
+          </div>
+
+          <nav className="crumbs" aria-label="Breadcrumb">
+            <Link href="/resources" className="back-pill">
+              <Icon name="arrow-left" />
+              Library
+            </Link>
+            <Link href="/resources">Free resources</Link>
+            <span aria-hidden="true">›</span>
+            <span>{r.category}</span>
+          </nav>
+
+          <header className="art__hero">
+            <span className="rp__kind">
+              <Icon name={k.icon} />
+              {k.label}
+              <em>Free</em>
+            </span>
+            <h1>{r.title}</h1>
+            {r.description && <p className="art__lead">{r.description}</p>}
+            <div className="art__meta">
+              <span className="art__by">
+                <span className="art__avatar">
+                  <Mark />
+                </span>
+                <span>
+                  <b>The Clentr team</b>
+                  <small>
+                    {date && `${date} · `}
+                    {a.minutes} min read
+                  </small>
+                </span>
+              </span>
+              <span className="art__actions">
+                <ShareResource title={r.title} />
+                <PdfButton title={r.title} file={pdfFile} />
+              </span>
+            </div>
+          </header>
+
+          {r.cover && (
+            <figure className="art__cover">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={r.cover} alt="" />
+            </figure>
+          )}
+
+          <div className={`art__layout ${a.toc.length < 2 ? "art__layout--solo" : ""}`}>
+            <aside className="art__side">
+              <ArticleToc toc={a.toc} />
+            </aside>
+            <div className="art__prose" dangerouslySetInnerHTML={{ __html: a.html }} />
+          </div>
+
+          <div className="art__end">
+            <span className="art__end-mark">
+              <Mark />
+            </span>
+            <div>
+              <b>Keep it for later</b>
+              <p>Save this {k.label.toLowerCase()} as a PDF, or send it to someone who needs it.</p>
+            </div>
+            <span className="art__actions">
+              <ShareResource title={r.title} />
+              <PdfButton title={r.title} file={pdfFile} />
+            </span>
+          </div>
+
+          <p className="art__print-foot" aria-hidden="true">
+            Free from Clentr — design &amp; engineering studio · {url}
+          </p>
+
+          <div className="art__after">{after}</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="page">
@@ -100,38 +233,7 @@ export default async function ResourcePage({ params }: PageProps<"/resources/[sl
           ))}
         </dl>
 
-        <section className="lib__after card">
-          <div>
-            <b>Found this useful?</b>
-            <p>It’s how we work on every product we build. If you’d like us to build yours, let’s talk — 30 minutes, no pitch deck needed.</p>
-          </div>
-          <div className="lib__after-ctas">
-            <Link href="/#work" className="btn btn--ghost btn--sm">
-              See our work
-            </Link>
-            <BookCall where={`resource:${r.slug || r.id}`} className="btn btn--ink btn--sm">
-              Book a call
-              <Icon name="arrow-up-right" className="arrow" />
-            </BookCall>
-          </div>
-        </section>
-
-        {more.length > 0 && (
-          <section className="rp__more">
-            <div className="rp__more-head">
-              <h2>More free resources</h2>
-              <Link href="/resources" className="rp__all">
-                See the library
-                <Icon name="arrow-right" />
-              </Link>
-            </div>
-            <div className="lib__grid">
-              {more.map((m) => (
-                <ResourceCard key={m.id} r={m} />
-              ))}
-            </div>
-          </section>
-        )}
+        {after}
       </main>
       <Footer />
     </div>

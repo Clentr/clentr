@@ -64,12 +64,13 @@ export async function saveResource(_: FormState, form: FormData): Promise<FormSt
   const file = text(form, "file");
   const link = text(form, "link");
   const cover = text(form, "cover");
+  const body = String(form.get("body") ?? "").replace(/\r\n/g, "\n").trim().slice(0, 200_000);
   if (!/^[a-z0-9-]{6,40}$/.test(id)) return { error: "Something went wrong — reload the page and try again." };
   if (!title) return { error: "Add a title." };
   if (!category) return { error: "Pick or type a category." };
   if (file && !isOurs(file)) return { error: "Upload the file again." };
   if (link && !/^https:\/\/\S+$/.test(link)) return { error: "The link must start with https://" };
-  if (!file && !link) return { error: "Upload a file or paste a link." };
+  if (!file && !link && !body) return { error: "Write the article, upload a file or paste a link." };
 
   const lib = await readLibrary();
   const before = lib.items.find((r) => r.id === id);
@@ -85,6 +86,7 @@ export async function saveResource(_: FormState, form: FormData): Promise<FormSt
     description: text(form, "description").slice(0, 400),
     category: category.slice(0, 40),
     kind,
+    ...(body ? { body } : {}),
     ...(file ? { file, fileName: text(form, "fileName").slice(0, 120), size: Math.max(0, Number(text(form, "size")) || 0) } : {}),
     ...(link && !file ? { link } : {}),
     ...(cover && isOurs(cover) ? { cover } : {}),
