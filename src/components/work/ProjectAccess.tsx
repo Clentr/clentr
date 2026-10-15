@@ -34,7 +34,7 @@ export function ProjectAccess({ p }: { p: Project }) {
         <div className="access__ctas">
           <BookCall where={`access_${p.slug}`} className="btn btn--accent btn--xs">
             <Icon name="calendar" />
-            Book a walkthrough
+            Request a walkthrough
           </BookCall>
           <Link href={`/contact?project=${p.slug}`} className="btn btn--ghost btn--xs">
             <Icon name="send" />

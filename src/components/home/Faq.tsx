@@ -58,7 +58,7 @@ export function Faq({ c }: { c: SiteContent["faq"]; email?: string }) {
             </span>
             <BookCall where="faq">
               <Icon name="calendar" />
-              Book a call
+              Request a call
             </BookCall>
           </div>
           <div className="bot__log" ref={logRef} aria-live="polite">

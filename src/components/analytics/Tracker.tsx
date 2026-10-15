@@ -2,14 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import { config } from "@/lib/config";
-
-type CalFn = ((...args: unknown[]) => void) & { loaded?: boolean; ns?: Record<string, unknown>; q?: unknown[] };
-declare global {
-  interface Window {
-    Cal?: CalFn;
-  }
-}
 
 function session() {
   try {
@@ -60,33 +52,6 @@ function labelFor(el: Element): string | null {
   return href.startsWith("/#") ? `nav:${href.slice(2)}` : null;
 }
 
-/** Loads the Cal.com pop-up once; buttons with data-cal-link open it. */
-function loadCal() {
-  if (!config.calLink || window.Cal) return;
-  const w = window as Window & { Cal?: CalFn };
-  // Official Cal.com embed loader, unminified.
-  const Cal: CalFn = function (...args: unknown[]) {
-    const cal = w.Cal!;
-    if (!cal.loaded) {
-      cal.ns = {};
-      cal.q = cal.q || [];
-      document.head.appendChild(document.createElement("script")).src = "https://app.cal.com/embed/embed.js";
-      cal.loaded = true;
-    }
-    cal.q!.push(args);
-  };
-  w.Cal = Cal;
-  Cal("init", { origin: "https://cal.com" });
-  const dark = document.documentElement.dataset.theme === "dark";
-  Cal("ui", {
-    hideEventTypeDetails: false,
-    layout: "month_view",
-    theme: dark ? "dark" : "light",
-    cssVarsPerTheme: { light: { "cal-brand": "#2d46ff" }, dark: { "cal-brand": "#7083ff" } },
-  });
-  Cal("on", { action: "bookingSuccessful", callback: () => send("click", "booking_made") });
-}
-
 export function Tracker() {
   const pathname = usePathname();
 
@@ -95,7 +60,6 @@ export function Tracker() {
   }, [pathname]);
 
   useEffect(() => {
-    loadCal();
     const onClick = (e: MouseEvent) => {
       if (location.pathname.startsWith("/admin") || !(e.target instanceof Element)) return;
       const label = labelFor(e.target);

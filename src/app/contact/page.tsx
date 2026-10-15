@@ -34,18 +34,18 @@ export default async function Contact() {
               <span className="dim">something real.</span>
             </h1>
             <p className="contact__lead">
-              Tell us what you’re making. A real person replies within one working day — or skip the form and book a call.
+              Tell us what you’re making. A real person replies within one working day — or request a call.
             </p>
             <div className="info card">
               <span className="icon-tile">
                 <Icon name="calendar" />
               </span>
               <div>
-                <b>Book a 30-min call</b>
-                <span>Tell us a time that suits you and we’ll confirm by email.</span>
+                <b>Request a call</b>
+                <span>A few quick questions. If it’s a fit, we send you a time to talk.</span>
                 <br />
                 <BookCall where="contact" className="btn btn--ink btn--xs">
-                  Book a call
+                  Request a call
                   <Icon name="arrow-up-right" className="arrow" />
                 </BookCall>
               </div>

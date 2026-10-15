@@ -1,0 +1,141 @@
+/* ---------- Request a call (/apply) ---------- */
+
+.apply-page .next {
+  margin-bottom: 16px;
+}
+.apply {
+  scroll-margin-top: 96px;
+}
+.apply__top {
+  margin: 0 0 28px;
+}
+.apply__steps {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.apply__steps li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.apply__steps li span {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+.apply__steps li span svg {
+  width: 12px;
+  height: 12px;
+}
+.apply__steps li.is-on {
+  color: var(--ink);
+}
+.apply__steps li.is-on span,
+.apply__steps li.is-done span {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.apply__steps li.is-done {
+  color: var(--ink-2);
+}
+.apply__bar {
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.apply__bar i {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease);
+}
+.apply__head {
+  margin: 0 0 22px;
+}
+.apply__head h2 {
+  margin: 0;
+}
+.apply__head p {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+.apply__step {
+  animation: apply-in 0.4s var(--ease) both;
+}
+@keyframes apply-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.apply .field > span em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--muted);
+}
+.apply .field textarea {
+  min-height: 0;
+}
+.apply fieldset.field small {
+  display: block;
+  margin-top: 8px;
+}
+.apply fieldset.field[data-error] .toggle span {
+  border-color: color-mix(in srgb, #e5484d 50%, var(--line));
+}
+.apply__foot .btn--ink {
+  margin-left: 0;
+}
+.apply__foot small {
+  margin-left: auto;
+}
+.apply__sent p {
+  max-width: 420px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .apply__step {
+    animation: none;
+  }
+}
+@media (max-width: 560px) {
+  .apply__steps {
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
+  .apply__steps li:not(.is-on) {
+    font-size: 0;
+    gap: 0;
+  }
+  .apply__foot small {
+    margin-left: 0;
+    width: 100%;
+  }
+  .apply__foot .btn {
+    flex: 1;
+    justify-content: center;
+  }
+}
+.apply-page .h1 {
+  font-size: clamp(2.4rem, 3.6vw, 3.2rem);
+}

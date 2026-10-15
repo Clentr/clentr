@@ -60,7 +60,7 @@ export default async function Resources() {
               See our work
             </Link>
             <BookCall where="resources" className="btn btn--ink btn--sm">
-              Book a call
+              Request a call
               <Icon name="arrow-up-right" className="arrow" />
             </BookCall>
           </div>

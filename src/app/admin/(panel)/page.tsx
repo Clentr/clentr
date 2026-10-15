@@ -58,7 +58,7 @@ export default async function Dashboard({ searchParams }: PageProps<"/admin">) {
       <div className="ad-kpis">
         <Kpi label="Visitors" icon={Users} value={d.kpis.visitors.value} delta={d.kpis.visitors.delta} trend={trend("visitors")} hint="Unique browser sessions" />
         <Kpi label="Page views" icon={Eye} value={d.kpis.views.value} delta={d.kpis.views.delta} trend={trend("views")} hint="Every page opened" />
-        <Kpi label="“Book a call” clicks" icon={PhoneCall} value={d.kpis.bookClicks.value} delta={d.kpis.bookClicks.delta} trend={trend("clicks")} hint="Across all buttons" />
+        <Kpi label="“Request a call” clicks" icon={PhoneCall} value={d.kpis.bookClicks.value} delta={d.kpis.bookClicks.delta} trend={trend("clicks")} hint="Across all buttons" />
         <Kpi label="Conversions" icon={Target} value={d.kpis.conversions.value} delta={d.kpis.conversions.delta} trend={trend("clicks")} hint={`${d.split.bookings} calls booked · ${d.split.leads} messages`} />
       </div>
 
@@ -87,7 +87,7 @@ export default async function Dashboard({ searchParams }: PageProps<"/admin">) {
             format={(slug) => bySlug.get(slug)?.name ?? cap(slug)}
           />
         </Card>
-        <Card title="Which “Book a call”" icon={PhoneCall}>
+        <Card title="Which “Request a call”" icon={PhoneCall}>
           <Ranked rows={d.buttons} format={cap} empty={config.calLink ? "No clicks yet in this period." : "Cal.com isn’t linked yet."} />
         </Card>
         <Card title="Where visitors come from" icon={Globe}>
@@ -175,7 +175,7 @@ export default async function Dashboard({ searchParams }: PageProps<"/admin">) {
                         </>
                       ) : (
                         <>
-                          Someone clicked <b>Book a call</b> <small>· {cap(a.title.slice(10))}</small>
+                          Someone clicked <b>Request a call</b> <small>· {cap(a.title.slice(10))}</small>
                         </>
                       ))}
                   </span>

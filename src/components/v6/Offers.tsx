@@ -87,7 +87,7 @@ export function Offers({ c }: { c: SiteContent["offers"] }) {
                   ))}
                 </ul>
                 <BookCall where={`offer_${i}`} className="btn btn--sm btn--ghost offer6__cta">
-                  Book a call
+                  Request a call
                   <Icon name="arrow-up-right" className="arrow" />
                 </BookCall>
               </Reveal>

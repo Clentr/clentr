@@ -28,7 +28,7 @@ export const defaults = {
     title: "We build your product like it’s our own.",
     dim: "Because we ship our own.",
     lead: "Clentr is a design and engineering studio for founders. Mobile apps, web platforms and AI systems — from first sketch to launch in about 8 weeks.",
-    primary: "Book a 30-min call",
+    primary: "Request a call",
     secondary: "See what we’ve shipped",
   },
   problem: {
@@ -168,7 +168,7 @@ export const builtIn: Record<SectionKey, Def> = {
       { k: "title", label: "Headline", type: "text" },
       { k: "dim", label: "Headline — grey ending", type: "text" },
       { k: "lead", label: "Intro paragraph", type: "textarea", rows: 3 },
-      { k: "primary", label: "Main button", type: "text", hint: "Opens the Cal.com booking." },
+      { k: "primary", label: "Main button", type: "text", hint: "Opens the call request form." },
       { k: "secondary", label: "Second button", type: "text", hint: "Scrolls to the work." },
     ],
   },
@@ -446,10 +446,10 @@ export const templates: Record<Template, Def & { sample: Record<string, unknown>
       { k: "points", label: "Bullet points", type: "strings" },
       { k: "image", label: "Image", type: "image" },
       { k: "button", label: "Button text", type: "text", optional: true },
-      { k: "href", label: "Button link", type: "url", optional: true, hint: "Use “book” to open the Cal.com booking." },
+      { k: "href", label: "Button link", type: "url", optional: true, hint: "Use “book” to open the call request form." },
       { k: "flip", label: "Image side", type: "text", hint: "“left” or “right”." },
     ],
-    sample: { chip: "Spotlight", icon: "star", title: "Tell a story", dim: "with an image.", body: "Write a paragraph here.", points: ["First point", "Second point"], image: "", button: "Book a call", href: "book", flip: "right" },
+    sample: { chip: "Spotlight", icon: "star", title: "Tell a story", dim: "with an image.", body: "Write a paragraph here.", points: ["First point", "Second point"], image: "", button: "Request a call", href: "book", flip: "right" },
   },
   stats: {
     name: "Numbers",
@@ -503,9 +503,9 @@ export const templates: Record<Template, Def & { sample: Record<string, unknown>
       { k: "title", label: "Heading", type: "text" },
       { k: "text", label: "Text", type: "textarea", rows: 2 },
       { k: "button", label: "Button text", type: "text" },
-      { k: "href", label: "Button link", type: "url", hint: "Use “book” to open the Cal.com booking." },
+      { k: "href", label: "Button link", type: "url", hint: "Use “book” to open the call request form." },
     ],
-    sample: { title: "Have an idea?", text: "Tell us about it — we reply within a day.", button: "Book a call", href: "book" },
+    sample: { title: "Have an idea?", text: "Tell us about it — we reply within a day.", button: "Request a call", href: "book" },
   },
 };
 

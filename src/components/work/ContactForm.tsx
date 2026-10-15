@@ -77,7 +77,7 @@ export function ContactForm({ email }: { email: string }) {
         <p>Thanks — a real person will reply from {email} within one working day.</p>
         <BookCall where="form_sent" className="btn btn--ink btn--sm">
           <Icon name="calendar" />
-          Or book a call now
+          Or request a call
         </BookCall>
       </div>
     );

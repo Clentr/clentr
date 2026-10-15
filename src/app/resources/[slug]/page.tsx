@@ -61,7 +61,7 @@ export default async function ResourcePage({ params }: PageProps<"/resources/[sl
             See our work
           </Link>
           <BookCall where={`resource:${r.slug || r.id}`} className="btn btn--ink btn--sm">
-            Book a call
+            Request a call
             <Icon name="arrow-up-right" className="arrow" />
           </BookCall>
         </div>

@@ -32,8 +32,8 @@ export default async function Settings() {
     },
     {
       icon: CalendarCheck,
-      name: "Booking pop-up",
-      about: "Every “Book a call” button opens Cal.com on the page.",
+      name: "Booking link",
+      about: "Sent only to approved call requests, from Leads.",
       ok: Boolean(config.calLink),
       detail: config.calLink ? `cal.com/${config.calLink}` : "Set NEXT_PUBLIC_CAL_LINK",
     },

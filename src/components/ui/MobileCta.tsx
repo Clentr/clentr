@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BookCall } from "./BookCall";
 import { Icon } from "./Icon";
 
-/** Phones only: a "Book a call" bar that appears once the hero has scrolled away, and hides at the final CTA. */
+/** Phones only: a "Request a call" bar that appears once the hero has scrolled away, and hides at the final CTA. */
 export function MobileCta() {
   const [show, setShow] = useState(false);
   useEffect(() => {
@@ -33,7 +33,7 @@ export function MobileCta() {
       </span>
       <BookCall where="mobile_bar" className="btn btn--ink btn--sm">
         <Icon name="calendar" />
-        Book a call
+        Request a call
       </BookCall>
     </div>
   );

@@ -128,7 +128,7 @@ export async function dashboard(days: number) {
     funnel: [
       { label: "Visitors", value: a.visitors },
       { label: "Clicked something", value: a.engaged },
-      { label: "Clicked “Book a call”", value: a.bookers },
+      { label: "Clicked “Request a call”", value: a.bookers },
       { label: "Booked or wrote in", value: a.conversions },
     ],
     split: { leads: a.leads, bookings: a.bookings },

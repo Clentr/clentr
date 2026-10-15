@@ -48,7 +48,7 @@ export function Nav() {
         </ul>
         <BookCall where="nav" className="btn btn--ink btn--sm nav__cta">
           <Icon name="calendar" />
-          Book a call
+          Request a call
           <Icon name="arrow-up-right" className="arrow" />
         </BookCall>
         <button type="button" className="round-btn nav__menu" aria-label="Open menu" aria-expanded={open} onClick={() => setOpen(true)}>
@@ -74,7 +74,7 @@ export function Nav() {
           </ul>
           <BookCall where="nav_2" className="btn btn--ink">
             <Icon name="calendar" />
-            Book a 30-min call
+            Request a call
           </BookCall>
         </div>
       )}

@@ -12,7 +12,7 @@ export default async function Leads({ searchParams }: PageProps<"/admin/leads">)
   const rows = await leads();
   return (
     <>
-      <PageHead title="Leads" sub="Everyone who sent the contact form. Track each one from new to won." />
+      <PageHead title="Leads" sub="Call requests and contact-form messages. Send the booking link to good fits, and track each one from new to won." />
       <LeadInbox leads={rows} initial={Number(id) || rows[0]?.id || null} />
     </>
   );

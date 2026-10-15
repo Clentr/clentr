@@ -55,7 +55,7 @@ export async function Footer() {
               <li>
                 <BookCall where="footer">
                   <Icon name="calendar" />
-                  Book a call
+                  Request a call
                 </BookCall>
               </li>
               <li>

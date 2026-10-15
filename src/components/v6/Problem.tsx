@@ -49,7 +49,7 @@ export function Problem({ c }: { c: SiteContent["problem"] }) {
           </p>
           <BookCall where="problem" className="btn btn--accent btn--sm">
             <Icon name="calendar" />
-            Book a 30-min call
+            Request a call
             <Icon name="arrow-up-right" className="arrow" />
           </BookCall>
         </Reveal>

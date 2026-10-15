@@ -231,7 +231,7 @@ export async function Finder({ c, email }: { c: SiteContent["work"]; email: stri
               <small>BOOK</small>
               <b>30</b>
             </span>
-            <span className="sr-only">Book a call</span>
+            <span className="sr-only">Request a call</span>
           </BookCall>
           <a href={`mailto:${email}`} className="phonehome__dockapp" aria-label="Email us">
             <span className="phonehome__tile phonehome__tile--mail" aria-hidden="true">

@@ -2,8 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition } from "react";
-import { Archive, Check, CircleDot, Inbox, Mail, MapPin, Search, Trash2, Trophy, Wallet, Wrench } from "lucide-react";
+import { Archive, AtSign, CalendarCheck, Check, CircleDot, Clock, Inbox, Layers, Mail, MapPin, MessageCircle, Phone, Search, Target, Trash2, Trophy, Wallet, Wrench } from "lucide-react";
 import type { Lead, LeadStatus } from "@/lib/analytics";
+import { LABELS, readApplication, type Application } from "@/content/apply";
+import { config } from "@/lib/config";
 import { deleteLead, updateLead } from "../../actions";
 
 const STATUSES: { k: LeadStatus; label: string; icon: typeof Inbox }[] = [
@@ -22,6 +24,10 @@ const short = (iso: string) => {
     : d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 };
 
+const calUrl = `https://cal.com/${config.calLink}`;
+const invite = (a: { name: string }) =>
+  `Hi ${a.name.split(" ")[0]},\n\nThanks for telling us about your product — it sounds like a good fit. Pick a time that suits you for a 30-min call:\n${calUrl}\n\nTalk soon,\nThe Clentr team`;
+
 export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; initial: number | null }) {
   const router = useRouter();
   const [leads, setLeads] = useState(initialLeads);
@@ -39,9 +45,10 @@ export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; ini
   const shown = leads.filter(
     (l) =>
       (tab === "all" ? l.status !== "archived" : l.status === tab) &&
-      (!q || `${l.name} ${l.email} ${l.details} ${l.building}`.toLowerCase().includes(q.toLowerCase())),
+      (!q || `${l.name} ${l.email} ${l.details} ${l.building} ${l.budget}`.toLowerCase().includes(q.toLowerCase())),
   );
   const lead = leads.find((l) => l.id === sel) ?? null;
+  const app = readApplication(lead?.details ?? null);
 
   function setStatus(status: LeadStatus) {
     if (!lead) return;
@@ -70,7 +77,7 @@ export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; ini
           <Inbox />
         </span>
         <h2>No messages yet</h2>
-        <p>When someone sends the contact form on clentr.com, it lands here — and in your email.</p>
+        <p>When someone requests a call or sends the contact form on clentr.com, it lands here — and in your email.</p>
       </div>
     );
   }
@@ -102,8 +109,11 @@ export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; ini
                     <b>{l.name}</b>
                     <time>{short(l.created_at)}</time>
                   </span>
-                  <span className="ad-inbox__preview">{l.details}</span>
-                  <span className={`ad-status ad-status--${l.status}`}>{l.status}</span>
+                  <span className="ad-inbox__preview">{readApplication(l.details)?.idea ?? l.details}</span>
+                  <span className="ad-inbox__tags">
+                    <span className={`ad-status ad-status--${l.status}`}>{l.status}</span>
+                    {readApplication(l.details) && <span className="ad-status ad-status--request">Call request</span>}
+                  </span>
                 </span>
               </button>
             </li>
@@ -122,13 +132,40 @@ export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; ini
                 <a href={`mailto:${lead.email}`}>{lead.email}</a>
               </div>
               <div className="ad-lead__actions">
-                <a
-                  className="ad-btn ad-btn--primary"
-                  href={`mailto:${lead.email}?subject=${encodeURIComponent("Re: your project with Clentr")}`}
-                >
-                  <Mail />
-                  Reply
-                </a>
+                {app ? (
+                  <>
+                    <a
+                      className="ad-btn ad-btn--primary"
+                      href={`mailto:${lead.email}?subject=${encodeURIComponent("Let’s talk — pick a time")}&body=${encodeURIComponent(invite(lead))}`}
+                      onClick={() => lead.status === "new" && setStatus("contacted")}
+                      title="Email them the booking link"
+                    >
+                      <CalendarCheck />
+                      Send booking link
+                    </a>
+                    {app.phone.replace(/\D/g, "").length >= 7 && (
+                      <a
+                        className="ad-btn"
+                        href={`https://wa.me/${app.phone.replace(/\D/g, "")}?text=${encodeURIComponent(invite(lead))}`}
+                        target="_blank"
+                        rel="noopener"
+                        onClick={() => lead.status === "new" && setStatus("contacted")}
+                        title="Send the booking link on WhatsApp"
+                      >
+                        <MessageCircle />
+                        WhatsApp
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <a
+                    className="ad-btn ad-btn--primary"
+                    href={`mailto:${lead.email}?subject=${encodeURIComponent("Re: your project with Clentr")}`}
+                  >
+                    <Mail />
+                    Reply
+                  </a>
+                )}
                 <button className="ad-iconbtn ad-iconbtn--danger" onClick={remove} aria-label="Delete lead" title="Delete">
                   <Trash2 />
                 </button>
@@ -144,6 +181,10 @@ export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; ini
               ))}
             </div>
 
+            {app ? (
+              <Answers app={app} lead={lead} />
+            ) : (
+              <>
             <dl className="ad-facts">
               <div>
                 <dt>
@@ -175,6 +216,8 @@ export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; ini
               <h3>Message</h3>
               <p>{lead.details}</p>
             </section>
+              </>
+            )}
 
             <Notes
               key={lead.id}
@@ -189,6 +232,66 @@ export function LeadInbox({ leads: initialLeads, initial }: { leads: Lead[]; ini
         )}
       </div>
     </div>
+  );
+}
+
+/** A "Request a call" application, laid out for a quick yes/no. */
+function Answers({ app, lead }: { app: Application; lead: Lead }) {
+  const facts: [typeof Wallet, keyof Application][] = [
+    [Wallet, "budget"],
+    [Clock, "timeline"],
+    [Layers, "stage"],
+    [Target, "expect"],
+    [Phone, "phone"],
+    [AtSign, "instagram"],
+  ];
+  const ig = app.instagram.replace(/^@/, "").replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/\/.*$/, "");
+  return (
+    <>
+      <dl className="ad-facts">
+        {facts.map(([I, k]) => (
+          <div key={k}>
+            <dt>
+              <I /> {LABELS[k]}
+            </dt>
+            <dd>
+              {k === "phone" ? (
+                <a href={`tel:${app.phone.replace(/[^\d+]/g, "")}`}>{app.phone}</a>
+              ) : k === "instagram" && ig ? (
+                <a href={`https://instagram.com/${encodeURIComponent(ig)}`} target="_blank" rel="noopener">
+                  @{ig}
+                </a>
+              ) : (
+                app[k] || "—"
+              )}
+            </dd>
+          </div>
+        ))}
+        <div>
+          <dt>
+            <Wrench /> {LABELS.before}
+          </dt>
+          <dd>{app.before || "—"}</dd>
+        </div>
+        <div>
+          <dt>
+            <MapPin /> Country · received
+          </dt>
+          <dd>
+            {lead.country || "—"} · {when(lead.created_at)}
+          </dd>
+        </div>
+      </dl>
+      {(["idea", "problem", "why", "extra"] as const).map(
+        (k) =>
+          app[k] && (
+            <section key={k} className="ad-message">
+              <h3>{LABELS[k]}</h3>
+              <p>{app[k]}</p>
+            </section>
+          ),
+      )}
+    </>
   );
 }
 

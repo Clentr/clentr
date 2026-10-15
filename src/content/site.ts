@@ -6,7 +6,7 @@ export const site = {
     "Clentr takes ideas from first sketch to shipped software across mobile apps, web platforms, desktop tools and AI systems.",
 };
 
-export const bookCallHref = `mailto:${site.email}?subject=${encodeURIComponent("Book a 30-min call")}`;
+export const bookCallHref = `mailto:${site.email}?subject=${encodeURIComponent("Request a call")}`;
 
 export const nav = [
   { label: "Services", href: "/#services" },

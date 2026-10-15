@@ -20,7 +20,7 @@ export function ContactCta({ c }: { c: SiteContent["cta"] }) {
           <div className="cta__ctas">
             <BookCall where="cta" className="btn btn--accent">
               <Icon name="calendar" />
-              Book a 30-min call
+              Request a call
               <Icon name="arrow-up-right" className="arrow" />
             </BookCall>
             <Link href="/contact" className="btn btn--light">

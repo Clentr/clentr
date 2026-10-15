@@ -184,7 +184,7 @@ export default async function CaseStudy({ params }: PageProps<"/work/[slug]">) {
               <p>We reply within one working day.</p>
               <BookCall where="case_study" className="btn btn--ink btn--xs">
                 <Icon name="calendar" />
-                Book a call
+                Request a call
               </BookCall>
             </div>
           </aside>
@@ -206,7 +206,7 @@ export default async function CaseStudy({ params }: PageProps<"/work/[slug]">) {
             <div className="closing__ctas">
               <BookCall where="case_study_2" className="btn btn--ink btn--sm">
                 <Icon name="calendar" />
-                Book a 30-min call
+                Request a call
                 <Icon name="arrow-up-right" className="arrow" />
               </BookCall>
               <Link href="/contact" className="btn btn--ghost btn--sm">

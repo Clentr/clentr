@@ -1240,6 +1240,20 @@
   color: var(--ink-2);
   font-size: 13px;
 }
+.ad-inbox__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.ad-status--request {
+  text-transform: none;
+}
+.ad-status--request::before {
+  border-radius: 2px;
+}
+.ad-facts a {
+  color: var(--accent);
+}
 .ad-inbox__none {
   padding: 24px;
   color: var(--muted);
@@ -1264,7 +1278,7 @@
 .ad-lead__head h2 {
   font-size: 20px;
 }
-.ad-lead__head a {
+.ad-lead__head > div:not(.ad-lead__actions) > a {
   color: var(--accent);
   font-size: 13.5px;
 }

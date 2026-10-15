@@ -432,7 +432,7 @@
     min-height: 40px;
   }
 
-  /* ---------- Sticky "Book a call" bar ---------- */
+  /* ---------- Sticky "Request a call" bar ---------- */
   .mcta {
     position: fixed !important;
     left: 12px;
