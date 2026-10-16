@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { serviceClient } from "@/lib/supabase/service";
 import { getSite } from "@/lib/content";
+import { FORM_ORIGIN } from "@/lib/config";
 
 const clip = (v: unknown, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
 
@@ -29,17 +30,19 @@ export async function POST(req: NextRequest) {
           .insert({ ...lead, path: clip(body.path, 300), country: req.headers.get("x-vercel-ip-country") })
           .then(({ error }) => !error)
       : false,
-    sendEmail(lead, req.nextUrl.origin),
+    sendEmail(lead),
   ]);
   return Response.json({ ok: stored || emailed, stored, emailed }, { status: stored || emailed ? 200 : 502 });
 }
 
-async function sendEmail(lead: Record<string, string>, origin: string) {
+async function sendEmail(lead: Record<string, string>) {
+  // Local testing would send FormSubmit activation emails for localhost.
+  if (process.env.NODE_ENV !== "production") return false;
   try {
     const to = (await getSite()).content.contact.email;
     const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", Origin: origin, Referer: `${origin}/contact` },
+      headers: { "Content-Type": "application/json", Accept: "application/json", ...FORM_ORIGIN },
       body: JSON.stringify({ _subject: `New project enquiry — ${lead.building}`, _replyto: lead.email, _template: "table", ...lead }),
       signal: AbortSignal.timeout(8000),
     });

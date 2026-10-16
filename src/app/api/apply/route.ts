@@ -1,7 +1,8 @@
 import type { NextRequest } from "next/server";
 import { serviceClient } from "@/lib/supabase/service";
 import { getSite } from "@/lib/content";
-import { LABELS, LIMITS, packApplication, type Application } from "@/content/apply";
+import { FORM_ORIGIN } from "@/lib/config";
+import { instagramHandle, LABELS, LIMITS, packApplication, phoneValid, type Application } from "@/content/apply";
 
 const clip = (v: unknown, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
 
@@ -14,8 +15,9 @@ export async function POST(req: NextRequest) {
   if (clip(body._honey, 10)) return Response.json({ ok: true });
 
   const a = Object.fromEntries(Object.entries(LIMITS).map(([k, n]) => [k, clip(body[k], n)])) as Application;
-  const missing = (Object.keys(LIMITS) as (keyof Application)[]).filter((k) => k !== "extra" && !a[k]);
-  if (missing.length || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email))
+  if (a.instagram) a.instagram = instagramHandle(a.instagram) || a.instagram;
+  const missing = (Object.keys(LIMITS) as (keyof Application)[]).filter((k) => k !== "extra" && k !== "instagram" && !a[k]);
+  if (missing.length || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email) || !phoneValid(a.phone))
     return Response.json({ ok: false, error: "invalid", missing }, { status: 400 });
 
   const db = serviceClient();
@@ -34,18 +36,20 @@ export async function POST(req: NextRequest) {
           })
           .then(({ error }) => !error)
       : false,
-    sendEmail(a, req.nextUrl.origin),
+    sendEmail(a),
   ]);
   return Response.json({ ok: stored || emailed, stored, emailed }, { status: stored || emailed ? 200 : 502 });
 }
 
-async function sendEmail(a: Application, origin: string) {
+async function sendEmail(a: Application) {
+  // Local testing would send FormSubmit activation emails for localhost.
+  if (process.env.NODE_ENV !== "production") return false;
   try {
     const to = (await getSite()).content.contact.email;
     const rows = Object.fromEntries((Object.keys(LABELS) as (keyof Application)[]).map((k) => [LABELS[k], a[k] || "—"]));
     const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", Origin: origin, Referer: `${origin}/apply` },
+      headers: { "Content-Type": "application/json", Accept: "application/json", ...FORM_ORIGIN },
       body: JSON.stringify({ _subject: `Call request — ${a.name} · ${a.budget}`, _replyto: a.email, _template: "table", ...rows }),
       signal: AbortSignal.timeout(8000),
     });

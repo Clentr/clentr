@@ -62,7 +62,8 @@ export async function prepareUploads(slug: string, types: string[]) {
 
 const isOurUrl = (u: string) => {
   const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  return Boolean(base && u.startsWith(`${base}/storage/v1/object/public/${BUCKET}/`));
+  // Built-in projects can also use the screenshots shipped with the site.
+  return /^\/screens\/[\w.-]+$/.test(u) || Boolean(base && u.startsWith(`${base}/storage/v1/object/public/${BUCKET}/`));
 };
 
 /** Creates or updates a project. The case-study page, folder and cards are generated from it. */
@@ -78,6 +79,7 @@ export async function saveProject(_: FormState, form: FormData): Promise<FormSta
   if (!name) return { error: "Name is required." };
 
   const status = text(form, "status") === "rnd" ? "rnd" : "shipped";
+  const group = (["app", "web", "ai"] as const).find((g) => g === text(form, "group")) ?? (status === "shipped" ? "app" : "web");
   const category = text(form, "category");
   const platform = text(form, "platform");
   const services = form.getAll("services").map(String);
@@ -93,7 +95,7 @@ export async function saveProject(_: FormState, form: FormData): Promise<FormSta
           url: x.url,
           w: Math.max(0, Math.round(Number(x.w) || 0)),
           h: Math.max(0, Math.round(Number(x.h) || 0)),
-          device: x.device === "desktop" ? "desktop" : "phone",
+          device: x.device === "desktop" || x.device === "tablet" ? x.device : "phone",
           ...(x.crop && [x.crop.x, x.crop.y, x.crop.z].every((n) => Number.isFinite(Number(n)))
             ? { crop: { x: Math.min(100, Math.max(0, Number(x.crop.x))), y: Math.min(100, Math.max(0, Number(x.crop.y))), z: Math.min(4, Math.max(1, Number(x.crop.z))) } }
             : {}),
@@ -115,6 +117,7 @@ export async function saveProject(_: FormState, form: FormData): Promise<FormSta
       kind: text(form, "kind"),
       platform,
       status,
+      group,
       eyebrow: `Case study · ${category}`,
       tagline,
       servicesLine: services.slice(0, 3).join(" · "),

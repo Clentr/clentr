@@ -4,14 +4,14 @@ import { useEffect, useState } from "react";
 import { BookCall } from "./BookCall";
 import { Icon } from "./Icon";
 
-/** Phones only: a "Request a call" bar that appears once the hero has scrolled away, and hides at the final CTA. */
+/** Phones only: a "Request a call" bar that appears once the hero has scrolled away, and hides at the final CTA (or the footer). */
 export function MobileCta() {
   const [show, setShow] = useState(false);
   useEffect(() => {
     let raf = 0;
     const update = () => {
       raf = 0;
-      const cta = document.querySelector(".cta")?.getBoundingClientRect();
+      const cta = document.querySelector(".cta, footer")?.getBoundingClientRect();
       const nearEnd = cta ? cta.top < window.innerHeight : false;
       setShow(window.scrollY > window.innerHeight * 0.9 && !nearEnd);
     };

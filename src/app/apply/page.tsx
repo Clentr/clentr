@@ -26,7 +26,7 @@ export default async function Apply() {
           </Link>
         </nav>
         <div className="contact apply-page">
-          <div>
+          <div className="apply-page__intro">
             <h1 className="h1">
               Request a call.
               <br />
@@ -35,6 +35,9 @@ export default async function Apply() {
             <p className="contact__lead">
               We take on a small number of new products each month. These few questions help us see if we’re the right team, so the call is worth your time.
             </p>
+          </div>
+          <ApplyForm email={email} />
+          <div className="apply-page__aside">
             <div className="next card">
               <b>How it works</b>
               <ol>
@@ -56,7 +59,6 @@ export default async function Apply() {
               </div>
             </a>
           </div>
-          <ApplyForm email={email} />
         </div>
       </main>
       <Footer />

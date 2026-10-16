@@ -3536,3 +3536,21 @@
   background: var(--surface-3);
   font-size: 11px;
 }
+.pf-choice--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.pf-choice--3 + .pf-choice--sm {
+  margin-top: 8px;
+  grid-template-columns: auto auto;
+  justify-content: start;
+}
+.pf-choice--3 label {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 10px;
+}
+.pf-choice--3 label > span {
+  min-width: 0;
+  line-height: 1.25;
+}

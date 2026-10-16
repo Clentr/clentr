@@ -1,10 +1,10 @@
 "use client";
 
 import { createBrowserClient } from "@supabase/ssr";
-import { ArrowDown, ArrowUp, Check, Crop as CropIcon, ImagePlus, Loader, Smartphone, Monitor, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Check, Crop as CropIcon, FlaskConical, ImagePlus, Loader, Rocket, Smartphone, Monitor, Sparkles, X } from "lucide-react";
 import { useActionState, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { guessDevice, shotsOf, type Project, type Shot } from "@/content/projects";
+import { GROUPS, groupOf, guessDevice, shotsOf, type Group, type Project, type Shot } from "@/content/projects";
 import { Device, ProjectIcon, StageArt } from "@/components/work/ProjectArt";
 import { config } from "@/lib/config";
 import { prepareUploads, saveProject } from "../../actions";
@@ -59,6 +59,7 @@ export function ProjectForm({ project, builtIn = false, published = true, sort =
   const [platform, setPlatform] = useState(project?.platform ?? "");
   const [color, setColor] = useState(project?.color ?? "#5b4fe0");
   const [status, setStatus] = useState<Project["status"]>(project?.status ?? "shipped");
+  const [group, setGroup] = useState<Group>(project ? groupOf(project) : "app");
   const [shots, setShots] = useState<Shot[]>(project?.media ? shotsOf(project.media) : []);
   const [icon, setIcon] = useState<string | null>(project?.media?.icon ?? null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -123,6 +124,7 @@ export function ProjectForm({ project, builtIn = false, published = true, sort =
     platform: platform || "Platform",
     color,
     status,
+    group,
     media: shots.length
       ? { icon, screens: shots.map((x) => x.url), device: shots[0].device, shots }
       : builtIn
@@ -173,15 +175,23 @@ export function ProjectForm({ project, builtIn = false, published = true, sort =
           <div className="pf-row">
             <div className="pf-field">
               <span>Section on the site</span>
-              <div className="pf-choice" role="radiogroup">
+              <div className="pf-choice pf-choice--3" role="radiogroup">
+                {GROUPS.map((g) => (
+                  <label key={g.k} className={group === g.k ? "is-on" : ""}>
+                    <input type="radio" name="group" value={g.k} checked={group === g.k} onChange={() => setGroup(g.k)} />
+                    {g.k === "app" ? <Smartphone /> : g.k === "web" ? <Monitor /> : <Sparkles />}
+                    <span>
+                      <b>{g.label}</b>
+                    </span>
+                  </label>
+                ))}
+              </div>
+              <div className="pf-choice pf-choice--sm" role="radiogroup" aria-label="Status">
                 {(["shipped", "rnd"] as const).map((v) => (
                   <label key={v} className={status === v ? "is-on" : ""}>
                     <input type="radio" name="status" value={v} checked={status === v} onChange={() => setStatus(v)} />
-                    {v === "shipped" ? <Smartphone /> : <Monitor />}
-                    <span>
-                      <b>{v === "shipped" ? "Mobile apps" : "Web & desktop"}</b>
-                      <small>{v === "shipped" ? "Shipped" : "In R&D"}</small>
-                    </span>
+                    {v === "shipped" ? <Rocket /> : <FlaskConical />}
+                    {v === "shipped" ? "Shipped" : "In R&D"}
                   </label>
                 ))}
               </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getLibrary } from "@/lib/resources";
 import { BookCall } from "@/components/ui/BookCall";
 import { Footer } from "@/components/ui/Footer";
+import { MobileCta } from "@/components/ui/MobileCta";
 import { Icon } from "@/components/ui/Icon";
 import { Nav } from "@/components/ui/Nav";
 import { Library } from "@/components/resources/Library";
@@ -67,6 +68,7 @@ export default async function Resources() {
         </section>
       </main>
       <Footer />
+      <MobileCta />
     </div>
   );
 }

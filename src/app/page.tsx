@@ -23,8 +23,8 @@ import { ResourceHandoff } from "@/components/resources/ResourceHandoff";
 /** The home page, in the order and with the sections chosen in the admin panel. */
 export default async function Home() {
   const { content: c, layout, sections } = await getSite();
-  // Clentr's own live products (DealsAmor is a client project).
-  const ownApps = (await getWork()).mobileApps.filter((p) => p.slug !== "dealsamor");
+  // Clentr's own live products (DealsAmor and NDA work are client projects).
+  const ownApps = (await getWork()).mobileApps.filter((p) => p.slug !== "dealsamor" && !p.nda);
   const builtIn: Record<string, () => ReactNode> = {
     hero: () => <Hero c={c.hero} />,
     problem: () => <Problem c={c.problem} />,

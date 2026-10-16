@@ -16,3 +16,9 @@ export function adminEmails() {
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
 }
+
+/**
+ * Every form emails through FormSubmit as this one address, so it needs activating only once
+ * (FormSubmit asks to activate each new page address it sees).
+ */
+export const FORM_ORIGIN = { Origin: "https://www.clentr.com", Referer: "https://www.clentr.com/" };

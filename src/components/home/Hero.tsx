@@ -7,7 +7,7 @@ import { WorkCard } from "../work/WorkCard";
 import { BookCall } from "../ui/BookCall";
 
 export async function Hero({ c }: { c: SiteContent["hero"] }) {
-  const { mobileApps, webDesktop, carousel: cards } = await getWork();
+  const { mobileApps, shipped, rnd, carousel: cards } = await getWork();
   return (
     <section aria-labelledby="hero-title">
       <div className="container hero">
@@ -39,11 +39,11 @@ export async function Hero({ c }: { c: SiteContent["hero"] }) {
           </span>
           <span className="proof__item">
             <Icon name="rocket" />
-            {mobileApps.length} products shipped
+            {shipped} products shipped
           </span>
           <span className="proof__item">
             <Icon name="sparkles" />
-            {webDesktop.length} in R&amp;D
+            {rnd} in R&amp;D
           </span>
           <span className="proof__item">
             <Icon name="monitor-smartphone" />

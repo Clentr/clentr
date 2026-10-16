@@ -1,7 +1,7 @@
 import { Fragment, type CSSProperties } from "react";
 import Link from "next/link";
 import type { SiteContent } from "@/content/cms";
-import type { Project } from "@/content/projects";
+import { GROUPS, type Project } from "@/content/projects";
 import { getWork } from "@/lib/projects";
 import { Art } from "../ui/Art";
 import { Icon } from "../ui/Icon";
@@ -38,18 +38,16 @@ function FolderItem({ p }: { p: Project }) {
   );
 }
 
-/** Projects whose Figma icon is only a letter — shown as a tinted tile on the phone screen. */
-const LETTER_ICONS = new Set(["wayfare", "siren", "edith", "voice-orchestrator", "cafemanager"]);
 
 /** Slots per home-screen page: 4 columns × 6 rows. The widget and each group title take a row. */
 const PER_PAGE = 24;
 type PhonePage = { widget: boolean; groups: { title: string; apps: Project[] }[] };
 
 /** Lays the projects out like an iPhone: fixed-size pages, filled in order. Empty groups are skipped. */
-function phonePages(shipped: Project[], rnd: Project[]): PhonePage[] {
+function phonePages(groups: (readonly [string, Project[]])[]): PhonePage[] {
   const pages: PhonePage[] = [{ widget: true, groups: [] }];
   let room = PER_PAGE - 4; // the widget takes one row
-  for (const [title, list] of [["Shipped", shipped], ["Web, desktop & R&D", rnd]] as const) {
+  for (const [title, list] of groups) {
     let first = true;
     for (let i = 0; i < list.length; ) {
       // A group title needs a row of its own; start a new page if there's no room for it plus one row.
@@ -77,7 +75,9 @@ const SIDEBAR = [
 
 /** The work, organised like the Mac it was built on. */
 export async function Finder({ c, email }: { c: SiteContent["work"]; email: string }) {
-  const { mobileApps, webDesktop } = await getWork();
+  const { mobileApps, webDesktop, aiWork, all, shipped, rnd } = await getWork();
+  // Empty columns stay out of sight.
+  const groups = GROUPS.map((g) => [g.label, { app: mobileApps, web: webDesktop, ai: aiWork }[g.k]] as const).filter(([, list]) => list.length);
   return (
     <section className="section" id="work" aria-labelledby="work-title">
       <div className="container">
@@ -149,18 +149,15 @@ export async function Finder({ c, email }: { c: SiteContent["work"]; email: stri
               </span>
             </div>
             <div className="finder__body">
-              {[
-                ["Mobile apps", mobileApps],
-                ["Web & desktop", webDesktop],
-              ].map(([title, list]) => (
-                <div key={title as string}>
+              {groups.map(([title, list]) => (
+                <div key={title}>
                   <div className="finder__group-head">
-                    <b>{title as string}</b>
-                    <span>{(list as Project[]).length} items</span>
+                    <b>{title}</b>
+                    <span>{list.length} items</span>
                     <em aria-hidden="true">Show Less</em>
                   </div>
                   <div className="folders">
-                    {(list as Project[]).map((p) => (
+                    {list.map((p) => (
                       <FolderItem key={p.slug} p={p} />
                     ))}
                   </div>
@@ -170,7 +167,7 @@ export async function Finder({ c, email }: { c: SiteContent["work"]; email: stri
             <div className="finder__path" aria-hidden="true">
               <Icon name="hard-drive" />
               <span>Macintosh HD › Users › clentr › Work</span>
-              <span>{mobileApps.length + webDesktop.length} items, 418 GB available</span>
+              <span>{all.length} items, 418 GB available</span>
             </div>
           </div>
         </div>
@@ -189,14 +186,14 @@ export async function Finder({ c, email }: { c: SiteContent["work"]; email: stri
           </span>
         </div>
         <PhonePager
-          pages={phonePages(mobileApps, webDesktop).map((pg, n) => (
+          pages={phonePages(groups.map(([t, l]) => [t === "Mobile apps" ? "Apps" : t, l] as const)).map((pg, n) => (
             <Fragment key={n}>
               {pg.widget && (
                 <div className="phonehome__widget">
                   <Mark className="phonehome__mark" />
                   <span>
-                    <b>{mobileApps.length} shipped</b>
-                    {webDesktop.length > 0 && <small>{webDesktop.length} in R&amp;D · web &amp; desktop</small>}
+                    <b>{shipped} shipped</b>
+                    {rnd > 0 && <small>{rnd} in R&amp;D</small>}
                     <small>Tap an app to open its story</small>
                   </span>
                 </div>
@@ -208,13 +205,7 @@ export async function Finder({ c, email }: { c: SiteContent["work"]; email: stri
                     {g.apps.map((p) => (
                       <li key={p.slug}>
                         <Link href={`/work/${p.slug}`} className="phonehome__app" aria-label={`Open ${p.name} — ${p.kind}`}>
-                          {LETTER_ICONS.has(p.slug) ? (
-                            <span className="phonehome__icon phonehome__letter" style={{ "--p": p.color } as CSSProperties}>
-                              {p.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                            </span>
-                          ) : (
-                            <ProjectIcon p={p} size={60} className="phonehome__icon" />
-                          )}
+                          <ProjectIcon p={p} size={60} className="phonehome__icon" />
                           <span>{p.name}</span>
                         </Link>
                       </li>

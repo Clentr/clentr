@@ -823,7 +823,7 @@ textarea {
 }
 .folders {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   margin-bottom: 1.2cqw;
 }
 .folder {
@@ -855,7 +855,17 @@ textarea {
   white-space: nowrap;
   transition: background-color 0.2s, color 0.2s;
 }
+/* Long names wrap onto two lines, like Finder's icon view. */
+.folder__label {
+  max-width: 100%;
+}
+.folder__label span {
+  white-space: normal;
+  text-wrap: balance;
+  line-height: 1.25;
+}
 .folder__label i {
+  flex: none;
   width: 0.55cqw;
   height: 0.55cqw;
   border-radius: 50%;
@@ -5650,11 +5660,11 @@ fieldset.field {
   overflow: visible;
 }
 /* iPhone: black titanium bezel, dynamic island, side buttons. */
+/* The screen is inset from the frame in its own proportions (padding % would follow the parent's width). */
 .dev--phone {
   aspect-ratio: 9 / 19.5;
-  padding: 2.6%;
-  border-radius: 15% / 7%;
-  background: linear-gradient(145deg, #3a3a3e, #121214 40%, #2a2a2e);
+  border-radius: 14% / 6.5%;
+  background: linear-gradient(145deg, #2e2e32, #0b0b0d 35%, #1f1f23);
   box-shadow:
     inset 0 0 0 1px rgba(255, 255, 255, 0.12),
     0 0 0 1px rgba(0, 0, 0, 0.5),
@@ -5680,7 +5690,27 @@ fieldset.field {
   height: 11%;
 }
 .dev--phone .dev__screen {
-  border-radius: 12.5% / 5.8%;
+  position: absolute;
+  inset: 0.83% 1.8%;
+  height: auto;
+  border-radius: 12.4% / 5.8%;
+  background: #000;
+}
+/* Counter tablet, in landscape: a slim black bezel, no title bar. */
+.dev--tablet {
+  aspect-ratio: 4 / 3;
+  border-radius: 4.6% / 6.1%;
+  background: linear-gradient(145deg, #2e2e32, #0b0b0d 35%, #1f1f23);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 0 0 1px rgba(0, 0, 0, 0.5),
+    0 24px 50px -22px rgba(0, 0, 0, 0.55);
+}
+.dev--tablet .dev__screen {
+  position: absolute;
+  inset: 2.4% 1.8%;
+  height: auto;
+  border-radius: 3% / 4%;
   background: #000;
 }
 .dev__island {

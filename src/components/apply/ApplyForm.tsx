@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { BEFORE, BUDGETS, EXPECTS, STAGES, TIMELINES, type Application } from "@/content/apply";
+import { BEFORE, BUDGETS, COUNTRIES, EXPECTS, flagOf, groupDigits, instagramHandle, phoneProblem, STAGES, TIMELINES, type Application } from "@/content/apply";
 import { Icon } from "../ui/Icon";
 
 type Key = keyof Application;
@@ -16,8 +16,7 @@ const STEPS: { title: string; sub: string; keys: Key[] }[] = [
 const MSG: Partial<Record<Key, string>> = {
   name: "Please add your name.",
   email: "Please add a valid email.",
-  phone: "Please add a number we can reach you on.",
-  instagram: "Please add your Instagram handle.",
+  instagram: "That isn’t a valid Instagram username.",
   idea: "A line or two about the product, please.",
   stage: "Pick the closest one.",
   problem: "Tell us who it’s for and what it solves.",
@@ -28,11 +27,26 @@ const MSG: Partial<Record<Key, string>> = {
   why: "A line is enough.",
 };
 
-function check(k: Key, v: string) {
+/** Phone is kept as "+91 98765 43210"; this splits it back into country and digits. */
+const splitPhone = (v: string) => {
+  const c = COUNTRIES.find((x) => v.startsWith(`${x.code} `)) ?? COUNTRIES[0];
+  return { c, digits: v.slice(c.code.length).replace(/\D/g, "") };
+};
+
+function problem(k: Key, v: string): string | null {
+  if (k === "phone") {
+    const { c, digits } = splitPhone(v);
+    return phoneProblem(c, digits);
+  }
+  if (k === "instagram") return v.trim() && !instagramHandle(v) ? MSG.instagram! : null;
+  return check(k, v) ? null : MSG[k]!;
+}
+
+function check(k: Key, v: string): boolean {
   const s = v.trim();
   if (k === "extra") return true;
+  if (k === "phone" || k === "instagram") return !problem(k, v);
   if (k === "email") return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
-  if (k === "phone") return s.replace(/\D/g, "").length >= 7;
   if (k === "idea" || k === "problem") return s.length >= 10;
   return s.length > 0;
 }
@@ -40,7 +54,7 @@ function check(k: Key, v: string) {
 /** Three short steps; answers go to /api/apply and the team replies with a booking link if it’s a fit. */
 export function ApplyForm({ email }: { email: string }) {
   const [step, setStep] = useState(0);
-  const [a, setA] = useState<Application>(EMPTY);
+  const [a, setA] = useState<Application>({ ...EMPTY, phone: `${COUNTRIES[0].code} ` });
   const [errors, setErrors] = useState<Partial<Record<Key, string>>>({});
   const [sending, setSending] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -60,7 +74,7 @@ export function ApplyForm({ email }: { email: string }) {
 
   function validate() {
     const bad = STEPS[step].keys.filter((k) => !check(k, a[k]));
-    setErrors(Object.fromEntries(bad.map((k) => [k, MSG[k]])));
+    setErrors(Object.fromEntries(bad.map((k) => [k, problem(k, a[k])])));
     if (bad.length) card.current?.querySelector<HTMLElement>(`[data-k="${bad[0]}"] input, [data-k="${bad[0]}"] textarea`)?.focus();
     return !bad.length;
   }
@@ -81,7 +95,7 @@ export function ApplyForm({ email }: { email: string }) {
       const res = await fetch("/api/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...a, _honey: honey.current?.value ?? "" }),
+        body: JSON.stringify({ ...a, instagram: a.instagram.trim() ? instagramHandle(a.instagram) : "", _honey: honey.current?.value ?? "" }),
       });
       const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
       if (!json.ok) throw new Error("send failed");
@@ -150,8 +164,8 @@ export function ApplyForm({ email }: { email: string }) {
               <Text k="email" label="Email" value={a.email} onChange={set("email")} error={errors.email} auto="email" type="email" placeholder="you@company.com" />
             </div>
             <div className="form__row">
-              <Text k="phone" label="Phone / WhatsApp" value={a.phone} onChange={set("phone")} error={errors.phone} auto="tel" type="tel" placeholder="+91 98765 43210" />
-              <Text k="instagram" label="Instagram" value={a.instagram} onChange={set("instagram")} error={errors.instagram} placeholder="@yourhandle" />
+              <Phone value={a.phone} onChange={set("phone")} error={errors.phone} />
+              <Text k="instagram" label="Instagram" hint="Optional" value={a.instagram} onChange={set("instagram")} error={errors.instagram} placeholder="@yourhandle" />
             </div>
           </>
         )}
@@ -201,7 +215,7 @@ function Label({ label, hint }: { label: string; hint?: string }): ReactNode {
   return (
     <>
       {label}
-      {hint && <em>{hint}</em>}
+      {hint && <em className={hint === "Optional" ? "is-opt" : undefined}>{hint}</em>}
     </>
   );
 }
@@ -223,6 +237,62 @@ function Text({
       )}
       {error && <small>{error}</small>}
     </label>
+  );
+}
+
+/** Country code picker + national number, formatted as you type. */
+function Phone({ value, onChange, error }: { value: string; onChange: (v: string) => void; error?: string }) {
+  const { c, digits } = splitPhone(value);
+  const max = c.len[1];
+  return (
+    <div className="field" data-k="phone" {...(error ? { "data-error": "" } : {})}>
+      <span id="apply-phone">Phone / WhatsApp</span>
+      <div className="phone">
+        <label className="phone__cc">
+          <span aria-hidden="true">
+            <i>{flagOf(c.iso)}</i>
+            {c.code}
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </span>
+          <select
+            aria-label="Country code"
+            value={c.iso}
+            onChange={(e) => {
+              const n = COUNTRIES.find((x) => x.iso === e.target.value) ?? COUNTRIES[0];
+              onChange(`${n.code} ${groupDigits(digits.slice(0, n.len[1]), n.iso)}`);
+            }}
+          >
+            {COUNTRIES.map((x) => (
+              <option key={x.iso} value={x.iso}>
+                {flagOf(x.iso)} {x.name} ({x.code})
+              </option>
+            ))}
+          </select>
+        </label>
+        <input
+          name="phone"
+          type="tel"
+          inputMode="numeric"
+          autoComplete="tel-national"
+          aria-labelledby="apply-phone"
+          aria-invalid={!!error}
+          placeholder={c.sample}
+          value={groupDigits(digits, c.iso)}
+          onChange={(e) => {
+            let d = e.target.value.replace(/\D/g, "");
+            // Pasted with the country code, or a leading trunk 0: keep the national number only.
+            const cc = c.code.slice(1);
+            if (e.target.value.trim().startsWith("+") && d.startsWith(cc)) d = d.slice(cc.length);
+            else if (d.length > max && d.startsWith(cc)) d = d.slice(cc.length);
+            d = d.replace(/^0+/, "").slice(0, max);
+            onChange(`${c.code} ${groupDigits(d, c.iso)}`);
+          }}
+        />
+      </div>
+      {error && <small>{error}</small>}
+    </div>
   );
 }
 

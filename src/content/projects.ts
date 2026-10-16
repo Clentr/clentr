@@ -31,9 +31,21 @@ export type Project = {
   liveLabel?: string;
   /** Under NDA: no public link — the page invites people to request a walkthrough instead. */
   nda?: boolean;
+  /** App icon shipped with the site (in /public); wins over the Figma icon and an uploaded one. */
+  icon?: string;
+  /** Column in the Work section. Older entries go by their status: shipped → apps, R&D → web & desktop. */
+  group?: Group;
 };
 
-export type Device = "phone" | "desktop";
+export type Group = "app" | "web" | "ai";
+export const GROUPS: { k: Group; label: string }[] = [
+  { k: "app", label: "Mobile apps" },
+  { k: "web", label: "Web & desktop" },
+  { k: "ai", label: "AI development" },
+];
+export const groupOf = (p: Pick<Project, "group" | "status">): Group => p.group ?? (p.status === "shipped" ? "app" : "web");
+
+export type Device = "phone" | "desktop" | "tablet";
 
 /** An uploaded screenshot: its pixel size picks how it is framed. */
 /** Crop inside the frame: focus point in % (0–100) and zoom (1 = fit). */
@@ -406,17 +418,18 @@ export const projects: Project[] = [
   },
   {
     "slug": "dealsamor",
+    "icon": "/screens/icon-dealsamor.png",
     "name": "DealsAmor",
     "color": "#b03bc9",
     "kind": "Local commerce",
-    "platform": "iOS · Android · Web",
+    "platform": "iOS · Android · Tablet",
     "status": "shipped",
     "eyebrow": "Case study · Local commerce",
     "tagline": "Good things, close by.",
-    "servicesLine": "Mobile app · Web platform · Product design",
+    "servicesLine": "Mobile app · Product design · Backend & cloud",
     "cta": "Open live site",
     "quote": "Good things, close by",
-    "short": "Offer discovery, wallet credentials and in-store redemption for local businesses.",
+    "short": "Verified offers from local businesses — a customer app to find and claim them, and a counter app that checks every code at the till.",
     "about": [
       [
         "Category",
@@ -424,7 +437,7 @@ export const projects: Project[] = [
       ],
       [
         "Platform",
-        "iOS · Android · Web"
+        "iOS · Android · Counter tablet"
       ],
       [
         "Status",
@@ -436,38 +449,159 @@ export const projects: Project[] = [
       ],
       [
         "Screens designed",
-        "2"
+        "19"
       ]
     ],
     "services": [
       "Mobile app",
-      "Web platform",
       "Product design",
-      "Backend & cloud"
+      "Backend & cloud",
+      "Web platform"
     ],
-    "product": "Offer discovery, wallet credentials and in-store redemption for local businesses — one product with surfaces for customers, creators and store staff.",
-    "challenge": "Local offers only work if they are easy to find and hard to abuse. DealsAmor had to serve customers, creators and store staff from one product, on every platform.",
+    "product": "DealsAmor puts verified offers from local businesses in one place. In the customer app, people browse what’s live a few blocks away — as a list or on a map — open a business page, and add an offer to their wallet. At the till they show a QR code that changes every few seconds; staff scan it on the DealsAmor Counter tablet and get a clear answer in about a second.",
+    "challenge": "Local offers only work if they’re easy to find and impossible to fake. Every redemption had to be checked live by the server, the cashier had to know exactly what to say for every outcome, and nothing could quietly fail offline — on two apps used by very different people.",
     "built": [
-      "Nearby offers with list and map browsing",
-      "Wallet with rotating redemption codes",
-      "Business console for offers"
+      "Discover nearby offers by walking distance, with filters and a map",
+      "A wallet with rotating QR codes, savings and clear expiry",
+      "Counter app: staff PIN sign-in, scanning or manual code entry",
+      "A verdict for every case — approved, can’t apply, not verified, offline — with the words to say to the customer",
+      "Shift summaries and an activity log for the business"
     ],
     "proves": [
-      "Shipped to real users, not left as a prototype.",
-      "Every state designed — empty, loading, offline and error.",
+      "Two apps, one system: customer phone and shop counter.",
+      "Every outcome designed, including the awkward ones at the till.",
       "A maintainable stack: Expo, React Native, Next.js, Supabase."
     ],
-    "gallery": [
-      "cs-dealsamor-g1",
-      "cs-dealsamor-g2"
-    ],
+    "gallery": [],
     "galleryWide": null,
     "screens": [],
-    "galleryCaptions": ["01  Discover", "02  Wallet"],
-    "captions": []
+    "galleryCaptions": ["Discover", "Welcome", "Offers sorted by walking distance", "Map view", "A business page", "The offer", "It’s in your wallet", "Wallet", "Show this code at the register", "Discount applied", "Your savings", "Approved", "Counter · staff sign-in", "Counter · scan the code", "Pick which offer to redeem", "Can’t apply — already redeemed", "Not verified — try again", "This shift", "Staff on this tablet"],
+    "captions": [],
+    "media": {
+      "icon": "/screens/icon-dealsamor.png",
+      "screens": ["/screens/da-app-3.webp", "/screens/da-app-1.webp", "/screens/da-app-2.webp", "/screens/da-app-4.webp", "/screens/da-app-5.webp", "/screens/da-app-6.webp", "/screens/da-app-7.webp", "/screens/da-app-8.webp", "/screens/da-app-9.webp", "/screens/da-app-10.webp", "/screens/da-app-11.webp", "/screens/da-counter-3.webp", "/screens/da-counter-1.webp", "/screens/da-counter-2.webp", "/screens/da-counter-6.webp", "/screens/da-counter-4.webp", "/screens/da-counter-5.webp", "/screens/da-counter-7.webp", "/screens/da-counter-8.webp"],
+      "device": "phone",
+      "shots": [
+        {
+          "url": "/screens/da-app-3.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-1.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-2.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-4.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-5.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-6.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-7.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-8.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-9.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-10.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-app-11.webp",
+          "w": 390,
+          "h": 844,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/da-counter-3.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        },
+        {
+          "url": "/screens/da-counter-1.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        },
+        {
+          "url": "/screens/da-counter-2.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        },
+        {
+          "url": "/screens/da-counter-6.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        },
+        {
+          "url": "/screens/da-counter-4.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        },
+        {
+          "url": "/screens/da-counter-5.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        },
+        {
+          "url": "/screens/da-counter-7.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        },
+        {
+          "url": "/screens/da-counter-8.webp",
+          "w": 1024,
+          "h": 768,
+          "device": "tablet"
+        }
+      ]
+    }
   },
   {
     "slug": "cafemanager",
+    "icon": "/screens/icon-cafemanager.png",
     "name": "CafeManager",
     "color": "#178a55",
     "kind": "Hospitality",
@@ -530,6 +664,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "wayfare",
+    "icon": "/screens/icon-wayfare.png",
     "name": "Wayfare",
     "color": "#0b78b8",
     "kind": "AI travel",
@@ -585,6 +720,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "siren",
+    "icon": "/screens/icon-siren.png",
     "name": "Siren",
     "color": "#c2410c",
     "kind": "Vision",
@@ -693,6 +829,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "edith",
+    "icon": "/screens/icon-edith.png",
     "name": "Edith",
     "color": "#9b3fe0",
     "kind": "macOS AI",
@@ -747,6 +884,7 @@ export const projects: Project[] = [
   },
   {
     "slug": "voice-orchestrator",
+    "icon": "/screens/icon-voice-orchestrator.png",
     "name": "Voice Orchestrator",
     "color": "#0e7490",
     "kind": "Voice AI",
@@ -801,7 +939,7 @@ export const projects: Project[] = [
     "captions": []
   },
   {
-    "slug": "inventory-erp",
+    "slug": "erp-assistant",
     "name": "Inventory ERP Assistant",
     "color": "#2d46ff",
     "kind": "AI ERP analytics",
@@ -810,7 +948,7 @@ export const projects: Project[] = [
     "eyebrow": "Case study · Supply chain · AI",
     "tagline": "Ask your ERP anything, in plain English.",
     "servicesLine": "Web platform · Applied AI · Backend & cloud",
-    "cta": "Open live site",
+    "cta": "",
     "quote": "Ask your ERP anything, in plain English",
     "short": "An AI assistant that answers stock, sales and supplier questions with live SQL, tables and charts.",
     "about": [
@@ -824,7 +962,7 @@ export const projects: Project[] = [
       ],
       [
         "Status",
-        "Live demo"
+        "In R&D"
       ],
       [
         "Highlights",
@@ -895,8 +1033,794 @@ export const projects: Project[] = [
         }
       ]
     },
-    "liveUrl": "https://inventory-erp-assistant.vercel.app/",
-    "liveLabel": "Open the live demo"
+    "nda": true
+  },
+
+  {
+    "slug": "rebase",
+    "name": "Rebase",
+    "color": "#ff5b24",
+    "kind": "Posture coaching",
+    "platform": "iPhone",
+    "status": "rnd",
+    "group": "app",
+    "eyebrow": "Case study · Health · AI",
+    "tagline": "Your head, back over your shoulders.",
+    "servicesLine": "Mobile app · Product design · Applied AI",
+    "cta": "",
+    "quote": "Your head, back over your shoulders",
+    "short": "A six-minute daily posture coach for desk workers, with a guide who does every move alongside you.",
+    "about": [
+      [
+        "Category",
+        "Health & fitness · AI"
+      ],
+      [
+        "Platform",
+        "iPhone"
+      ],
+      [
+        "Status",
+        "In R&D"
+      ],
+      [
+        "Highlights",
+        "Posture scan, 4-week plan, guided player, re-scans"
+      ],
+      [
+        "Screens designed",
+        "69"
+      ]
+    ],
+    "services": [
+      "Mobile app",
+      "Product design",
+      "Applied AI",
+      "Backend & cloud"
+    ],
+    "product": "Rebase is a six-minute daily coach for people who sit six or more hours a day. A short quiz and a guided photo scan set up a personal 4-week plan for the neck, upper back and chest. A 3D coach — him or her, your choice — shows every move, then does it with you, with spoken cues and captions.",
+    "challenge": "Stretching apps give people a picture and a timer, and most are dropped within a week. Rebase had to feel like a real coach: safe for a sore neck, short enough for a workday, and private — posture photos stay on the phone.",
+    "built": [
+      "Guided front and side posture scan, with results in plain words",
+      "A 4-week plan with weekly check-ins and re-scans on day 14 and 28",
+      "Learn and flow player modes, with a “This hurts” option on every move",
+      "Paywall, streaks, badges, discreet reminders and a home-screen widget"
+    ],
+    "proves": [
+      "Every state designed — camera off, poor lighting, offline, purchase failed.",
+      "Light and dark themes with two coaches, across 69 screens.",
+      "A full launch kit: app icon, launch screen and landing page."
+    ],
+    "gallery": [],
+    "galleryWide": null,
+    "screens": [],
+    "galleryCaptions": [
+      "Launch",
+      "Pick your coach",
+      "Guided posture scan",
+      "What the scan found",
+      "Your 4-week plan",
+      "Paywall with a free week",
+      "Today",
+      "Plan",
+      "Player · learn mode",
+      "Day done",
+      "Progress",
+      "Exercise library",
+      "Home-screen widget",
+      "Today · light",
+      "Player · light"
+    ],
+    "captions": [],
+    "media": {
+      "icon": "/screens/rebase-icon.png",
+      "screens": [
+        "/screens/rebase-app-1.webp",
+        "/screens/rebase-app-2.webp",
+        "/screens/rebase-app-3.webp",
+        "/screens/rebase-app-4.webp",
+        "/screens/rebase-app-5.webp",
+        "/screens/rebase-app-6.webp",
+        "/screens/rebase-app-7.webp",
+        "/screens/rebase-app-8.webp",
+        "/screens/rebase-app-9.webp",
+        "/screens/rebase-app-10.webp",
+        "/screens/rebase-app-11.webp",
+        "/screens/rebase-app-12.webp",
+        "/screens/rebase-app-13.webp",
+        "/screens/rebase-app-14.webp",
+        "/screens/rebase-app-15.webp"
+      ],
+      "device": "phone",
+      "shots": [
+        {
+          "url": "/screens/rebase-app-1.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-2.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-3.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-4.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-5.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-6.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-7.webp",
+          "w": 786,
+          "h": 2006,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-8.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-9.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-10.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-11.webp",
+          "w": 786,
+          "h": 2360,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-12.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-13.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-14.webp",
+          "w": 786,
+          "h": 2006,
+          "device": "phone"
+        },
+        {
+          "url": "/screens/rebase-app-15.webp",
+          "w": 786,
+          "h": 1704,
+          "device": "phone"
+        }
+      ]
+    },
+    "nda": true
+  },
+  {
+    "slug": "rebase-web",
+    "name": "Rebase website",
+    "color": "#ff5b24",
+    "kind": "Landing page",
+    "platform": "Web",
+    "status": "rnd",
+    "group": "web",
+    "eyebrow": "Case study · Health · Marketing site",
+    "tagline": "A coach, not a picture and a timer.",
+    "servicesLine": "Web platform · Product design · Launch & growth",
+    "cta": "",
+    "quote": "A coach, not a picture and a timer",
+    "short": "The launch site for Rebase: one scroll from the problem to a free trial.",
+    "about": [
+      [
+        "Category",
+        "Health & fitness"
+      ],
+      [
+        "Platform",
+        "Web"
+      ],
+      [
+        "Status",
+        "In R&D"
+      ],
+      [
+        "Highlights",
+        "Live player hero, coaches, plan, pricing, FAQ"
+      ],
+      [
+        "Screens designed",
+        "9"
+      ]
+    ],
+    "services": [
+      "Web platform",
+      "Product design",
+      "Launch & growth"
+    ],
+    "product": "The marketing site for the Rebase app. It opens on the coach mid-session, then walks through the four-step setup, the two coaches, what’s inside the app, the 4-week plan, safety and privacy, reviews, pricing and FAQ — one story that ends at the free week.",
+    "challenge": "Posture apps all promise the same thing. The site had to show the coach actually working, answer the safety and privacy questions before anyone asks, and make the pricing feel fair.",
+    "built": [
+      "A hero built from the real player, with reminder and progress cards",
+      "How it works in four steps, both coaches and a tour of the app",
+      "Safety, privacy, reviews, pricing with a free week, and an FAQ"
+    ],
+    "proves": [
+      "App and website designed together, in one visual language.",
+      "Clear pricing: monthly, annual with a free week, or lifetime.",
+      "Every claim on the page is backed by a real app screen."
+    ],
+    "gallery": [],
+    "galleryWide": null,
+    "screens": [],
+    "galleryCaptions": [
+      "Hero",
+      "How it works",
+      "Pick your coach",
+      "Inside the app",
+      "A plan that grows with you",
+      "Private by default",
+      "Made for real desk days",
+      "Pricing",
+      "Your six minutes are ready"
+    ],
+    "captions": [],
+    "media": {
+      "icon": "/screens/rebase-icon.png",
+      "screens": [
+        "/screens/rebase-web-1.webp",
+        "/screens/rebase-web-2.webp",
+        "/screens/rebase-web-3.webp",
+        "/screens/rebase-web-4.webp",
+        "/screens/rebase-web-5.webp",
+        "/screens/rebase-web-6.webp",
+        "/screens/rebase-web-7.webp",
+        "/screens/rebase-web-8.webp",
+        "/screens/rebase-web-9.webp"
+      ],
+      "device": "desktop",
+      "shots": [
+        {
+          "url": "/screens/rebase-web-1.webp",
+          "w": 1920,
+          "h": 1297,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-2.webp",
+          "w": 1920,
+          "h": 1147,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-3.webp",
+          "w": 1920,
+          "h": 1275,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-4.webp",
+          "w": 1920,
+          "h": 1504,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-5.webp",
+          "w": 1920,
+          "h": 1211,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-6.webp",
+          "w": 1920,
+          "h": 1448,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-7.webp",
+          "w": 1920,
+          "h": 1206,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-8.webp",
+          "w": 1920,
+          "h": 1728,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/rebase-web-9.webp",
+          "w": 1920,
+          "h": 907,
+          "device": "desktop"
+        }
+      ]
+    },
+    "nda": true
+  },
+  {
+    "slug": "vr-robotics",
+    "name": "VR Robotics Academy",
+    "color": "#ff6a00",
+    "kind": "EdTech platform",
+    "platform": "Web",
+    "status": "shipped",
+    "group": "web",
+    "eyebrow": "Case study · Education",
+    "tagline": "Robotics, coding and AI for young learners.",
+    "servicesLine": "Web platform · Product design · Backend & cloud",
+    "cta": "",
+    "quote": "Robotics, coding and AI for young learners",
+    "short": "The website and learning platform for a robotics, coding and AI academy for school students.",
+    "about": [
+      [
+        "Category",
+        "Education"
+      ],
+      [
+        "Platform",
+        "Web"
+      ],
+      [
+        "Status",
+        "Shipped"
+      ],
+      [
+        "Highlights",
+        "Course catalogue, founder workshops, demo booking, admin platform"
+      ],
+      [
+        "Screens designed",
+        "7"
+      ]
+    ],
+    "services": [
+      "Web platform",
+      "Product design",
+      "Backend & cloud"
+    ],
+    "product": "VR Robotics Academy teaches robotics, coding, AI and VR to school students, online and on campus. The site lays out an 18-module curriculum, the course catalogue and a weekly free workshop with the founder, and turns visits into demo bookings. Behind it, an admin platform runs courses, classes, demos, certificates, schools, batches and leads.",
+    "challenge": "Parents need to trust a programme before they book a demo. The site had to explain a long curriculum simply, show what students actually build, and make booking a demo the obvious next step.",
+    "built": [
+      "Marketing site with course search, curriculum and course catalogue",
+      "A weekly founder workshop with live seat count and registration",
+      "Student sign-in and an admin platform for courses, classes, demos, certificates and leads"
+    ],
+    "proves": [
+      "Live with real students, parents and teachers.",
+      "A clear path from first visit to a booked demo.",
+      "One team for the website and the platform behind it."
+    ],
+    "gallery": [],
+    "galleryWide": null,
+    "screens": [],
+    "galleryCaptions": [
+      "Home",
+      "Weekly workshop with the founder",
+      "An 18-module journey",
+      "Course catalogue",
+      "Project-based learning",
+      "Why VR Robotics",
+      "Getting started"
+    ],
+    "captions": [],
+    "media": {
+      "icon": "/screens/vr-icon.png",
+      "screens": [
+        "/screens/vr-1.webp",
+        "/screens/vr-2.webp",
+        "/screens/vr-3.webp",
+        "/screens/vr-4.webp",
+        "/screens/vr-5.webp",
+        "/screens/vr-6.webp",
+        "/screens/vr-7.webp"
+      ],
+      "device": "desktop",
+      "shots": [
+        {
+          "url": "/screens/vr-1.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/vr-2.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/vr-3.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/vr-4.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/vr-5.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/vr-6.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/vr-7.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        }
+      ]
+    },
+    "nda": true
+  },
+  {
+    "slug": "gir-valley-dairy",
+    "name": "Gir Valley Dairy",
+    "color": "#0f8423",
+    "kind": "Dairy commerce admin",
+    "platform": "Web",
+    "status": "shipped",
+    "group": "web",
+    "eyebrow": "Case study · Food & agriculture",
+    "tagline": "Farm-fresh dairy, run from one screen.",
+    "servicesLine": "Web platform · Product design · Backend & cloud",
+    "cta": "",
+    "quote": "Farm-fresh dairy, run from one screen",
+    "short": "The admin behind a farm-to-doorstep dairy: orders, stock, delivery areas and pickup points.",
+    "about": [
+      [
+        "Category",
+        "Food & agriculture"
+      ],
+      [
+        "Platform",
+        "Web"
+      ],
+      [
+        "Status",
+        "Shipped"
+      ],
+      [
+        "Highlights",
+        "Orders, stock, delivery map, pickup points"
+      ],
+      [
+        "Screens designed",
+        "5"
+      ]
+    ],
+    "services": [
+      "Web platform",
+      "Product design",
+      "Backend & cloud"
+    ],
+    "product": "Gir Valley Dairy sells milk, curd, paneer, ghee and drinks straight from the farm. The farm team runs everything from this admin: today’s orders and deadlines, products with sizes and prices, stock and variants, delivery areas with pincodes and charges, pickup points for inter-city orders, and the store settings the customer app reads.",
+    "challenge": "A dairy works to same-day deadlines with stock that spoils. The farm team needed to see what’s late, what’s running out and where every order is going — at a glance, without spreadsheets.",
+    "built": [
+      "A dashboard with orders, revenue, active deliveries and low-stock alerts",
+      "Products, categories, sizes and stock, with a movement log",
+      "Delivery areas on a map with pincodes, charges and delivery windows",
+      "Pickup points at bus stations for inter-city orders, and a delivery board"
+    ],
+    "proves": [
+      "Built around a real business’s daily routine.",
+      "Every list can be filtered and searched; orders export to CSV.",
+      "One admin drives the customer app’s catalogue and branding."
+    ],
+    "gallery": [],
+    "galleryWide": null,
+    "screens": [],
+    "galleryCaptions": [
+      "Dashboard — today on the farm",
+      "Products, sizes and prices",
+      "Stock and variants",
+      "Delivery areas and charges",
+      "Categories"
+    ],
+    "captions": [],
+    "media": {
+      "icon": "/screens/dairy-icon.png",
+      "screens": [
+        "/screens/dairy-1.webp",
+        "/screens/dairy-2.webp",
+        "/screens/dairy-3.webp",
+        "/screens/dairy-4.webp",
+        "/screens/dairy-5.webp"
+      ],
+      "device": "desktop",
+      "shots": [
+        {
+          "url": "/screens/dairy-1.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/dairy-2.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/dairy-3.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/dairy-4.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/dairy-5.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        }
+      ]
+    },
+    "nda": true
+  },
+  {
+    "slug": "attentionx",
+    "name": "AttentionX Labs",
+    "color": "#3a3a38",
+    "kind": "Studio website",
+    "platform": "Web",
+    "status": "shipped",
+    "group": "web",
+    "eyebrow": "Case study · Engineering studio",
+    "tagline": "Command attention.",
+    "servicesLine": "Web platform · Product design",
+    "cta": "",
+    "quote": "Command attention",
+    "short": "A dot-matrix, monochrome website for an AI-first engineering studio.",
+    "about": [
+      [
+        "Category",
+        "Engineering studio"
+      ],
+      [
+        "Platform",
+        "Web"
+      ],
+      [
+        "Status",
+        "Shipped"
+      ],
+      [
+        "Highlights",
+        "Dot-matrix type, light and dark, brief form"
+      ],
+      [
+        "Screens designed",
+        "4"
+      ]
+    ],
+    "services": [
+      "Web platform",
+      "Product design"
+    ],
+    "product": "AttentionX Labs designs and ships applied AI, data platforms and infrastructure. Their site reads like an instrument panel — dot-matrix display type, a hand-drawn mark and a quiet monochrome palette — and walks through what they’re hired to build, how they work, and a short project brief.",
+    "challenge": "Engineering studios tend to look alike. This one needed a voice and a visual system of its own that says “senior engineers” without a single stock photo.",
+    "built": [
+      "Dot-matrix display type and a monochrome system, in light and dark",
+      "A capabilities grid, a three-step approach and a tech-stack marquee",
+      "A short project brief that goes straight to the team"
+    ],
+    "proves": [
+      "A brand system, not a template.",
+      "Every section says one thing, in plain words.",
+      "Design and copy written together."
+    ],
+    "gallery": [],
+    "galleryWide": null,
+    "screens": [],
+    "galleryCaptions": [
+      "Hero",
+      "What we are hired to build",
+      "How we work",
+      "Tell us what has to exist"
+    ],
+    "captions": [],
+    "media": {
+      "icon": "/screens/attx-icon.png",
+      "screens": [
+        "/screens/attx-1.webp",
+        "/screens/attx-2.webp",
+        "/screens/attx-3.webp",
+        "/screens/attx-4.webp"
+      ],
+      "device": "desktop",
+      "shots": [
+        {
+          "url": "/screens/attx-1.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/attx-2.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/attx-3.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/attx-4.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        }
+      ]
+    },
+    "nda": true
+  },
+  {
+    "slug": "finbot",
+    "icon": "/screens/icon-finbot.png",
+    "name": "FinBot Security Audit",
+    "color": "#4f46e5",
+    "kind": "LLM security",
+    "platform": "Web",
+    "status": "rnd",
+    "group": "web",
+    "eyebrow": "Case study · Fintech · AI security",
+    "tagline": "Can a bank’s chatbot be tricked into leaking customer data?",
+    "servicesLine": "Applied AI · Web platform · Backend & cloud",
+    "cta": "",
+    "quote": "Can a bank’s chatbot be tricked into leaking customer data",
+    "short": "A red-team audit of a banking support chatbot — the attacks, the fixes and the monitoring that proves them.",
+    "about": [
+      [
+        "Category",
+        "Fintech · AI security"
+      ],
+      [
+        "Platform",
+        "Web"
+      ],
+      [
+        "Status",
+        "In R&D"
+      ],
+      [
+        "Highlights",
+        "Red-team tests, guardrails, Langfuse tracing"
+      ],
+      [
+        "Screens designed",
+        "6"
+      ]
+    ],
+    "services": [
+      "Applied AI",
+      "Web platform",
+      "Backend & cloud"
+    ],
+    "product": "FinBot is a support assistant for a fictional bank. The same attacks — prompt injection, data leakage, excessive agency, hijacking and hallucination — were sent to the original bot and to a hardened version. Every message, guardrail decision and score is traced and shown in a read-only monitoring view.",
+    "challenge": "Chatbots with access to account data fail quietly. The audit had to find the real leaks, fix them with input and output guardrails, and show the before and after so that someone who isn’t an engineer can see what changed.",
+    "built": [
+      "A red-team suite of 20 tests across six attack categories",
+      "Input and output guardrails — the pass rate went from 40% to 100%",
+      "Side-by-side chat that sends one message to both versions",
+      "Langfuse tracing for sessions, traces, scores and latency"
+    ],
+    "proves": [
+      "AI with guardrails you can measure, not promise.",
+      "Every answer is traced, so failures can be found and fixed.",
+      "Results a security reviewer and a product owner can both read."
+    ],
+    "gallery": [],
+    "galleryWide": null,
+    "screens": [],
+    "galleryCaptions": [
+      "Audit results — before and after",
+      "Try the chatbot on both versions",
+      "Monitoring overview",
+      "Every message, traced",
+      "A blocked attack, step by step",
+      "Guardrail scores"
+    ],
+    "captions": [],
+    "media": {
+      "icon": "/screens/icon-finbot.png",
+      "screens": [
+        "/screens/finbot-1.webp",
+        "/screens/finbot-2.webp",
+        "/screens/finbot-3.webp",
+        "/screens/finbot-4.webp",
+        "/screens/finbot-5.webp",
+        "/screens/finbot-6.webp"
+      ],
+      "device": "desktop",
+      "shots": [
+        {
+          "url": "/screens/finbot-1.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/finbot-2.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/finbot-3.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/finbot-4.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/finbot-5.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        },
+        {
+          "url": "/screens/finbot-6.webp",
+          "w": 1920,
+          "h": 1200,
+          "device": "desktop"
+        }
+      ]
+    },
+    "nda": true
   }
 ];
 

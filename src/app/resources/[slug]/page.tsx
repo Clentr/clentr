@@ -5,6 +5,7 @@ import { downloadUrl, fileType, formatSize, KINDS, viewOf } from "@/content/reso
 import { getLibrary, getResource } from "@/lib/resources";
 import { BookCall } from "@/components/ui/BookCall";
 import { Footer } from "@/components/ui/Footer";
+import { MobileCta } from "@/components/ui/MobileCta";
 import { Icon } from "@/components/ui/Icon";
 import { Nav } from "@/components/ui/Nav";
 import { ResourceCard } from "@/components/resources/ResourceCard";
@@ -174,6 +175,7 @@ export default async function ResourcePage({ params }: PageProps<"/resources/[sl
           <div className="art__after">{after}</div>
         </main>
         <Footer />
+        <MobileCta />
       </div>
     );
   }
@@ -236,6 +238,7 @@ export default async function ResourcePage({ params }: PageProps<"/resources/[sl
         {after}
       </main>
       <Footer />
+      <MobileCta />
     </div>
   );
 }

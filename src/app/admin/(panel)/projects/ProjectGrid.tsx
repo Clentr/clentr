@@ -4,18 +4,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { ExternalLink, Eye, EyeOff, Pencil, RotateCcw, Trash2 } from "lucide-react";
-import type { Project } from "@/content/projects";
+import { GROUPS, groupOf, type Project } from "@/content/projects";
 import { ProjectIcon, StageArt } from "@/components/work/ProjectArt";
 import { resetOrDeleteProject, setProjectVisible } from "../../actions";
 
 export type ProjectRow = { p: Project; source: "builtin" | "edited" | "added"; visible: boolean };
 
-const TABS = [
-  { k: "all", label: "All" },
-  { k: "shipped", label: "Mobile apps" },
-  { k: "rnd", label: "Web & desktop" },
-  { k: "hidden", label: "Hidden" },
-] as const;
+const TABS = [{ k: "all", label: "All" }, ...GROUPS, { k: "hidden", label: "Hidden" }] as const;
 
 export function ProjectGrid({ rows: initial }: { rows: ProjectRow[] }) {
   const router = useRouter();
@@ -23,8 +18,9 @@ export function ProjectGrid({ rows: initial }: { rows: ProjectRow[] }) {
   const [tab, setTab] = useState<(typeof TABS)[number]["k"]>("all");
   const [, start] = useTransition();
 
-  const shown = rows.filter((r) => (tab === "all" ? true : tab === "hidden" ? !r.visible : r.p.status === tab && r.visible));
-  const count = (k: string) => rows.filter((r) => (k === "all" ? true : k === "hidden" ? !r.visible : r.p.status === k && r.visible)).length;
+  const inTab = (r: ProjectRow, k: string) => (k === "all" ? true : k === "hidden" ? !r.visible : groupOf(r.p) === k && r.visible);
+  const shown = rows.filter((r) => inTab(r, tab));
+  const count = (k: string) => rows.filter((r) => inTab(r, k)).length;
 
   function setVisible(slug: string, visible: boolean) {
     setRows((rs) => rs.map((r) => (r.p.slug === slug ? { ...r, visible, source: r.source === "builtin" ? "edited" : r.source } : r)));
@@ -71,7 +67,7 @@ export function ProjectGrid({ rows: initial }: { rows: ProjectRow[] }) {
               <div>
                 <b>{r.p.name}</b>
                 <small>
-                  {r.p.kind} · {r.p.status === "shipped" ? "Mobile apps" : "Web & desktop"}
+                  {r.p.kind} · {GROUPS.find((g) => g.k === groupOf(r.p))?.label}
                 </small>
               </div>
             </div>

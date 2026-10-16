@@ -2057,6 +2057,18 @@
   font-weight: 500;
   color: var(--ink-2);
 }
+/* Windows and tablets: one large screen at a time, the next one peeking in. */
+.prow--wide .prow__track {
+  gap: 22px;
+  scroll-padding-inline: 4px;
+}
+.prow--wide .prow__track figure {
+  flex: 0 0 min(620px, 84%);
+  text-align: left;
+}
+.prow--wide .prow__track figcaption {
+  font-size: 13px;
+}
 .prow__ctrl {
   display: flex;
   justify-content: center;

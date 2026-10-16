@@ -9,7 +9,7 @@ import { ProjectIcon } from "../work/ProjectArt";
 
 /** Proof points in one compact band: four tiles, each with a small live detail. Real figures only. */
 export async function Trust({ c }: { c: SiteContent["trust"] }) {
-  const { mobileApps, webDesktop } = await getWork();
+  const { mobileApps, shipped, rnd } = await getWork();
   const bars = [18, 26, 32, 40, 52, 66, 84, 100];
   return (
     <section className="section" aria-labelledby="trust-title">
@@ -20,11 +20,11 @@ export async function Trust({ c }: { c: SiteContent["trust"] }) {
           icon={c.icon}
           title={c.title}
           dim={c.dim}
-          lead={c.lead.replaceAll("{shipped}", String(mobileApps.length)).replaceAll("{rnd}", String(webDesktop.length))}
+          lead={c.lead.replaceAll("{shipped}", String(shipped)).replaceAll("{rnd}", String(rnd))}
         />
         <Reveal className="trust7">
           <div className="trust7__tile">
-            <span className="trust7__num">{mobileApps.length}</span>
+            <span className="trust7__num">{shipped}</span>
             <span className="trust7__label">{c.shippedLabel}</span>
             <span className="trust7__fan" aria-hidden="true">
               {mobileApps.slice(0, 6).map((p, i) => (

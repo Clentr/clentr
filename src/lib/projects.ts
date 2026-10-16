@@ -1,5 +1,5 @@
 import { cacheLife, cacheTag } from "next/cache";
-import { carouselOrder, projects as builtIn, type Project } from "@/content/projects";
+import { carouselOrder, groupOf, projects as builtIn, type Group, type Project } from "@/content/projects";
 import { serviceClient } from "./supabase/service";
 
 /** Built-in (Figma) projects plus published ones added from the admin panel. */
@@ -16,7 +16,7 @@ export async function getProjects(): Promise<Project[]> {
   const fromRow = (r: (typeof data)[number]) => ({ ...(r.data as Omit<Project, "slug">), slug: r.slug as string });
   const merged = builtIn.flatMap((p) => {
     const r = rows.get(p.slug);
-    return !r ? [p] : r.published ? [{ ...fromRow(r), media: (r.data as Project).media }] : [];
+    return !r ? [p] : r.published ? [{ ...fromRow(r), media: (r.data as Project).media, icon: p.icon }] : [];
   });
   const added = data.filter((r) => r.published && !builtIn.some((p) => p.slug === r.slug)).map(fromRow);
   return [...merged, ...added];
@@ -32,10 +32,14 @@ export async function getWork() {
     ...carouselOrder.map((s) => all.find((p) => p.slug === s)).filter((p): p is Project => Boolean(p)),
     ...all.filter((p) => !carouselOrder.includes(p.slug)),
   ];
+  const inGroup = (g: Group) => all.filter((p) => groupOf(p) === g);
   return {
     all,
-    mobileApps: all.filter((p) => p.status === "shipped"),
-    webDesktop: all.filter((p) => p.status === "rnd"),
+    mobileApps: inGroup("app"),
+    webDesktop: inGroup("web"),
+    aiWork: inGroup("ai"),
+    shipped: all.filter((p) => p.status === "shipped").length,
+    rnd: all.filter((p) => p.status === "rnd").length,
     carousel: ordered,
   };
 }

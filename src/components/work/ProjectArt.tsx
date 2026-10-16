@@ -2,7 +2,7 @@ import Image from "next/image";
 import type { CSSProperties } from "react";
 import { shotsOf, type Crop, type Device as DeviceKind, type Project, type Shot } from "@/content/projects";
 import { Art } from "../ui/Art";
-import { PhoneRow, ScreenTour } from "./ScreenTour";
+import { ShotRow } from "./ScreenTour";
 
 /*
  * Project artwork. Built-in projects use their Figma exports; projects added from the admin
@@ -12,7 +12,7 @@ import { PhoneRow, ScreenTour } from "./ScreenTour";
 const tint = (p: Project) => ({ "--p": p.color }) as CSSProperties;
 
 // Visible screen proportions (height / width) of each frame.
-const SCREEN_RATIO: Record<DeviceKind, number> = { phone: 19.5 / 9, desktop: 10 / 16 };
+const SCREEN_RATIO: Record<DeviceKind, number> = { phone: 19.5 / 9, desktop: 10 / 16, tablet: 3 / 4 };
 
 /**
  * How a screenshot fills its frame without losing anything:
@@ -26,7 +26,7 @@ function fitFor(device: DeviceKind, w: number, h: number) {
   return diff >= 1.14 ? "scroll" : "contain";
 }
 
-/** A screenshot in an iPhone or a macOS-style window, fitted to any size. */
+/** A screenshot in an iPhone, a counter tablet or a macOS-style window, fitted to any size. */
 export function Device({ src, device, w = 0, h = 0, alt = "", sizes, className = "", crop }: {
   src: string;
   device: DeviceKind;
@@ -52,9 +52,9 @@ export function Device({ src, device, w = 0, h = 0, alt = "", sizes, className =
           <i />
           <span className="dev__url" />
         </span>
-      ) : (
+      ) : device === "phone" ? (
         <span className="dev__island" aria-hidden="true" />
-      )}
+      ) : null}
       <span className="dev__screen">
         {fit === "contain" && <Image src={src} alt="" fill sizes={sizes} className="dev__blur" aria-hidden="true" />}
         <Image src={src} alt={alt} fill sizes={sizes} className="dev__img" style={cropStyle} />
@@ -68,8 +68,9 @@ const Shot = ({ s, sizes, className }: { s: Shot; sizes: string; className?: str
 );
 
 export function ProjectIcon({ p, size, className = "" }: { p: Project; size: number; className?: string }) {
+  const src = p.icon ?? p.media?.icon;
+  if (src) return <Image src={src} alt="" width={size} height={size} className={`picon ${className}`} />;
   if (!p.media) return <Art name={`icon-${p.slug}`} themed alt="" className={className} sizes={`${size}px`} />;
-  if (p.media.icon) return <Image src={p.media.icon} alt="" width={size} height={size} className={`picon ${className}`} />;
   return (
     <span className={`picon picon--letter ${className}`} style={{ ...tint(p), width: size, height: size }} aria-hidden="true">
       {p.name.slice(0, 1)}
@@ -81,7 +82,8 @@ export function ProjectIcon({ p, size, className = "" }: { p: Project; size: num
 function compose(p: Project) {
   const shots = shotsOf(p.media!);
   const phones = shots.filter((x) => x.device === "phone");
-  const desks = shots.filter((x) => x.device === "desktop");
+  // Tablets sit in the window slot: both are landscape screens.
+  const desks = shots.filter((x) => x.device !== "phone");
   const layout = desks.length && phones.length ? "mixed" : desks.length ? "desktop" : "phone";
   return { phones, desks, layout };
 }
@@ -126,53 +128,40 @@ export function HeroArt({ p }: { p: Project }) {
 }
 
 /** Every screenshot, each in its own frame, for the case-study gallery. */
-/** Up to this many screens are laid out in full; more become a tour (web) or a swipe row (phone). */
-const STACK_DESKTOP = 2;
+/** Up to this many screens are laid out in full; more become a row you swipe through. */
+const STACK_WIDE = 2;
 const ROW_PHONES = 4;
 
 export function GalleryArt({ p }: { p: Project }) {
   if (!p.media) return null;
   const shots = shotsOf(p.media);
   const phones = shots.filter((x) => x.device === "phone");
-  const desks = shots.filter((x) => x.device === "desktop");
+  const wide = shots.filter((x) => x.device !== "phone");
   const caption = (s: Shot) => p.galleryCaptions[shots.indexOf(s)];
-  const phone = (s: Shot, i: number) => (
+  const figure = (s: Shot, i: number, sizes: string) => (
     <figure key={s.url}>
-      <Device src={s.url} device="phone" w={s.w} h={s.h} crop={s.crop} alt={`${p.name} screen ${i + 1}`} sizes="160px" />
+      <Device src={s.url} device={s.device} w={s.w} h={s.h} crop={s.crop} alt={caption(s) ?? `${p.name} screen ${i + 1}`} sizes={sizes} />
       {caption(s) && <figcaption>{caption(s)}</figcaption>}
     </figure>
   );
+  const wideSizes = "(max-width: 900px) 86vw, 620px";
   return (
     <>
-      {desks.length > STACK_DESKTOP ? (
-        <ScreenTour
-          name={p.name}
-          captions={desks.map(caption)}
-          slides={desks.map((s, i) => (
-            <Device key={s.url} src={s.url} device="desktop" w={s.w} h={s.h} crop={s.crop} alt={caption(s) ?? `${p.name} screen ${i + 1}`} sizes="(max-width: 900px) 92vw, 640px" />
-          ))}
-          thumbs={desks.map((s) => (
-            <Image key={s.url} src={s.url} alt="" fill sizes="150px" />
-          ))}
-        />
+      {wide.length > STACK_WIDE ? (
+        <ShotRow name={p.name} kind="wide">
+          {wide.map((s, i) => figure(s, i, wideSizes))}
+        </ShotRow>
       ) : (
-        desks.length > 0 && (
-          <div className="mgal mgal--desktop">
-            {desks.map((s, i) => (
-              <figure key={s.url}>
-                <Device src={s.url} device="desktop" w={s.w} h={s.h} crop={s.crop} alt={`${p.name} screen ${i + 1}`} sizes="(max-width: 900px) 92vw, 620px" />
-                {caption(s) && <figcaption>{caption(s)}</figcaption>}
-              </figure>
-            ))}
-          </div>
-        )
+        wide.length > 0 && <div className="mgal mgal--desktop">{wide.map((s, i) => figure(s, i, wideSizes))}</div>
       )}
       {phones.length > ROW_PHONES ? (
-        <PhoneRow name={p.name}>{phones.map(phone)}</PhoneRow>
+        <ShotRow name={p.name} kind="phone">
+          {phones.map((s, i) => figure(s, i, "160px"))}
+        </ShotRow>
       ) : (
         phones.length > 0 && (
           <div className="mgal mgal--phone" style={{ "--n": phones.length } as CSSProperties}>
-            {phones.map(phone)}
+            {phones.map((s, i) => figure(s, i, "160px"))}
           </div>
         )
       )}
@@ -182,7 +171,6 @@ export function GalleryArt({ p }: { p: Project }) {
 
 /** Finder folder, with the project's icon on a blank folder. */
 export function FolderArt({ p }: { p: Project }) {
-  if (!p.media) return <Art name={`folder-${p.slug}`} themed alt="" className="folder__art" sizes="96px" />;
   return (
     <span className="folder__art folder__art--custom">
       <Art name="folder-generic" themed alt="" sizes="96px" />
