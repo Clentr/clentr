@@ -1,12 +1,11 @@
 import type { NextRequest } from "next/server";
 import { serviceClient } from "@/lib/supabase/service";
-import { getSite } from "@/lib/content";
-import { FORM_ORIGIN } from "@/lib/config";
+import { notifyTeam } from "@/lib/notify";
 
 const clip = (v: unknown, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
 
 /**
- * Contact-form submissions: stored for the admin panel and emailed to the studio inbox via
+ * Contact-form submissions: stored for the admin panel and emailed to the team via
  * FormSubmit. The enquiry counts as received if either one succeeds.
  */
 export async function POST(req: NextRequest) {
@@ -30,30 +29,7 @@ export async function POST(req: NextRequest) {
           .insert({ ...lead, path: clip(body.path, 300), country: req.headers.get("x-vercel-ip-country") })
           .then(({ error }) => !error)
       : false,
-    sendEmail(lead),
+    notifyTeam("lead", `New project enquiry — ${lead.building}`, lead.email, lead),
   ]);
   return Response.json({ ok: stored || emailed, stored, emailed }, { status: stored || emailed ? 200 : 502 });
-}
-
-async function sendEmail(lead: Record<string, string>) {
-  // Local testing would send FormSubmit activation emails for localhost.
-  if (process.env.NODE_ENV !== "production") return false;
-  try {
-    const to = (await getSite()).content.contact.email;
-    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(to)}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json", ...FORM_ORIGIN },
-      body: JSON.stringify({ _subject: `New project enquiry — ${lead.building}`, _replyto: lead.email, _template: "table", ...lead }),
-      signal: AbortSignal.timeout(8000),
-    });
-    const json = (await res.json().catch(() => ({}))) as { success?: string | boolean; message?: string };
-    if (!res.ok || String(json.success) === "false") {
-      console.warn("[lead] FormSubmit did not send:", json.message ?? res.status);
-      return false;
-    }
-    return true;
-  } catch (e) {
-    console.warn("[lead] FormSubmit error:", e);
-    return false;
-  }
 }
