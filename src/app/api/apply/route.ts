@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { serviceClient } from "@/lib/supabase/service";
-import { notifyTeam } from "@/lib/notify";
+import { buildNotice, notifyTeam } from "@/lib/notify";
 import { instagramHandle, LABELS, LIMITS, packApplication, phoneValid, type Application } from "@/content/apply";
 
 const clip = (v: unknown, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
@@ -19,6 +19,11 @@ export async function POST(req: NextRequest) {
   if (missing.length || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(a.email) || !phoneValid(a.phone))
     return Response.json({ ok: false, error: "invalid", missing }, { status: 400 });
 
+  const notice = buildNotice(
+    `Call request — ${a.name} · ${a.budget}`,
+    a.email,
+    Object.fromEntries((Object.keys(LABELS) as (keyof Application)[]).map((k) => [LABELS[k], a[k] || "—"])),
+  );
   const db = serviceClient();
   const [stored, emailed] = await Promise.all([
     db
@@ -35,12 +40,8 @@ export async function POST(req: NextRequest) {
           })
           .then(({ error }) => !error)
       : false,
-    notifyTeam(
-      "apply",
-      `Call request — ${a.name} · ${a.budget}`,
-      a.email,
-      Object.fromEntries((Object.keys(LABELS) as (keyof Application)[]).map((k) => [LABELS[k], a[k] || "—"])),
-    ),
+    notifyTeam("apply", notice),
   ]);
-  return Response.json({ ok: stored || emailed, stored, emailed }, { status: stored || emailed ? 200 : 502 });
+  // If the server couldn't email the team, the browser sends the same notice.
+  return Response.json({ ok: stored || emailed, stored, emailed, ...(emailed ? {} : { notice }) }, { status: stored || emailed ? 200 : 502 });
 }

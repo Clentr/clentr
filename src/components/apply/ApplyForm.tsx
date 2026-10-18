@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { BEFORE, BUDGETS, COUNTRIES, EXPECTS, flagOf, groupDigits, instagramHandle, phoneProblem, STAGES, TIMELINES, type Application } from "@/content/apply";
 import { Icon } from "../ui/Icon";
+import { relayNotice } from "@/lib/relay-notice";
 
 type Key = keyof Application;
 const EMPTY: Application = { name: "", email: "", phone: "", instagram: "", idea: "", stage: "", problem: "", budget: "", timeline: "", expect: "", before: "", why: "", extra: "" };
@@ -97,7 +98,8 @@ export function ApplyForm({ email }: { email: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...a, instagram: a.instagram.trim() ? instagramHandle(a.instagram) : "", _honey: honey.current?.value ?? "" }),
       });
-      const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; notice?: unknown };
+      if (json.notice) relayNotice(json.notice);
       if (!json.ok) throw new Error("send failed");
       setSent(true);
     } catch {

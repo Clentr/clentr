@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Icon } from "../ui/Icon";
 import { BookCall } from "../ui/BookCall";
+import { relayNotice } from "@/lib/relay-notice";
 
 const KINDS: [string, string][] = [
   ["Mobile app", "smartphone"],
@@ -57,7 +58,8 @@ export function ContactForm({ email }: { email: string }) {
           _honey: get("_honey"),
         }),
       });
-      const json = (await res.json().catch(() => ({}))) as { ok?: boolean };
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; notice?: unknown };
+      if (json.notice) relayNotice(json.notice);
       if (!json.ok) throw new Error("send failed");
       setSent(true);
     } catch {

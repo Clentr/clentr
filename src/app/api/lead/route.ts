@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { serviceClient } from "@/lib/supabase/service";
-import { notifyTeam } from "@/lib/notify";
+import { buildNotice, notifyTeam } from "@/lib/notify";
 
 const clip = (v: unknown, n: number) => (typeof v === "string" ? v.trim().slice(0, n) : "");
 
@@ -21,6 +21,7 @@ export async function POST(req: NextRequest) {
   };
   if (!lead.name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) return Response.json({ ok: false, error: "invalid" }, { status: 400 });
 
+  const notice = buildNotice(`New project enquiry — ${lead.building}`, lead.email, lead);
   const db = serviceClient();
   const [stored, emailed] = await Promise.all([
     db
@@ -29,7 +30,8 @@ export async function POST(req: NextRequest) {
           .insert({ ...lead, path: clip(body.path, 300), country: req.headers.get("x-vercel-ip-country") })
           .then(({ error }) => !error)
       : false,
-    notifyTeam("lead", `New project enquiry — ${lead.building}`, lead.email, lead),
+    notifyTeam("lead", notice),
   ]);
-  return Response.json({ ok: stored || emailed, stored, emailed }, { status: stored || emailed ? 200 : 502 });
+  // If the server couldn't email the team, the browser sends the same notice.
+  return Response.json({ ok: stored || emailed, stored, emailed, ...(emailed ? {} : { notice }) }, { status: stored || emailed ? 200 : 502 });
 }
